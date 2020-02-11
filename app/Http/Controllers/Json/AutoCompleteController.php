@@ -29,6 +29,7 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
@@ -125,6 +126,14 @@ class AutoCompleteController extends Controller
         $filtered = $result->unique('description');
         $limited  = $filtered->slice(0, 15);
         $array    = $limited->toArray();
+        // duplicate 'description' value into 'name':
+        $array = array_map(
+            static function (array $journal) {
+                $journal['name'] = $journal['description'];
+
+                return $journal;
+            }, $array
+        );
 
         return response()->json(array_values($array));
     }
@@ -172,6 +181,54 @@ class AutoCompleteController extends Controller
 
 
         return response()->json($array);
+    }
+
+    /**
+     * An auto-complete specifically for asset accounts and liabilities, used when mass updating and for rules mostly.
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function assetAccounts(Request $request): JsonResponse
+    {
+        $search = $request->get('search');
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+
+        // filter the account types:
+        $allowedAccountTypes = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
+        Log::debug(sprintf('Now in expenseAccounts(%s). Filtering results.', $search), $allowedAccountTypes);
+
+        $return = [];
+        $result = $repository->searchAccount((string)$search, $allowedAccountTypes);
+
+        /** @var Account $account */
+        foreach ($result as $account) {
+            $return[] = [
+                'id'   => $account->id,
+                'name' => $account->name,
+                'type' => $account->accountType->type,
+            ];
+        }
+
+        return response()->json($return);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     * @codeCoverageIgnore
+     */
+    public function bills(Request $request): JsonResponse
+    {
+        $query = (string)$request->get('search');
+        /** @var BillRepositoryInterface $repository */
+        $repository = app(BillRepositoryInterface::class);
+        $result     = $repository->searchBill($query);
+
+        return response()->json($result->toArray());
     }
 
     /**
@@ -283,39 +340,6 @@ class AutoCompleteController extends Controller
         return response()->json($return);
     }
 
-
-    /**
-     * An auto-complete specifically for asset accounts and liabilities, used when mass updating and for rules mostly.
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function assetAccounts(Request $request): JsonResponse
-    {
-        $search = $request->get('search');
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-
-        // filter the account types:
-        $allowedAccountTypes = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
-        Log::debug(sprintf('Now in expenseAccounts(%s). Filtering results.', $search), $allowedAccountTypes);
-
-        $return = [];
-        $result = $repository->searchAccount((string)$search, $allowedAccountTypes);
-
-        /** @var Account $account */
-        foreach ($result as $account) {
-            $return[] = [
-                'id'   => $account->id,
-                'name' => $account->name,
-                'type' => $account->accountType->type,
-            ];
-        }
-
-        return response()->json($return);
-    }
-
     /**
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -328,12 +352,12 @@ class AutoCompleteController extends Controller
         /** @var AccountRepositoryInterface $accountRepos */
         $accountRepos = app(AccountRepositoryInterface::class);
 
-        $piggies    = $repository->getPiggyBanks();
+        $piggies         = $repository->getPiggyBanks();
         $defaultCurrency = \Amount::getDefaultCurrency();
-        $response  = [];
+        $response        = [];
         /** @var PiggyBank $piggy */
         foreach ($piggies as $piggy) {
-            $currency = $accountRepos->getAccountCurrency($piggy->account) ?? $defaultCurrency;
+            $currency                = $accountRepos->getAccountCurrency($piggy->account) ?? $defaultCurrency;
             $currentAmount           = $repository->getRepetition($piggy)->currentamount ?? '0';
             $piggy->name_with_amount = sprintf(
                 '%s (%s / %s)',
@@ -341,7 +365,7 @@ class AutoCompleteController extends Controller
                 app('amount')->formatAnything($currency, $currentAmount, false),
                 app('amount')->formatAnything($currency, $piggy->targetamount, false),
             );
-            $response[] = $piggy->toArray();
+            $response[]              = $piggy->toArray();
         }
 
         return response()->json($response);

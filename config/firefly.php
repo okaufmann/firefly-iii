@@ -90,6 +90,10 @@ use FireflyIII\TransactionRules\Triggers\DescriptionStarts;
 use FireflyIII\TransactionRules\Triggers\FromAccountContains;
 use FireflyIII\TransactionRules\Triggers\FromAccountEnds;
 use FireflyIII\TransactionRules\Triggers\FromAccountIs;
+use FireflyIII\TransactionRules\Triggers\FromAccountNumberContains;
+use FireflyIII\TransactionRules\Triggers\FromAccountNumberEnds;
+use FireflyIII\TransactionRules\Triggers\FromAccountNumberIs;
+use FireflyIII\TransactionRules\Triggers\FromAccountNumberStarts;
 use FireflyIII\TransactionRules\Triggers\FromAccountStarts;
 use FireflyIII\TransactionRules\Triggers\HasAnyBudget;
 use FireflyIII\TransactionRules\Triggers\HasAnyCategory;
@@ -108,6 +112,10 @@ use FireflyIII\TransactionRules\Triggers\TagIs;
 use FireflyIII\TransactionRules\Triggers\ToAccountContains;
 use FireflyIII\TransactionRules\Triggers\ToAccountEnds;
 use FireflyIII\TransactionRules\Triggers\ToAccountIs;
+use FireflyIII\TransactionRules\Triggers\ToAccountNumberContains;
+use FireflyIII\TransactionRules\Triggers\ToAccountNumberEnds;
+use FireflyIII\TransactionRules\Triggers\ToAccountNumberIs;
+use FireflyIII\TransactionRules\Triggers\ToAccountNumberStarts;
 use FireflyIII\TransactionRules\Triggers\ToAccountStarts;
 use FireflyIII\TransactionRules\Triggers\TransactionType;
 use FireflyIII\TransactionRules\Triggers\UserAction;
@@ -124,29 +132,39 @@ return [
         'single_user_mode' => true,
         'is_demo_site'     => false,
     ],
-    'encryption'                   => null === env('USE_ENCRYPTION') || env('USE_ENCRYPTION') === true,
-    'version'                      => '4.8.2',
-    'api_version'                  => '0.10.5',
-    'db_version'                   => 11,
-    'maxUploadSize'                => 15242880,
-    'send_error_message'           => env('SEND_ERROR_MESSAGE', true),
-    'site_owner'                   => env('SITE_OWNER', ''),
-    'send_registration_mail'       => env('SEND_REGISTRATION_MAIL', true),
-    'demo_username'                => env('DEMO_USERNAME', ''),
-    'demo_password'                => env('DEMO_PASSWORD', ''),
-    'is_sandstorm'                 => env('IS_SANDSTORM', 'unknown'),
-    'bunq_use_sandbox'             => env('BUNQ_USE_SANDBOX', false),
-    'fixer_api_key'                => env('FIXER_API_KEY', ''),
-    'mapbox_api_key'               => env('MAPBOX_API_KEY', ''),
-    'trusted_proxies'              => env('TRUSTED_PROXIES', ''),
-    'search_result_limit'          => env('SEARCH_RESULT_LIMIT', 50),
-    'send_report_journals'         => envNonEmpty('SEND_REPORT_JOURNALS', true),
-    'analytics_id'                 => env('ANALYTICS_ID', ''),
-    'disable_frame_header'         => env('DISABLE_FRAME_HEADER', false),
-    'login_provider'               => envNonEmpty('LOGIN_PROVIDER', 'eloquent'),
-    'cer_provider'                 => envNonEmpty('CER_PROVIDER', 'fixer'),
-    'update_endpoint'              => 'https://version.firefly-iii.org/index.json',
-    'allowedMimes'                 => [
+    'feature_flags'          => [
+        'export' => true,
+    ],
+    'encryption'             => null === env('USE_ENCRYPTION') || true === env('USE_ENCRYPTION'),
+    'version'                => '5.0.4',
+    'api_version'            => '1.0.0',
+    'db_version'             => 12,
+    'maxUploadSize'          => 15242880,
+    'send_error_message'     => env('SEND_ERROR_MESSAGE', true),
+    'site_owner'             => env('SITE_OWNER', ''),
+    'send_registration_mail' => env('SEND_REGISTRATION_MAIL', true),
+    'demo_username'          => env('DEMO_USERNAME', ''),
+    'demo_password'          => env('DEMO_PASSWORD', ''),
+    'is_sandstorm'           => env('IS_SANDSTORM', 'unknown'),
+    'bunq_use_sandbox'       => env('BUNQ_USE_SANDBOX', false),
+    'fixer_api_key'          => env('FIXER_API_KEY', ''),
+    'mapbox_api_key'         => env('MAPBOX_API_KEY', ''),
+    'trusted_proxies'        => env('TRUSTED_PROXIES', ''),
+    'search_result_limit'    => env('SEARCH_RESULT_LIMIT', 50),
+    'send_report_journals'   => envNonEmpty('SEND_REPORT_JOURNALS', true),
+    'tracker_site_id'        => env('TRACKER_SITE_ID', ''),
+    'tracker_url'            => env('TRACKER_URL', ''),
+    'disable_frame_header'   => env('DISABLE_FRAME_HEADER', false),
+    'disable_csp_header'     => env('DISABLE_CSP_HEADER', false),
+    'login_provider'         => envNonEmpty('LOGIN_PROVIDER', 'eloquent'),
+    'cer_provider'           => envNonEmpty('CER_PROVIDER', 'fixer'),
+    'update_endpoint'        => 'https://version.firefly-iii.org/index.json',
+    'default_location'       => [
+        'longitude'  => env('MAP_DEFAULT_LONG', '5.916667'),
+        'latitude'   => env('MAP_DEFAULT_LAT', '51.983333'),
+        'zoom_level' => env('MAP_DEFAULT_ZOOM', '6'),
+    ],
+    'allowedMimes'           => [
         /* plain files */
         'text/plain',
 
@@ -404,40 +422,48 @@ return [
 
     ],
     'rule-triggers'                => [
-        'user_action'           => UserAction::class,
-        'from_account_starts'   => FromAccountStarts::class,
-        'from_account_ends'     => FromAccountEnds::class,
-        'from_account_is'       => FromAccountIs::class,
-        'from_account_contains' => FromAccountContains::class,
-        'to_account_starts'     => ToAccountStarts::class,
-        'to_account_ends'       => ToAccountEnds::class,
-        'to_account_is'         => ToAccountIs::class,
-        'to_account_contains'   => ToAccountContains::class,
-        'amount_less'           => AmountLess::class,
-        'amount_exactly'        => AmountExactly::class,
-        'amount_more'           => AmountMore::class,
-        'description_starts'    => DescriptionStarts::class,
-        'description_ends'      => DescriptionEnds::class,
-        'description_contains'  => DescriptionContains::class,
-        'description_is'        => DescriptionIs::class,
-        'transaction_type'      => TransactionType::class,
-        'category_is'           => CategoryIs::class,
-        'budget_is'             => BudgetIs::class,
-        'tag_is'                => TagIs::class,
-        'currency_is'           => CurrencyIs::class,
-        'has_attachments'       => HasAttachment::class,
-        'has_no_category'       => HasNoCategory::class,
-        'has_any_category'      => HasAnyCategory::class,
-        'has_no_budget'         => HasNoBudget::class,
-        'has_any_budget'        => HasAnyBudget::class,
-        'has_no_tag'            => HasNoTag::class,
-        'has_any_tag'           => HasAnyTag::class,
-        'notes_contain'         => NotesContain::class,
-        'notes_start'           => NotesStart::class,
-        'notes_end'             => NotesEnd::class,
-        'notes_are'             => NotesAre::class,
-        'no_notes'              => NotesEmpty::class,
-        'any_notes'             => NotesAny::class,
+        'user_action'              => UserAction::class,
+        'from_account_starts'      => FromAccountStarts::class,
+        'from_account_ends'        => FromAccountEnds::class,
+        'from_account_is'          => FromAccountIs::class,
+        'from_account_contains'    => FromAccountContains::class,
+        'from_account_nr_starts'   => FromAccountNumberStarts::class,
+        'from_account_nr_ends'     => FromAccountNumberEnds::class,
+        'from_account_nr_is'       => FromAccountNumberIs::class,
+        'from_account_nr_contains' => FromAccountNumberContains::class,
+        'to_account_starts'        => ToAccountStarts::class,
+        'to_account_ends'          => ToAccountEnds::class,
+        'to_account_is'            => ToAccountIs::class,
+        'to_account_contains'      => ToAccountContains::class,
+        'to_account_nr_starts'     => ToAccountNumberStarts::class,
+        'to_account_nr_ends'       => ToAccountNumberEnds::class,
+        'to_account_nr_is'         => ToAccountNumberIs::class,
+        'to_account_nr_contains'   => ToAccountNumberContains::class,
+        'amount_less'              => AmountLess::class,
+        'amount_exactly'           => AmountExactly::class,
+        'amount_more'              => AmountMore::class,
+        'description_starts'       => DescriptionStarts::class,
+        'description_ends'         => DescriptionEnds::class,
+        'description_contains'     => DescriptionContains::class,
+        'description_is'           => DescriptionIs::class,
+        'transaction_type'         => TransactionType::class,
+        'category_is'              => CategoryIs::class,
+        'budget_is'                => BudgetIs::class,
+        'tag_is'                   => TagIs::class,
+        'currency_is'              => CurrencyIs::class,
+        'has_attachments'          => HasAttachment::class,
+        'has_no_category'          => HasNoCategory::class,
+        'has_any_category'         => HasAnyCategory::class,
+        'has_no_budget'            => HasNoBudget::class,
+        'has_any_budget'           => HasAnyBudget::class,
+        'has_no_tag'               => HasNoTag::class,
+        'has_any_tag'              => HasAnyTag::class,
+        'notes_contain'            => NotesContain::class,
+        'notes_start'              => NotesStart::class,
+        'notes_end'                => NotesEnd::class,
+        'notes_are'                => NotesAre::class,
+        'no_notes'                 => NotesEmpty::class,
+        'any_notes'                => NotesAny::class,
     ],
     'rule-actions'                 => [
         'set_category'            => SetCategory::class,

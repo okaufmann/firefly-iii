@@ -151,6 +151,30 @@ class Account extends Model
     }
 
     /**
+     * @codeCoverageIgnore
+     * @return MorphMany
+     */
+    public function locations(): MorphMany
+    {
+        return $this->morphMany(Location::class, 'locatable');
+    }
+
+    /**
+     * Get the account number.
+     *
+     * @return string
+     */
+    public function getAccountNumberAttribute(): string
+    {
+        /** @var AccountMeta $metaValue */
+        $metaValue = $this->accountMeta()
+                          ->where('name', 'account_number')
+                          ->first();
+
+        return $metaValue ? $metaValue->data : '';
+    }
+
+    /**
      * @return string
      * @codeCoverageIgnore
      */

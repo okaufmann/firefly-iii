@@ -164,6 +164,7 @@ class ReportController extends Controller
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->withAccountInformation();
         $collector->setXorAccounts($accounts);
+        $collector->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::RECONCILIATION, TransactionType::TRANSFER]);
         $journals = $collector->getExtractedJournals();
 
         // loop. group by currency and by period.
@@ -186,10 +187,19 @@ class ReportController extends Controller
             // in our outgoing?
             $key    = 'spent';
             $amount = app('steam')->positive($journal['amount']);
-            if (TransactionType::DEPOSIT === $journal['transaction_type_type'] ||
-                (TransactionType::TRANSFER === $journal['transaction_type_type']
+
+            if (
+                TransactionType::DEPOSIT === $journal['transaction_type_type']
+                || // deposit = incoming
+                // transfer or opening balance, and these accounts are the destination.
+                (
+                    (
+                        TransactionType::TRANSFER === $journal['transaction_type_type']
+                        || TransactionType::OPENING_BALANCE === $journal['transaction_type_type']
+                    )
                     && in_array($journal['destination_account_id'], $ids, true)
-                )) {
+                )
+            ) {
                 $key = 'earned';
             }
             $data[$currencyId][$period][$key] = bcadd($data[$currencyId][$period][$key], $amount);

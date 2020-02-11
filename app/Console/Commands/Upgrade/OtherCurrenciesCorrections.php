@@ -1,7 +1,7 @@
 <?php
 /**
  * OtherCurrenciesCorrections.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -125,19 +125,17 @@ class OtherCurrenciesCorrections extends Command
         if (isset($this->accountCurrencies[$accountId]) && $this->accountCurrencies[$accountId] instanceof TransactionCurrency) {
             return $this->accountCurrencies[$accountId]; // @codeCoverageIgnore
         }
-        // TODO we can use getAccountCurrency() instead
-        $currencyId = (int)$this->accountRepos->getMetaValue($account, 'currency_id');
-        $result     = $this->currencyRepos->findNull($currencyId);
-        if (null === $result) {
+        $currency = $this->accountRepos->getAccountCurrency($account);
+        if (null === $currency) {
             // @codeCoverageIgnoreStart
             $this->accountCurrencies[$accountId] = 0;
 
             return null;
             // @codeCoverageIgnoreEnd
         }
-        $this->accountCurrencies[$accountId] = $result;
+        $this->accountCurrencies[$accountId] = $currency;
 
-        return $result;
+        return $currency;
 
 
     }

@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use DB;
 use FireflyIII\Factory\TagFactory;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Models\Location;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
@@ -301,9 +302,11 @@ class TagRepository implements TagRepositoryInterface
         $journals = $collector->getExtractedJournals();
 
         $sums = [
-            TransactionType::WITHDRAWAL => '0',
-            TransactionType::DEPOSIT    => '0',
-            TransactionType::TRANSFER   => '0',
+            TransactionType::WITHDRAWAL      => '0',
+            TransactionType::DEPOSIT         => '0',
+            TransactionType::TRANSFER        => '0',
+            TransactionType::RECONCILIATION  => '0',
+            TransactionType::OPENING_BALANCE => '0',
         ];
 
         /** @var array $journal */
@@ -361,6 +364,7 @@ class TagRepository implements TagRepositoryInterface
                 'tag'        => $tag->tag,
                 'id'         => $tag->id,
                 'created_at' => $tag->created_at,
+                'location' => $this->getLocation($tag),
             ];
         }
 
@@ -395,10 +399,35 @@ class TagRepository implements TagRepositoryInterface
         $tag->tag         = $data['tag'];
         $tag->date        = $data['date'];
         $tag->description = $data['description'];
-        $tag->latitude    = $data['latitude'];
-        $tag->longitude   = $data['longitude'];
-        $tag->zoomLevel   = $data['zoom_level'];
+        $tag->latitude    = null;
+        $tag->longitude   = null;
+        $tag->zoomLevel   = null;
         $tag->save();
+
+        // update, delete or create location:
+        $updateLocation = $data['update_location'] ?? false;
+
+        // location must be updated?
+        if (true === $updateLocation) {
+            // if all set to NULL, delete
+            if (null === $data['latitude'] && null === $data['longitude'] && null === $data['zoom_level']) {
+                $tag->locations()->delete();
+            }
+
+            // otherwise, update or create.
+            if (!(null === $data['latitude'] && null === $data['longitude'] && null === $data['zoom_level'])) {
+                $location = $this->getLocation($tag);
+                if (null === $location) {
+                    $location = new Location;
+                    $location->locatable()->associate($tag);
+                }
+
+                $location->latitude = $data['latitude'] ?? config('firefly.default_location.latitude');
+                $location->longitude = $data['longitude'] ?? config('firefly.default_location.longitude');
+                $location->zoom_level = $data['zoom_level'] ?? config('firefly.default_location.zoom_level');
+                $location->save();
+            }
+        }
 
         return $tag;
     }
@@ -498,5 +527,13 @@ class TagRepository implements TagRepositoryInterface
             DB::table('tag_transaction_journal')->where('tag_id', $tag->id)->delete();
             $tag->delete();
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLocation(Tag $tag): ?Location
+    {
+        return $tag->locations()->first();
     }
 }
