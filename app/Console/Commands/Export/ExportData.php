@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * ExportData.php
  * Copyright (c) 2020 james@firefly-iii.org
@@ -22,6 +23,7 @@
 namespace FireflyIII\Console\Commands\Export;
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Console\Commands\VerifiesAccessToken;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\AccountType;
@@ -32,6 +34,7 @@ use FireflyIII\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
+use League\Csv\CannotInsertRecord;
 use Log;
 
 /**
@@ -77,20 +80,11 @@ class ExportData extends Command
     private $user;
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      *
-     * @return int
      * @throws FireflyException
+     * @throws CannotInsertRecord
+     * @return int
      */
     public function handle(): int
     {
@@ -142,8 +136,12 @@ class ExportData extends Command
             $this->exportData($options, $data);
         } catch (FireflyException $e) {
             $this->error(sprintf('Could not store data: %s', $e->getMessage()));
+
+            // app('telemetry')->feature('executed-command-with-error', $this->signature);
+            return 1;
         }
 
+        // app('telemetry')->feature('executed-command', $this->signature);
         return 0;
     }
 
@@ -171,8 +169,8 @@ class ExportData extends Command
     }
 
     /**
-     * @return Collection
      * @throws FireflyException
+     * @return Collection
      */
     private function getAccountsParameter(): Collection
     {
@@ -180,7 +178,7 @@ class ExportData extends Command
         $accounts    = new Collection;
         $accountList = $this->option('accounts');
         $types       = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
-        if (null !== $accountList && '' !== (string)$accountList) {
+        if (null !== $accountList && '' !== (string) $accountList) {
             $accountIds = explode(',', $accountList);
             $accounts   = $this->accountRepository->getAccountsById($accountIds);
         }
@@ -204,8 +202,9 @@ class ExportData extends Command
     /**
      * @param string $field
      *
-     * @return Carbon
      * @throws FireflyException
+     * @throws Exception
+     * @return Carbon
      */
     private function getDateParameter(string $field): Carbon
     {
@@ -239,12 +238,13 @@ class ExportData extends Command
     }
 
     /**
-     * @return string
      * @throws FireflyException
+     *
+     * @return string
      */
     private function getExportDirectory(): string
     {
-        $directory = $this->option('export_directory');
+        $directory = (string) $this->option('export_directory');
         if (null === $directory) {
             $directory = './';
         }
@@ -256,8 +256,8 @@ class ExportData extends Command
     }
 
     /**
-     * @return array
      * @throws FireflyException
+     * @return array
      */
     private function parseOptions(): array
     {

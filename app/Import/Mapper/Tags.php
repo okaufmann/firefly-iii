@@ -1,7 +1,7 @@
 <?php
 /**
  * Tags.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -27,6 +27,9 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 
 /**
  * Class Tags.
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class Tags implements MapperInterface
 {
@@ -44,11 +47,11 @@ class Tags implements MapperInterface
 
         /** @var Tag $tag */
         foreach ($result as $tag) {
-            $tagId        = (int)$tag->id;
+            $tagId        = (int) $tag->id;
             $list[$tagId] = $tag->tag;
         }
         asort($list);
-        $list = [0 => (string)trans('import.map_do_not_map')] + $list;
+        $list = [0 => (string) trans('import.map_do_not_map')] + $list;
 
         return $list;
     }

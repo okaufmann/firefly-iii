@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
 /**
  * IsTransferAccount.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -35,7 +36,7 @@ class IsTransferAccount implements Rule
     /**
      * Get the validation error message.
      *
-     * @return string|array
+     * @return string
      */
     public function message(): string
     {
@@ -58,14 +59,14 @@ class IsTransferAccount implements Rule
         $validator->setTransactionType(TransactionType::TRANSFER);
         $validator->setUser(auth()->user());
 
-        $validAccount = $validator->validateSource(null, (string)$value);
+        $validAccount = $validator->validateSource(null, (string)$value, null);
         if (true === $validAccount) {
             Log::debug('Found account based on name. Return true.');
 
             // found by name, use repos to return.
             return true;
         }
-        $validAccount = $validator->validateSource((int)$value, null);
+        $validAccount = $validator->validateSource((int)$value, null, null);
         Log::debug(sprintf('Search by id (%d), result is %s.', (int)$value, var_export($validAccount, true)));
 
         return !(false === $validAccount);

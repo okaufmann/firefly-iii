@@ -2,7 +2,7 @@
 
 /**
  * firefly.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -58,7 +58,8 @@ return [
     'no_rules_for_bill'                          => '此帳單未設定相關的規則。',
     'go_to_asset_accounts'                       => '檢視您的資產帳戶',
     'go_to_budgets'                              => '前往您的預算',
-    'clone_instructions'                         => '若要複製交易，請在編輯畫面中勾取 "另存新檔" 核選方塊',
+    'new_clone_instructions'                     => 'This button will automatically clone the transaction and set the date to today. Are you sure?',
+    'clones_journal_x'                           => 'This transaction is a clone of ":description" (#:id)',
     'go_to_categories'                           => '前往您的分類',
     'go_to_bills'                                => '前往您的帳單',
     'go_to_expense_accounts'                     => '查看您的支出帳戶',
@@ -94,7 +95,7 @@ return [
     'two_factor_forgot'                          => '啥兩步驟我忘了。',
     'two_factor_lost_header'                     => '遺失您的兩步驟驗證嗎？',
     'two_factor_lost_intro'                      => 'If you lost your backup codes as well, you have bad luck. This is not something you can fix from the web interface. You have two choices.',
-    'two_factor_lost_fix_self'                   => 'If you run your own instance of Firefly III, check the logs in <code>storage/logs</code> for instructions, or run <code>docker logs &lt;container_id&gt;</code> to see the instructions (refresh this page).',
+    'two_factor_lost_fix_self'                   => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/faq/other#i-lost-my-two-factor-authentication-codes-and-backup-codes">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                  => '否則，請寄送電子郵件至網站擁有者 <a href="mailto::site_owner">:site_owner</a> 要求重設您的兩步驟驗證。',
     'mfa_backup_code'                            => 'You have used a backup code to login to Firefly III. It can\'t be used again, so cross it from your list.',
     'pref_two_factor_new_backup_codes'           => 'Get new backup codes',
@@ -103,7 +104,7 @@ return [
     'warning_much_data'                          => '載入 :days 天的資料或會相當耗時。',
     'registered'                                 => '您已成功註冊！',
     'Default asset account'                      => '預設資產帳戶',
-    'no_budget_pointer'                          => '您似乎尚無預算，您可至 <a href=":link">預算</a>頁面來建立預算。預算可協助您追蹤支出。',
+    'no_budget_pointer'                          => 'You seem to have no budgets yet. You should create some on the <a href="/budgets">budgets</a>-page. Budgets can help you keep track of expenses.',
     'Savings account'                            => '儲蓄帳戶',
     'Credit card'                                => '信用卡',
     'source_accounts'                            => '來源帳戶',
@@ -204,6 +205,7 @@ return [
     'active_exp_bills_only'                      => 'active and expected bills only',
     'average_per_bill'                           => '每張帳單的平均數',
     'expected_total'                             => '預期總數',
+    'reconciliation_account_name'                => ':name reconciliation',
     // API access
     'authorization_request'                      => 'Firefly III :version 版授權請求',
     'authorization_request_intro'                => '<strong>:client</strong> 正要求權限存取您的財務管理，您是否願意授權 <strong>:client</strong> 存取這些紀錄？',
@@ -214,11 +216,15 @@ return [
     'name_in_currency'                           => ':name 於 :currency',
     'paid_in_currency'                           => '以 :currency 支付',
     'unpaid_in_currency'                         => '未以 :currency 支付',
+    'is_alpha_warning'                           => 'You are running an ALPHA version. Be wary of bugs and issues.',
+    'is_beta_warning'                            => 'You are running an BETA version. Be wary of bugs and issues.',
+    'all_destination_accounts'                   => 'Destination accounts',
+    'all_source_accounts'                        => 'Source accounts',
 
     // check for updates:
     'update_check_title'                         => '檢查更新',
     'admin_update_check_title'                   => '自動檢查更新',
-    'admin_update_check_explain'                 => 'Firefly III 可以自動檢查更新。啟用此設定時，將會自動連接 Github 查看是否有新版本可用，並在可用時顯示一則通知。您可使用右方按鈕測試通知功能，並於下方表示您是否希望 Firefly III 檢查更新。',
+    'admin_update_check_explain'                 => 'Firefly III can check for updates automatically. When you enable this setting, it will contact the Firefly III update server to see if a new version of Firefly III is available. When it is, you will get a notification. You can test this notification using the button on the right. Please indicate below if you want Firefly III to check for updates.',
     'check_for_updates_permission'               => 'Firefly III 可以自動檢查更新，但需要您先許可。請前往 <a href=":link">系統管理</a> 表示您是否想啟用此功能。',
     'updates_ask_me_later'                       => '稍後再詢問',
     'updates_do_not_check'                       => '不檢查更新',
@@ -231,7 +237,9 @@ return [
     'update_version_alpha'                       => 'This version is a ALPHA version. You may run into issues.',
     'update_current_version_alert'               => 'You are running :version, which is the latest available release.',
     'update_newer_version_alert'                 => 'You are running :your_version, which is newer than the latest release, :new_version.',
-    'update_check_error'                         => '檢查更新時發生一個錯誤，請檢閱日誌檔。',
+    'update_check_error'                         => 'An error occurred while checking for updates: :error',
+    'unknown_error'                              => 'Unknown error. Sorry about that.',
+    'just_new_release'                           => 'A new version is available! Version :version was released :date. This release is very fresh. Wait a few days for the new release to stabilize.',
     'admin_update_channel_title'                 => 'Update channel',
     'admin_update_channel_explain'               => 'Firefly III has three update "channels" which determine how ahead of the curve you are in terms of features, enhancements and bugs. Use the "beta" channel if you\'re adventurous and the "alpha" when you like to live life dangerously.',
     'update_channel_stable'                      => 'Stable. Everything should work as expected.',
@@ -299,6 +307,9 @@ return [
     'created_new_rule_group'                     => '新規則群組 ":title" 已儲存！',
     'updated_rule_group'                         => '已成功更新 ":title" 規則群組。',
     'edit_rule_group'                            => '編輯 ":title" 規則群組',
+    'duplicate_rule'                             => 'Duplicate rule ":title"',
+    'rule_copy_of'                               => 'Copy of ":title"',
+    'duplicated_rule'                            => 'Duplicated rule ":title" into ":newTitle"',
     'delete_rule_group'                          => '刪除 ":title" 規則群組',
     'deleted_rule_group'                         => '規則群組 ":title" 已刪除',
     'update_rule_group'                          => '更新規則群組',
@@ -309,6 +320,7 @@ return [
     'make_new_rule'                              => '在規則群組 ":title" 中建立新規則',
     'make_new_rule_no_group'                     => '建立新規則',
     'instructions_rule_from_bill'                => '為了媒合交易至您的新帳單 ":name"，Firefly III 可以建立一個針對您儲存的每一筆交易且自動啟動的規則。請驗證下方的資訊並儲存規則，讓 Firefly III 自動媒合交易至您的新帳單。',
+    'instructions_rule_from_journal'             => 'Create a rule based on one of your transactions. Complement or submit the form below.',
     'rule_is_strict'                             => '嚴謹規則',
     'rule_is_not_strict'                         => '非嚴謹規則',
     'rule_help_stop_processing'                  => '勾選此核選方塊時，將不會執行此群組中的後續規則。',
@@ -493,6 +505,9 @@ return [
     'new_rule_for_bill_title'         => '供帳單 ":name" 的規則',
     'new_rule_for_bill_description'   => '此規則標記給帳單 ":name" 的交易。',
 
+    'new_rule_for_journal_title'         => 'Rule based on transaction ":description"',
+    'new_rule_for_journal_description'   => 'This rule is based on transaction ":description". It will match transactions that are exactly the same.',
+
     // tags
     'store_new_tag'                   => '儲存新標籤',
     'update_tag'                      => '更新標籤',
@@ -508,8 +523,10 @@ return [
     'delete_all_selected_tags'        => 'Delete all selected tags',
     'select_tags_to_delete'           => 'Don\'t forget to select some tags.',
     'deleted_x_tags'                  => 'Deleted :count tag(s).',
+    'create_rule_from_transaction'    => 'Create rule based on transaction',
 
     // preferences
+    'equal_to_language'               => '(equal to language)',
     'pref_home_screen_accounts'       => '主畫面帳戶',
     'pref_home_screen_accounts_help'  => '哪些帳戶應該顯示在主頁面上？',
     'pref_view_range'                 => '檢視範圍',
@@ -521,7 +538,9 @@ return [
     'pref_6M'                         => '6個月',
     'pref_1Y'                         => '1年',
     'pref_languages'                  => '語言',
+    'pref_locale'                     => 'Locale settings',
     'pref_languages_help'             => 'Firefly III 支援多種語言，您想顯示哪一種？',
+    'pref_locale_help'                => 'Firefly III allows you to set other local settings, like how currencies, numbers and dates are formatted. Entries in this list may not be supported by your system. Firefly III doesn\'t have the correct date settings for every locale; contact me for improvements.',
     'pref_custom_fiscal_year'         => '財政年度設定',
     'pref_custom_fiscal_year_label'   => '已啟用',
     'pref_custom_fiscal_year_help'    => '有些國家/地區採用的會計年度有別於每年 1 月 1 日至 12 月 31 日，您可開啟此功能並指定財政年度的起迄日。',
@@ -700,6 +719,7 @@ return [
     'update_currency'                           => '更新貨幣',
     'new_default_currency'                      => ':name 現已為預設貨幣',
     'cannot_delete_currency'                    => '因為仍在使用中，無法刪除 :name 。',
+    'cannot_delete_fallback_currency'           => ':name is the system fallback currency and can\'t be deleted.',
     'cannot_disable_currency_journals'          => 'Cannot disable :name because transactions are still using it.',
     'cannot_disable_currency_last_left'         => 'Cannot disable :name because it is the last enabled currency.',
     'cannot_disable_currency_account_meta'      => 'Cannot disable :name because it is used in asset accounts.',
@@ -771,6 +791,18 @@ return [
     'over_budget_warn'                          => '<i class="fa fa-money"></i> 您通常每日預算 :amount。這回卻是每日 :over_amount。您確定嗎？',
     'transferred_in'                            => '轉帳 (轉入)',
     'transferred_away'                          => '轉帳 (轉出)',
+    'auto_budget_none'                          => 'No auto-budget',
+    'auto_budget_reset'                         => 'Set a fixed amount every period',
+    'auto_budget_rollover'                      => 'Add an amount every period',
+    'auto_budget_period_daily'                  => 'Daily',
+    'auto_budget_period_weekly'                 => 'Weekly',
+    'auto_budget_period_monthly'                => 'Monthly',
+    'auto_budget_period_quarterly'              => 'Quarterly',
+    'auto_budget_period_half_year'              => 'Every half year',
+    'auto_budget_period_yearly'                 => 'Yearly',
+    'auto_budget_help'                          => 'You can read more about this feature in the help. Click the top-right (?) icon.',
+    'auto_budget_reset_icon'                    => 'This budget will be set periodically',
+    'auto_budget_rollover_icon'                 => 'The budget amount will increase periodically',
 
     // bills:
     'match_between_amounts'                     => '帳單配合自 :low 至 :high 的交易。',
@@ -800,6 +832,7 @@ return [
     'skips_over'                                => '略過',
     'bill_store_error'                          => '儲存您的新帳單時發生錯誤，請檢查日誌檔',
     'list_inactive_rule'                        => '未啟用的規則',
+    'bill_edit_rules'                           => 'Firefly III will attempt to edit the :count rule(s) related to this bill as well. If you\'ve edited these rule(s) yourself however, Firefly III won\'t change anything.',
 
     // accounts:
     'inactive_account_link'                     => 'You have :count inactive (archived) accounts, which you can view on this separate page.',
@@ -932,6 +965,7 @@ return [
     'deleted_withdrawal'                        => '已成功刪除提款 “:description”',
     'deleted_deposit'                           => '已成功刪除存款 “:description”',
     'deleted_transfer'                          => '已成功刪除轉帳 “:description”',
+    'deleted_reconciliation'                    => 'Successfully deleted reconciliation transaction ":description"',
     'stored_journal'                            => '已成功建立新交易 “:description”',
     'stored_journal_no_descr'                   => '已成功建立新交易',
     'updated_journal_no_descr'                  => '已成功更新您的交易',
@@ -957,6 +991,7 @@ return [
     'no_budget'                                 => '(無預算)',
     'account_per_budget'                        => 'Account per budget',
     'account_per_category'                      => 'Account per category',
+    'create_new_object'                         => 'Create',
     'empty'                                     => '(empty)',
     'all_other_budgets'                         => '(all other budgets)',
     'all_other_accounts'                        => '(all other accounts)',
@@ -1091,7 +1126,8 @@ return [
     'errors'                                    => '錯誤',
     'debt_start_date'                           => '負債開始日期',
     'debt_start_amount'                         => '負債開始金額',
-    'debt_start_amount_help'                    => '如欠債未還，建議您輸入負數，以便在您的資產淨值反映。如有別人的欠款，反之亦然。請參見說明頁面中的詳解。',
+    'debt_start_amount_help'                    => 'It\'s always best to set this value to a negative amount. Read the help pages (top right (?)-icon) for more information.',
+    'interest_period_help'                      => 'This field is purely cosmetic and won\'t be calculated for you. As it turns out banks are very sneaky so Firefly III never gets it right.',
     'store_new_liabilities_account'             => '儲存新債務',
     'edit_liabilities_account'                  => '編輯債務 “:name”',
 
@@ -1294,7 +1330,7 @@ return [
     'store_configuration'              => '儲存設定',
     'single_user_administration'       => ':email 的使用者管理後臺',
     'edit_user'                        => '編輯使用者 :email',
-    'hidden_fields_preferences'        => '您可在 <a href=":link">設定</a> 啟用更多交易選項。',
+    'hidden_fields_preferences'        => 'You can enable more transaction options in your <a href="/preferences">settings</a>.',
     'user_data_information'            => '使用者資料',
     'user_information'                 => '使用者資訊',
     'total_size'                       => '總大小',
@@ -1318,14 +1354,15 @@ return [
     'send_test_email_text'             => '要檢查您的安裝是否有能力發送電子郵件，請按此按鈕。您不會在此看到錯誤 (如果有的話)，<strong>日誌檔才會反應一切錯誤</strong>。您可依照自己意願點選此按鈕，程式無管控垃圾郵件，測試訊息將會被寄發至 <code>:email</code> 並在短時間內送達。',
     'send_message'                     => '發送消息',
     'send_test_triggered'              => '測試已觸發，請檢視您的收件匣與日誌檔。',
+    'give_admin_careful'               => 'Users who are given admin rights can take away yours. Be careful.',
 
     'split_transaction_title'               => '拆分交易的描述',
     'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'split_title_help'                      => '若您建立一筆拆分交易，須有一個有關交易所有拆分的整體描述。',
     'transaction_information'               => '交易資訊',
-    'you_create_transfer'                   => '您正在建立一筆 <strong>轉帳</strong>。',
-    'you_create_withdrawal'                 => '您正在建立一筆 <strong>提款</strong>。',
-    'you_create_deposit'                    => '您正在建立一筆 <strong>存款</strong>。',
+    'you_create_transfer'                   => 'You\'re creating a transfer.',
+    'you_create_withdrawal'                 => 'You\'re creating a withdrawal.',
+    'you_create_deposit'                    => 'You\'re creating a deposit.',
 
 
     // links
@@ -1382,6 +1419,13 @@ return [
     '(partially) refunds_outward'           => '(部分) 退還',
     '(partially) pays for_outward'          => '(部分) 支付',
     '(partially) reimburses_outward'        => '(部分) 核銷',
+    'is (partially) refunded by'            => 'is (partially) refunded by',
+    'is (partially) paid for by'            => 'is (partially) paid for by',
+    'is (partially) reimbursed by'          => 'is (partially) reimbursed by',
+    'relates to'                            => 'relates to',
+    '(partially) refunds'                   => '(partially) refunds',
+    '(partially) pays for'                  => '(partially) pays for',
+    '(partially) reimburses'                => '(partially) reimburses',
 
     // split a transaction:
     'splits'                                => '拆分',
@@ -1406,7 +1450,13 @@ return [
     'import_index_title'                    => '將交易記錄導入',
     'import_data'                           => '匯入資料',
     'import_transactions'                   => '匯入交易',
-
+    'import_tools_title'                    => 'Import tools',
+    'tools_index_intro'                     => 'Several tools exist to import data into Firefly III. Check them out below. For more information, check out <a href="https://docs.firefly-iii.org/importing-data/introduction">this page</a>.',
+    'firefly_iii_csv_importer_name'         => 'Firefly III CSV importer',
+    'firefly_iii_bunq_importer_name'        => 'Firefly III bunq 🌈 importer',
+    'firefly_iii_ynab_importer_name'        => 'Firefly III YNAB importer',
+    'ludo_revolut_importer_name'            => 'Ludo444\'s Revolut importer',
+    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => '當您在 Sandstorm.io 環境使用 Firefly III 時，此功能不可用。',
 
@@ -1541,4 +1591,27 @@ return [
     'box_net_worth_in_currency'          => '淨值 (:currency)',
     'box_spend_per_day'                  => '每日可供花費: :amount',
 
+    // telemetry
+    'telemetry_admin_index'              => 'Telemetry',
+    'telemetry_intro'                    => 'Firefly III supports the collection and sending of usage telemetry. This means that Firefly III will try to collect info on how you use Firefly III, and send it to the developer of Firefly III. This is always opt-in, and is disabled by default. Firefly III will never collect or send financial information. Firefly III will also never collect or send financial meta-information, like sums or calculations. The collected data will never be made publicly accessible.',
+    'telemetry_what_collected'           => 'What Firefly III collects and sends exactly is different for each version. You are running version :version. What Firefly III collects in version :version is something you can read in the help pages. Click the (?)-icon in the top-right corner <a href="https://docs.firefly-iii.org/support/telemetry">or visit the documentation page</a>.',
+    'telemetry_is_enabled_yes_no'        => 'Is Firefly III telemetry enabled?',
+    'telemetry_disabled_no'              => 'Telemetry is NOT enabled',
+    'telemetry_disabled_yes'             => 'Telemetry is enabled',
+    'telemetry_enabled_now_what'         => 'You can disable telemetry the same way you enabled it: in your .env file or in your Docker configuration.',
+    'telemetry_disabled_now_what'        => 'If you want to, you can enable telemetry in your .env file or in your Docker configuration.',
+    'telemetry_collected_info'           => 'Collected information',
+    'no_telemetry_present'               => 'Firefly III has collected zero telemetry records.',
+    'records_telemetry_present'          => 'Firefly III has collected :count telemetry record(s).',
+    'telemetry_button_view'              => 'View telemetry',
+    'telemetry_button_delete'            => 'Delete all telemetry',
+    'telemetry_admin_overview'           => 'Telemetry overview',
+    'telemetry_back_to_index'            => 'Back to telemetry index',
+    'not_yet_submitted'                  => 'Not yet submitted',
+    'telemetry_type_feature'             => 'Feature flag',
+    'telemetry_submit_all'               => 'Submit records',
+    'telemetry_delete_submitted_records' => 'Delete submitted records',
+    'telemetry_submission_executed'      => 'Records have been submitted. Check your log files for more info.',
+    'telemetry_all_deleted'              => 'All telemetry records have been deleted.',
+    'telemetry_submitted_deleted'        => 'All submitted telemetry records have been deleted.'
 ];

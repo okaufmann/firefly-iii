@@ -1,6 +1,6 @@
 <!--
   - Clients.vue
-  - Copyright (c) 2019 thegrumpydictator@gmail.com
+  - Copyright (c) 2019 james@firefly-iii.org
   -
   - This file is part of Firefly III (https://github.com/firefly-iii).
   -
@@ -45,13 +45,14 @@
                 </p>
 
                 <table class="table table-borderless m-b-none" v-if="clients.length > 0">
+                    <caption>Clients</caption>
                     <thead>
                         <tr>
-                            <th>Client ID</th>
-                            <th>Name</th>
-                            <th>Secret</th>
-                            <th></th>
-                            <th></th>
+                            <th scope="col">Client ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Secret</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
                         </tr>
                     </thead>
 

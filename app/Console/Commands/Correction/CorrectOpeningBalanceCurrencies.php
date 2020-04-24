@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * CorrectOpeningBalanceCurrencies.php
  * Copyright (c) 2020 james@firefly-iii.org
@@ -76,6 +77,8 @@ class CorrectOpeningBalanceCurrencies extends Command
             $this->info('There was nothing to fix in the opening balance transactions.');
         }
 
+        // app('telemetry')->feature('executed-command', $this->signature);
+
         return 0;
     }
 
@@ -111,15 +114,12 @@ class CorrectOpeningBalanceCurrencies extends Command
      */
     private function getAccount(TransactionJournal $journal): ?Account
     {
-        $excluded     = [];
         $transactions = $journal->transactions()->with(['account', 'account.accountType'])->get();
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
             $account = $transaction->account;
-            if (null !== $account) {
-                if (AccountType::INITIAL_BALANCE !== $account->accountType->type) {
-                    return $account;
-                }
+            if ((null !== $account) && AccountType::INITIAL_BALANCE !== $account->accountType->type) {
+                return $account;
             }
         }
 

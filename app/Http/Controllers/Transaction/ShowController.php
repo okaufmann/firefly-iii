@@ -1,7 +1,7 @@
 <?php
 /**
  * ShowController.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -23,14 +23,17 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
-
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Transformers\TransactionGroupTransformer;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -53,7 +56,7 @@ class ShowController extends Controller
             function ($request, $next) {
                 $this->repository = app(TransactionGroupRepositoryInterface::class);
 
-                app('view')->share('title', (string)trans('firefly.transactions'));
+                app('view')->share('title', (string) trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-exchange');
 
                 return $next($request);
@@ -64,14 +67,30 @@ class ShowController extends Controller
     /**
      * @param TransactionGroup $transactionGroup
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return JsonResponse
+     */
+    public function debugShow(TransactionGroup $transactionGroup)
+    {
+        return response()->json($this->repository->expandGroup($transactionGroup));
+    }
+
+    /**
+     * @param TransactionGroup $transactionGroup
+     *
+     * @throws FireflyException
+     * @return Factory|View
      */
     public function show(Request $request, TransactionGroup $transactionGroup)
     {
         /** @var TransactionJournal $first */
-        $first    = $transactionGroup->transactionJournals->first();
-        $splits   = $transactionGroup->transactionJournals->count();
-        $type     = $first->transactionType->type;
+        $first  = $transactionGroup->transactionJournals()->first(['transaction_journals.*']);
+        $splits = $transactionGroup->transactionJournals()->count();
+
+        if (null === $first) {
+            throw new FireflyException('This transaction is broken :(.');
+        }
+
+        $type     = (string) trans(sprintf('firefly.%s', $first->transactionType->type));
         $title    = 1 === $splits ? $first->description : $transactionGroup->title;
         $subTitle = sprintf('%s: "%s"', $type, $title);
 
@@ -89,6 +108,7 @@ class ShowController extends Controller
             if (!Str::contains($transaction['notes'], $search)) {
                 $groupArray['transactions'][$index]['notes'] = e($transaction['notes']);
             }
+            $groupArray['transactions'][$index]['tags'] = $this->repository->getTagObjects($groupArray['transactions'][$index]['transaction_journal_id']);
         }
 
         $events      = $this->repository->getPiggyEvents($transactionGroup);
@@ -96,15 +116,25 @@ class ShowController extends Controller
         $links       = $this->repository->getLinks($transactionGroup);
 
         return view(
-            'transactions.show', compact(
-                                   'transactionGroup', 'amounts', 'first', 'type', 'subTitle', 'splits', 'groupArray',
-                                   'events', 'attachments', 'links'
-                               )
+            'transactions.show',
+            compact(
+                'transactionGroup',
+                'amounts',
+                'first',
+                'type',
+                'subTitle',
+                'splits',
+                'groupArray',
+                'events',
+                'attachments',
+                'links'
+            )
         );
     }
 
     /**
      * @param array $group
+     *
      * @return array
      */
     private function getAmounts(array $group): array

@@ -2,7 +2,7 @@
 
 /**
  * validation.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -36,18 +36,18 @@ return [
     'file_attached'                  => 'Fichier ":name" téléchargé avec succès.',
     'must_exist'                     => 'L\'ID dans le champ :attribute n\'existe pas dans la base de données.',
     'all_accounts_equal'             => 'Tous les comptes dans ce champ doivent être égaux.',
-    'group_title_mandatory'          => 'Un titre de groupe est obligatoire lorsqu\'il y a plus d\'une transaction.',
+    'group_title_mandatory'          => 'Un titre de groupe est obligatoire lorsqu\'il y a plus d\'une opération.',
     'transaction_types_equal'        => 'Toutes les ventilations doivent être de même type.',
-    'invalid_transaction_type'       => 'Type de transaction non valide.',
+    'invalid_transaction_type'       => 'Type d\'opération non valide.',
     'invalid_selection'              => 'Votre sélection est invalide.',
     'belongs_user'                   => 'Cette valeur n\'est pas valide pour ce champ.',
-    'at_least_one_transaction'       => 'Besoin d\'au moins une transaction.',
+    'at_least_one_transaction'       => 'Besoin d\'au moins une opération.',
     'at_least_one_repetition'        => 'Besoin d\'au moins une répétition.',
     'require_repeat_until'           => 'Besoin d’un certain nombre de répétitions ou d\'une date de fin (repeat_until). Pas les deux.',
     'require_currency_info'          => 'Le contenu de ce champ n\'est pas valide sans informations sur la devise.',
     'not_transfer_account'           => 'Ce compte n\'est pas un compte qui peut être utilisé pour les transferts.',
     'require_currency_amount'        => 'Le contenu de ce champ est invalide sans informations sur le montant étranger.',
-    'equal_description'              => 'La description de la transaction ne doit pas être identique à la description globale.',
+    'equal_description'              => 'La description de l\'opération ne doit pas être identique à la description globale.',
     'file_invalid_mime'              => 'Le fichier ":name" est du type ":mime" ce qui n\'est pas accepté pour un nouvel envoi.',
     'file_too_large'                 => 'Le fichier ":name" est trop grand.',
     'belongs_to_user'                => 'La valeur de :attribute est inconnue.',
@@ -130,6 +130,7 @@ return [
     'amount_zero'                    => 'Le montant total ne peut pas être zéro.',
     'current_target_amount'          => 'Le montant actuel doit être inférieur au montant cible.',
     'unique_piggy_bank_for_user'     => 'Le nom de la tirelire doit être unique.',
+
     'secure_password'                => 'Ce n\'est pas un mot de passe sécurisé. Veuillez essayez à nouveau. Pour plus d\'informations, visitez https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Type de répétition non valide pour des opérations périodiques.',
     'valid_recurrence_rep_moment'    => 'Période de répétition non valide pour ce type de répétition.',
@@ -148,7 +149,7 @@ return [
         'amount_max'              => 'montant maximum',
         'title'                   => 'titre',
         'tag'                     => 'tag',
-        'transaction_description' => 'description de la transaction',
+        'transaction_description' => 'description de l\'opération',
         'rule-action-value.1'     => 'valeur d\'action de la règle #1',
         'rule-action-value.2'     => 'valeur d\'action de la règle #2',
         'rule-action-value.3'     => 'valeur d\'action de la règle #3',
@@ -197,7 +198,11 @@ return [
     'generic_invalid_destination' => 'Vous ne pouvez pas utiliser ce compte comme compte de destination.',
 
     'gte.numeric' => 'La valeur de :attribute doit être supérieure ou égale à :value.',
-    'gte.file'    => 'The :attribute must be greater than or equal to :value kilobytes.',
-    'gte.string'  => 'The :attribute must be greater than or equal to :value characters.',
-    'gte.array'   => 'The :attribute must have :value items or more.',
+    'gte.file'    => 'L\'attribut :attribute doit contenir au moins :value kilo-octets.',
+    'gte.string'  => 'Le texte :attribute doit contenir au moins :value caractères.',
+    'gte.array'   => 'L\'attribut :attribute doit avoir :value éléments ou plus.',
+
+    'amount_required_for_auto_budget' => 'Le montant est requis.',
+    'auto_budget_amount_positive'     => 'Le montant doit être supérieur à zéro.',
+    'auto_budget_period_mandatory' => 'La période du budget automatique est un champ obligatoire.',
 ];

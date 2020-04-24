@@ -1,7 +1,7 @@
 <?php
 /**
  * UpdatedGroupEventHandler.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Events;
 
 use FireflyIII\Events\UpdatedTransactionGroup;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Engine\RuleEngine;
 
@@ -35,16 +34,22 @@ class UpdatedGroupEventHandler
     /**
      * This method will check all the rules when a journal is updated.
      *
-     * @param UpdatedTransactionGroup $updatedJournalEvent
+     * @param UpdatedTransactionGroup $updatedGroupEvent
      */
-    public function processRules(UpdatedTransactionGroup $updatedJournalEvent): void
+    public function processRules(UpdatedTransactionGroup $updatedGroupEvent): void
     {
+        if (false === $updatedGroupEvent->applyRules) {
+            Log::info(sprintf('Will not run rules on group #%d', $updatedGroupEvent->transactionGroup->id));
+
+            return;
+        }
+
         /** @var RuleEngine $ruleEngine */
         $ruleEngine = app(RuleEngine::class);
-        $ruleEngine->setUser($updatedJournalEvent->transactionGroup->user);
+        $ruleEngine->setUser($updatedGroupEvent->transactionGroup->user);
         $ruleEngine->setAllRules(true);
         $ruleEngine->setTriggerMode(RuleEngine::TRIGGER_UPDATE);
-        $journals = $updatedJournalEvent->transactionGroup->transactionJournals;
+        $journals = $updatedGroupEvent->transactionGroup->transactionJournals;
 
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {

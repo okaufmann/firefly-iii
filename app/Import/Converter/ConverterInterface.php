@@ -1,7 +1,7 @@
 <?php
 /**
  * ConverterInterface.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -24,15 +24,19 @@ namespace FireflyIII\Import\Converter;
 
 /**
  * Interface ConverterInterface.
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 interface ConverterInterface
 {
     /**
      * Convert a value.
      *
+     * @param $value
+     *
      * @return mixed
      *
-     * @param $value
      */
     public function convert($value);
 }

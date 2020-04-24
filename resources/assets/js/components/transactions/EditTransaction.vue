@@ -1,6 +1,6 @@
 <!--
   - EditTransaction.vue
-  - Copyright (c) 2019 thegrumpydictator@gmail.com
+  - Copyright (c) 2019 james@firefly-iii.org
   -
   - This file is part of Firefly III (https://github.com/firefly-iii).
   -
@@ -41,24 +41,6 @@
                 </div>
             </div>
         </div>
-        <div class="row" v-if="transactions.length > 1">
-            <div class="col-lg-6">
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">
-                            {{ $t('firefly.split_transaction_title')}}
-                        </h3>
-                    </div>
-                    <div class="box-body">
-                        <group-description
-                                :error="group_title_errors"
-                                v-model="group_title"
-                        ></group-description>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div>
             <div class="row" v-for="(transaction, index) in transactions">
                 <div class="col-lg-12">
@@ -183,14 +165,31 @@
                             </div>
                         </div>
                         <div class="box-footer" v-if="transactions.length-1 === index && transactionType.toLowerCase() !== 'reconciliation'">
-                            <button class="btn btn-primary" type="button" @click="addTransaction">{{ $t('firefly.add_another_split') }}</button>
+                            <button class="btn btn-default" type="button" @click="addTransaction">{{ $t('firefly.add_another_split') }}</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="row" v-if="transactions.length > 1">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            {{ $t('firefly.split_transaction_title')}}
+                        </h3>
+                    </div>
+                    <div class="box-body">
+                        <group-description
+                                :error="group_title_errors"
+                                v-model="group_title"
+                        ></group-description>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="row">
-            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <div class="box">
                     <div class="box-header with-border">
                         <h3 class="box-title">
@@ -567,6 +566,13 @@
                 if (0 === sourceId) {
                     sourceId = null;
                 }
+
+                // parse amount if has exactly one comma:
+                // solves issues with some locales.
+                if (1 === (String(row.amount).match(/\,/g) || []).length) {
+                    row.amount = String(row.amount).replace(',', '.');
+                }
+
                 currentArray =
                     {
                         transaction_journal_id: row.transaction_journal_id,
@@ -621,7 +627,7 @@
                 }
                 const data = this.convertData();
 
-                let button = $(e.currentTarget);
+                let button = $('#submitButton');
                 button.prop("disabled", true);
 
                 //axios.put(uri, data)
@@ -642,7 +648,7 @@
                 if (e) {
                     e.preventDefault();
                 }
-                button.prop("disabled", false);
+                button.removeAttr('disabled');
             },
 
             redirectUser(groupId) {
@@ -737,8 +743,8 @@
                         const uri = './api/v1/attachments';
                         const data = {
                             filename: fileData[key].name,
-                            model: 'TransactionJournal',
-                            model_id: fileData[key].journal,
+                            attachable_type: 'TransactionJournal',
+                            attachable_id: fileData[key].journal,
                         };
                         axios.post(uri, data)
                             .then(response => {

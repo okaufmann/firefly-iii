@@ -1,7 +1,7 @@
 <?php
 /**
  * General.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -147,7 +147,7 @@ class General extends AbstractExtension
             'balance',
             static function (?Account $account): string {
                 if (null === $account) {
-                    return 'NULL';
+                    return '0';
                 }
                 /** @var Carbon $date */
                 $date = session('end', Carbon::now()->endOfMonth());

@@ -1,7 +1,7 @@
 <?php
 /**
  * FireflyConfig.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -136,7 +136,8 @@ class FireflyConfig
 
     /**
      * @param string $name
-     * @param        $value
+     * @param $value
+     * @param int|string|true $value
      *
      * @return Configuration
      */

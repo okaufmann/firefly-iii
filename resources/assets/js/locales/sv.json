@@ -8,7 +8,9 @@
         "errors_submission": "N\u00e5got fel uppstod med inskickningen. V\u00e4nligen kontrollera felen nedan.",
         "split": "Dela",
         "transaction_journal_information": "Transaktionsinformation",
+        "no_budget_pointer": "You seem to have no budgets yet. You should create some on the <a href=\"\/budgets\">budgets<\/a>-page. Budgets can help you keep track of expenses.",
         "source_account": "Fr\u00e5n konto",
+        "hidden_fields_preferences": "You can enable more transaction options in your <a href=\"\/preferences\">settings<\/a>.",
         "destination_account": "Till konto",
         "add_another_split": "L\u00e4gga till en annan delning",
         "submission": "Inskickning",
@@ -32,7 +34,10 @@
         "split_transaction_title_help": "If you create a split transaction, there must be a global description for all splits of the transaction.",
         "destination_account_reconciliation": "Du kan inte redigera destinationskontot f\u00f6r en avst\u00e4mningstransaktion.",
         "source_account_reconciliation": "Du kan inte redigera k\u00e4llkontot f\u00f6r en avst\u00e4mningstransaktion.",
-        "budget": "Budget"
+        "budget": "Budget",
+        "you_create_withdrawal": "You're creating a withdrawal.",
+        "you_create_transfer": "You're creating a transfer.",
+        "you_create_deposit": "You're creating a deposit."
     },
     "form": {
         "interest_date": "R\u00e4ntedatum",

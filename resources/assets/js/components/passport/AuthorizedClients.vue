@@ -1,6 +1,6 @@
 <!--
   - AuthorizedClients.vue
-  - Copyright (c) 2019 thegrumpydictator@gmail.com
+  - Copyright (c) 2019 james@firefly-iii.org
   -
   - This file is part of Firefly III (https://github.com/firefly-iii).
   -
@@ -41,11 +41,12 @@
                 <div class="box-body">
                     <!-- Authorized Tokens -->
                     <table class="table table-borderless m-b-none">
+                        <caption>Authorized clients</caption>
                         <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Scopes</th>
-                            <th></th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Scopes</th>
+                            <th scope="col"></th>
                         </tr>
                         </thead>
 

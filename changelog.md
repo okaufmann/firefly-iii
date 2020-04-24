@@ -2,6 +2,167 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.2.3 (API 1.1.0)] - 2020-04-22
+
+## [3.4.2] - 2015-05-25
+### Added
+- Support for British English! 🇬🇧
+- You can set your locale *and* your language now.
+
+### Changed
+- [Issue 3270](https://github.com/firefly-iii/firefly-iii/issues/3270) Wrong average in budget table.
+
+### Fixed
+- [Issue 3264](https://github.com/firefly-iii/firefly-iii/issues/3264) Error when exporting recurring transactions
+- [Issue 3272](https://github.com/firefly-iii/firefly-iii/issues/3272) Rule issue when using "set source account" action.
+- [Issue 3281](https://github.com/firefly-iii/firefly-iii/issues/3281) Bad markdown parsing in piggy banks.
+- [Issue 3284](https://github.com/firefly-iii/firefly-iii/issues/3284) Recurring transactions with bad info couldn't be rendered.
+
+## [5.2.2 (API 1.1.0)] - 2020-04-14
+
+### Fixed
+- [Issue 3529](https://github.com/firefly-iii/firefly-iii/issues/3529) Issue with rule execution.
+- [Issue 3263](https://github.com/firefly-iii/firefly-iii/issues/3263) Issue with new user account creation.
+
+## [5.2.2 (API 1.1.0)] - 2020-04-13
+
+### Fixed
+- Virtual balance would always be stored as "0.0" despite the field being nullable.
+- The rule action "set source account" was improperly configured.
+
+## [5.2.1 (API 1.1.0)] - 2020-04-10
+
+Firefly III 5.2.1 fixes an issue with charts and allows users to store budgets again.
+
+## [5.2.0 (API 1.1.0)] - 2020-04-10
+
+- ⚠️ This will be the last version to support PHP version 7.3. The next release will require PHP **7.4**
+- ⚠️ The bunq and CSV import routines have been disabled and replaced by their stand alone variants: [bunq](https://github.com/firefly-iii/bunq-importer), [CSV](https://github.com/firefly-iii/csv-importer).
+
+This release was preceded by a number of test versions:
+
+- 5.2.0-alpha.1 on 2020-03-24
+- 5.2.0-beta.1 on 2020-04-02
+
+### Added
+- [Issue 2578](https://github.com/firefly-iii/firefly-iii/issues/2578) Allows users to create automatic budget configurations to rollover or set periodic limits.
+- [Issue 2726](https://github.com/firefly-iii/firefly-iii/issues/2726) Added new pie charts on the transaction index pages. 
+- [Issue 2957](https://github.com/firefly-iii/firefly-iii/issues/2957) A new button to duplicate rules
+- [Issue 2828](https://github.com/firefly-iii/firefly-iii/issues/2828) More objects now support attachments: accounts, bills, budgets, categories, piggy banks and tags.
+- [Issue 2938](https://github.com/firefly-iii/firefly-iii/issues/2938) Expense and revenue accounts show their balances better.
+- [Issue 2977](https://github.com/firefly-iii/firefly-iii/issues/2977) On the budget page, the bars and amounts auto update.
+- [Issue 3079](https://github.com/firefly-iii/firefly-iii/issues/3079) Version is now visible in the footer on mobile.
+- Support for Vietnamese 🇻🇳
+
+### Changed
+- [Issue 2985](https://github.com/firefly-iii/firefly-iii/issues/2985) Updating an object (like a budget or a bill) will also update the associated rule, if any.
+- [Issue 3057](https://github.com/firefly-iii/firefly-iii/issues/3057) Several form changes to improve the usability of the transaction input form.
+- [Issue 3048](https://github.com/firefly-iii/firefly-iii/issues/3048) Rules can now handle liabilities as source or destination.
+- [Issue 2999](https://github.com/firefly-iii/firefly-iii/issues/2999) The category chart on the frontpage now displays income.
+- [Issue 2997](https://github.com/firefly-iii/firefly-iii/issues/2997) The tag list has categories.
+- [Issue 3122](https://github.com/firefly-iii/firefly-iii/issues/3122) Buttons on the top of lists.
+- The Docker maximum file attachment size has been increased to 64M.
+- The CSV file importer has been disabled. Find the [new CSV importer on GitHub](https://github.com/firefly-iii/csv-importer).
+
+### Fixed
+- [Issue 3154](https://github.com/firefly-iii/firefly-iii/issues/3154) `bcadd()` problems for users who were already running PHP7.4.
+- [Issue 3193](https://github.com/firefly-iii/firefly-iii/issues/3193) Copying a reconciled transaction correctly removes the reconciliation status.
+- [Issue 3003](https://github.com/firefly-iii/firefly-iii/issues/3003) Tables will look less crowded on your phone.
+- [Issue 3202](https://github.com/firefly-iii/firefly-iii/issues/3202) A bug in the frontpage budget chart is fixed.
+- [Issue 3203](https://github.com/firefly-iii/firefly-iii/issues/3203) Firefly III won't complain when using a locale that uses comma's as decimal separators.
+- [Issue 3212](https://github.com/firefly-iii/firefly-iii/issues/3212) Issue with ING imports.
+- [Issue 3210](https://github.com/firefly-iii/firefly-iii/issues/3210) Could not create rule based on a transaction from a dropdown menu.
+- [Issue 3234](https://github.com/firefly-iii/firefly-iii/issues/3234) Export didn't export tags. 
+
+### API
+- [Issue 2828](https://github.com/firefly-iii/firefly-iii/issues/2828) Appropriate endpoints for new transaction possibilities.
+- [Issue 2958](https://github.com/firefly-iii/firefly-iii/issues/2958) A new default currency endpoint.
+
+## [5.1.1 (API 1.0.2)] - 2020-03-13
+
+### Added
+- [Issue 2672](https://github.com/firefly-iii/firefly-iii/issues/2672) Buttons to create transactions from the list of accounts is back.
+
+### Changed
+- [Issue 3176](https://github.com/firefly-iii/firefly-iii/issues/3176) Greek language support is enabled again!
+
+### Fixed
+- [Issue 3160](https://github.com/firefly-iii/firefly-iii/issues/3160) Deleting a reconciliation won't send you to a 404.
+- [Issue 3172](https://github.com/firefly-iii/firefly-iii/issues/3172) Remaining amount left calculation is wrong over multiple months.
+- [Issue 3173](https://github.com/firefly-iii/firefly-iii/issues/3173) Amount is invisible when viewing transactions.
+- [Issue 3177](https://github.com/firefly-iii/firefly-iii/issues/3177) Fix attachment breadcrumb.
+- [Issue 3180](https://github.com/firefly-iii/firefly-iii/issues/3180) Improve instructions for when the user loses MFA info.
+- [Issue 3182](https://github.com/firefly-iii/firefly-iii/issues/3182) Better fallback when transaction errors out.
+- Search modifiers are now case insensitive.
+
+### Security
+- The minimal password length for new users is now 16 characters.
+- Have I Been Pwnd check is now enabled by default.
+
+### API
+- A new call to `apply_rules` is available when submitting transactions.
+
+## [5.1.0 (API 1.0.1)] - 2020-03-06
+
+Before this release came out, several alpha and beta versions had been released already:
+
+- 5.1.0-alpha.1 on 2020-02-16
+- 5.1.0-beta.1 on 2020-02-23
+
+### Added
+- [Issue 2575](https://github.com/firefly-iii/firefly-iii/issues/2575) You can now create a transaction from a rule.
+- [Issue 3052](https://github.com/firefly-iii/firefly-iii/issues/3052) The old way of cloning transactions is back.
+- Firefly III will generate a unique installation ID for itself.
+
+### Changed
+- [Issue 3066](https://github.com/firefly-iii/firefly-iii/issues/3066) [issue 3067](https://github.com/firefly-iii/firefly-iii/issues/3067) New tag overview. Not yet sure what works best.
+- [Issue 3071](https://github.com/firefly-iii/firefly-iii/issues/3071) Top box with expense information (left to spend) is now more clear.
+- [Issue 3075](https://github.com/firefly-iii/firefly-iii/issues/3075) Embarrassing typo in welcome email.
+- You can set the default language for Firefly III which will also apply to the login page.
+- Add Lando to readme.
+- Add support for Finnish! 🇫🇮
+- In the configuration `pgsql` is now the default database connection. This may break your non-`pgsql` installation if you haven't set it specifically to your database type.
+- A new debug view for transactions. Change the word "show" in `/transactions/show/123` to "debug" to get a nice JSON thing.
+- Foreign currencies should show up less often in edit/create transaction screens. 
+
+### Fixed
+- [Issue 3042](https://github.com/firefly-iii/firefly-iii/issues/3042) Rule engine behavior was inconsistent when importing data.
+- [Issue 3045](https://github.com/firefly-iii/firefly-iii/issues/3045) Linking bills to liability accounts through rules was broken.
+- [Issue 3050](https://github.com/firefly-iii/firefly-iii/issues/3050) Date blocks were rendered badly.
+- [Issue 3070](https://github.com/firefly-iii/firefly-iii/issues/3070) The currency symbol would not precede the amount in some locales.
+- [Issue 3083](https://github.com/firefly-iii/firefly-iii/issues/3083) Fix category sort in report.
+- [Issue 3064](https://github.com/firefly-iii/firefly-iii/issues/3064) Weird bug in reports.
+- [Issue 3073](https://github.com/firefly-iii/firefly-iii/issues/3073) Rules would not be applied to all splits if a split was newly created.
+- [Issue 3099](https://github.com/firefly-iii/firefly-iii/issues/3099) Can't make piggy banks on accounts with no currency.
+- [Issue 3111](https://github.com/firefly-iii/firefly-iii/issues/3111) Budget amount edit redirect.
+- [Issue 3114](https://github.com/firefly-iii/firefly-iii/issues/3114) Removed double entry from budget list.
+- [Issue 3119](https://github.com/firefly-iii/firefly-iii/issues/3119) Command would break if transaction was incomplete.
+- [Issue 3127](https://github.com/firefly-iii/firefly-iii/issues/3127) Cloning a transaction would not clear the cache.
+- [Issue 3129](https://github.com/firefly-iii/firefly-iii/issues/3129) Issue importing interest dates.
+- [Issue 3130](https://github.com/firefly-iii/firefly-iii/issues/3130) A forwarder sent you to a 404.
+- [Issue 3131](https://github.com/firefly-iii/firefly-iii/issues/3131) The search modifiers would claim the whole query.
+- [Issue 3135](https://github.com/firefly-iii/firefly-iii/issues/3135) Could not change liability type.
+- [Issue 3137](https://github.com/firefly-iii/firefly-iii/issues/3137) Fix mis-alignment in table rows.
+- [Issue 3140](https://github.com/firefly-iii/firefly-iii/issues/3140) New user email message had a broken link.
+- [Issue 3141](https://github.com/firefly-iii/firefly-iii/issues/3141) Cache issue
+- [Issue 3145](https://github.com/firefly-iii/firefly-iii/issues/3145) Issue with empty charts.
+- [Issue 3146](https://github.com/firefly-iii/firefly-iii/issues/3146) Better handling of CSV imports from ING.
+- [Issue 3154](https://github.com/firefly-iii/firefly-iii/issues/3154) Problem with bcadd() in PHP 7.4
+- [Issue 3159](https://github.com/firefly-iii/firefly-iii/issues/3159) Fixed some untranslatable strings.
+- Bad redirect when editing opening balances.
+
+### API
+- [Issue 3097](https://github.com/firefly-iii/firefly-iii/issues/3097) Unifying API models
+- [Issue 3098](https://github.com/firefly-iii/firefly-iii/issues/3098) Add field to link types.
+
+## [5.0.5 (API 1.0.0)] - 2020-02-13
+
+This release fixes an issue with logging that could, in rare cases, error out terribly.
+
+### Fixed
+
+- Inconsistent log configuration.
+
 ## [5.0.4 (API 1.0.0)] - 2020-02-01
 
 This release fixes several bugs found in 5.0.0 and earlier releases.

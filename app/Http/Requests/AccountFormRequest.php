@@ -1,7 +1,7 @@
 <?php
 /**
  * AccountFormRequest.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -112,10 +112,10 @@ class AccountFormRequest extends Request
             'what'                               => 'in:' . $types,
             'interest_period'                    => 'in:daily,monthly,yearly',
         ];
-        $rules = Location::requestRules($rules);
+        $rules          = Location::requestRules($rules);
 
         if ('liabilities' === $this->get('objectType')) {
-            $rules['opening_balance']      = ['numeric', 'required','max:1000000000'];
+            $rules['opening_balance']      = ['numeric', 'required', 'max:1000000000'];
             $rules['opening_balance_date'] = 'date|required';
         }
 

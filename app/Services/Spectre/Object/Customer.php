@@ -1,7 +1,7 @@
 <?php
 /**
  * Customer.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -27,6 +27,7 @@ namespace FireflyIII\Services\Spectre\Object;
  *
  * @codeCoverageIgnore
  * @SuppressWarnings(PHPMD.ShortVariable)
+ * @deprecated
  */
 class Customer extends SpectreObject
 {

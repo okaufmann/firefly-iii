@@ -2,7 +2,7 @@
 
 /**
  * breadcrumbs.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -51,9 +51,12 @@ return [
     'edit_journal'           => '编辑交易 ":description"',
     'edit_reconciliation'    => '编辑 ":description"',
     'delete_journal'         => '删除交易 ":description"',
+    'delete_group'           => '删除交易":description"',
     'tags'                   => '标签',
     'createTag'              => '建立新标签',
     'edit_tag'               => '编辑标签 ":tag"',
     'delete_tag'             => '删除标签 ":tag"',
     'delete_journal_link'    => '删除交易记录之间的连结',
+    'telemetry_index'        => '遥测',
+    'telemetry_view'         => '查看遥测',
 ];

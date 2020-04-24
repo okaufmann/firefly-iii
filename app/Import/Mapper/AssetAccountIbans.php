@@ -1,7 +1,7 @@
 <?php
 /**
  * AssetAccountIbans.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -28,6 +28,9 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 
 /**
  * Class AssetAccounts.
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class AssetAccountIbans implements MapperInterface
 {
@@ -52,7 +55,7 @@ class AssetAccountIbans implements MapperInterface
         /** @var Account $account */
         foreach ($set as $account) {
             $iban      = $account->iban ?? '';
-            $accountId = (int)$account->id;
+            $accountId = (int) $account->id;
             if ('' !== $iban) {
                 $name = $account->iban . ' (' . $account->name . ')';
 
@@ -75,7 +78,7 @@ class AssetAccountIbans implements MapperInterface
         /** @noinspection AdditionOperationOnArraysInspection */
         $list = $topList + $list;
         asort($list);
-        $list = [0 => (string)trans('import.map_do_not_map')] + $list;
+        $list = [0 => (string) trans('import.map_do_not_map')] + $list;
 
         return $list;
     }

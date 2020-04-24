@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * RestoreOAuthKeys.php
  * Copyright (c) 2020 james@firefly-iii.org
@@ -21,8 +22,6 @@
 
 namespace FireflyIII\Console\Commands\Integrity;
 
-use Artisan;
-use Crypt;
 use FireflyIII\Support\System\OAuthKeys;
 use Illuminate\Console\Command;
 
@@ -53,6 +52,7 @@ class RestoreOAuthKeys extends Command
     {
         $this->restoreOAuthKeys();
 
+        // app('telemetry')->feature('executed-command', $this->signature);
         return 0;
     }
 

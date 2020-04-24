@@ -2,7 +2,7 @@
 
 /**
  * validation.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -130,6 +130,7 @@ return [
     'amount_zero'                    => 'Der Gesamtbetrag darf nicht Null sein.',
     'current_target_amount'          => 'Der aktuelle Betrag muss niedriger als der Zielbetrag sein.',
     'unique_piggy_bank_for_user'     => 'Der Name des Sparschweins muss eindeutig sein.',
+
     'secure_password'                => 'Dies ist ein unsicheres Passwort. Bitte versuchen Sie es erneut. Weitere Informationen finden Sie unter https://github.com/firefly-iii/help/wiki/Secure-password',
     'valid_recurrence_rep_type'      => 'Ungültige Wiederholungsart für Daueraufträge.',
     'valid_recurrence_rep_moment'    => 'Ungültiges Wiederholungsmoment für diese Art der Wiederholung.',
@@ -196,8 +197,12 @@ return [
     'generic_invalid_source'      => 'Sie können dieses Konto nicht als Quellkonto verwenden.',
     'generic_invalid_destination' => 'Sie können dieses Konto nicht als Zielkonto verwenden.',
 
-    'gte.numeric' => 'The :attribute must be greater than or equal to :value.',
-    'gte.file'    => 'The :attribute must be greater than or equal to :value kilobytes.',
-    'gte.string'  => 'The :attribute must be greater than or equal to :value characters.',
-    'gte.array'   => 'The :attribute must have :value items or more.',
+    'gte.numeric' => ':attribute muss größer oder gleich :value sein.',
+    'gte.file'    => ':attribute muss größer oder gleich :value Kilobytes sein.',
+    'gte.string'  => ':attribute muss mindestens :value Zeichen enthalten.',
+    'gte.array'   => ':attribute muss mindestens :value Elemente enthalten.',
+
+    'amount_required_for_auto_budget' => 'Betrag ist erforderlich.',
+    'auto_budget_amount_positive'     => 'Der Betrag muss größer als Null sein.',
+    'auto_budget_period_mandatory' => 'Der Zeitraum für das automatische Budget ist ein Pflichtfeld.',
 ];

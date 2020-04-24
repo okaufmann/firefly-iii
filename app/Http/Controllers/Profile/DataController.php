@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
 /**
  * DataController.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,7 +21,6 @@
  */
 
 namespace FireflyIII\Http\Controllers\Profile;
-
 
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;

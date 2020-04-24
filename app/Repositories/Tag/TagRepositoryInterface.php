@@ -1,7 +1,7 @@
 <?php
 /**
  * TagRepositoryInterface.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -35,23 +35,16 @@ interface TagRepositoryInterface
 {
 
     /**
-     * Return location, or NULL.
-     *
-     * @param Tag $tag
-     *
-     * @return Location|null
-     */
-    public function getLocation(Tag $tag): ?Location;
-
-    /**
-     * Destroy all tags.
-     */
-    public function destroyAll(): void;
-
-    /**
      * @return int
      */
     public function count(): int;
+
+    /**
+     * @param Tag $tag
+     *
+     * @return Collection
+     */
+    public function getAttachments(Tag $tag): Collection;
 
     /**
      * This method destroys a tag.
@@ -61,6 +54,11 @@ interface TagRepositoryInterface
      * @return bool
      */
     public function destroy(Tag $tag): bool;
+
+    /**
+     * Destroy all tags.
+     */
+    public function destroyAll(): void;
 
     /**
      * @param Tag    $tag
@@ -88,14 +86,6 @@ interface TagRepositoryInterface
     public function findByTag(string $tag): ?Tag;
 
     /**
-     * Find one or more tags based on the query.
-     * @param string $query
-     *
-     * @return Collection
-     */
-    public function searchTag(string $query): Collection;
-
-    /**
      * @param int $tagId
      *
      * @return Tag|null
@@ -115,6 +105,22 @@ interface TagRepositoryInterface
      * @return Collection
      */
     public function get(): Collection;
+
+    /**
+     * Return location, or NULL.
+     *
+     * @param Tag $tag
+     *
+     * @return Location|null
+     */
+    public function getLocation(Tag $tag): ?Location;
+
+    /**
+     * @param int|null $year
+     *
+     * @return array
+     */
+    public function getTagsInYear(?int $year): array;
 
     /**
      * @param Tag    $tag
@@ -145,6 +151,15 @@ interface TagRepositoryInterface
      * @return Tag|null
      */
     public function oldestTag(): ?Tag;
+
+    /**
+     * Find one or more tags based on the query.
+     *
+     * @param string $query
+     *
+     * @return Collection
+     */
+    public function searchTag(string $query): Collection;
 
     /**
      * Search the users tags.
@@ -191,6 +206,7 @@ interface TagRepositoryInterface
 
     /**
      * Generates a tag cloud.
+     * @deprecated
      *
      * @param int|null $year
      *

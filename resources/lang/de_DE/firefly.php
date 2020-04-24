@@ -2,7 +2,7 @@
 
 /**
  * firefly.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -33,7 +33,7 @@ return [
     'last_seven_days'                            => 'Letzte sieben Tage',
     'last_thirty_days'                           => 'Letzte 30 Tage',
     'welcomeBack'                                => 'Was ist gerade los?',
-    'welcome_back'                               => 'Was ist gerade los?',
+    'welcome_back'                               => 'Überblick',
     'everything'                                 => 'Alle',
     'today'                                      => 'Heute',
     'customRange'                                => 'Individueller Bereich',
@@ -58,7 +58,8 @@ return [
     'no_rules_for_bill'                          => 'Diese Rechnung enthält keine mit ihr verbundenen Regeln.',
     'go_to_asset_accounts'                       => 'Bestandskonten anzeigen',
     'go_to_budgets'                              => 'Budgets anzeigen',
-    'clone_instructions'                         => 'Um eine Buchung zu duplizieren, setzen Sie im Bearbeitungsbildschirm ein Häkchen bei „Als neu speichern”.',
+    'new_clone_instructions'                     => 'Mit dieser Schaltfläche wird die Buchung automatisch dupliziert und das Datum auf heute festgelegt. Möchten Sie fortfahren?',
+    'clones_journal_x'                           => 'Diese Buchung ist ein Duplikat von „:description” (#:id)',
     'go_to_categories'                           => 'Kategorien anzeigen',
     'go_to_bills'                                => 'Rechnungen anzeigen',
     'go_to_expense_accounts'                     => 'Kreditoren (Ausgabenkonten) anzeigen',
@@ -94,7 +95,7 @@ return [
     'two_factor_forgot'                          => 'Ich kann keine 2FA-Codes generieren.',
     'two_factor_lost_header'                     => 'Haben Sie ihre Zwei-Faktor-Authentifizierung verloren?',
     'two_factor_lost_intro'                      => 'Wenn Sie auch Ihre Sicherungsschlüssel verloren haben, haben Sie Pech. Dies ist nichts, was Sie über die Weboberfläche beheben können. Sie haben jedoch zwei Möglichkeiten.',
-    'two_factor_lost_fix_self'                   => 'Wenn Sie Ihre eigene Instanz von Firefly III ausführen, überprüfen Sie die Protokolle in <code>storage/logs</code> auf Anweisungen, oder führen Sie <code>docker logs &lt;container_id&gt;</code> aus, um die Anweisungen zu lesen (aktualisieren Sie diese Seite).',
+    'two_factor_lost_fix_self'                   => 'Wenn Sie Ihre eigene Instanz von Firefly III betreiben, lesen Sie <a href="https://docs.firefly-iii.org/faq/other#i-lost-my-two-factor-authentication-codes-and-backup-codes">diesen Eintrag in den FAQ</a> für Anweisungen.',
     'two_factor_lost_fix_owner'                  => 'Ansonsten, mailen Sie dem Inhaber der Website, <a href="mailto::site_owner">:site_owner</a> und bitten Sie ihn, Ihre Zwei-Faktor Authentifizierung zurückzusetzen.',
     'mfa_backup_code'                            => 'Sie haben sich mit einem Sicherungsschlüssel bei Firefly III angemeldet. Dieser kann nun nicht mehr verwendet werden, also streichen Sie ihn aus Ihrer Liste.',
     'pref_two_factor_new_backup_codes'           => 'Neue Sicherungsschlüssel abrufen',
@@ -103,7 +104,7 @@ return [
     'warning_much_data'                          => ':days Tage Daten können eine Weile zum Laden benötigen.',
     'registered'                                 => 'Sie haben sich erfolgreich registriert!',
     'Default asset account'                      => 'Standard-Bestandskonto',
-    'no_budget_pointer'                          => 'Sie scheinen noch keine Budgets festgelegt zu haben. Sie sollten einige davon auf der Seite <a href=":link">Budgets</a> anlegen. Budgets können Ihnen dabei helfen, den Überblick über die Ausgaben zu behalten.',
+    'no_budget_pointer'                          => 'Sie scheinen noch keine Kostenrahmen festgelegt zu haben. Sie sollten einige davon auf der Seite <a href="/budgets">„Kostenrahmen”</a> anlegen. Kostenrahmen können Ihnen dabei helfen, den Überblick über die Ausgaben zu behalten.',
     'Savings account'                            => 'Sparkonto',
     'Credit card'                                => 'Kreditkarte',
     'source_accounts'                            => 'Ausgangskonto',
@@ -204,6 +205,7 @@ return [
     'active_exp_bills_only'                      => 'nur aktive und erwartete Rechnungen',
     'average_per_bill'                           => 'Durchschnitt je Rechnung',
     'expected_total'                             => 'Voraussichtliche Summe',
+    'reconciliation_account_name'                => ':name Kontenabgleich',
     // API access
     'authorization_request'                      => 'Firefly III v:version Autorisierungsanfrage',
     'authorization_request_intro'                => '<strong>:client</strong> bittet um Erlaubnis, auf Ihre Finanzverwaltung zuzugreifen. Möchten Sie <strong>:client</strong> erlauben auf diese Datensätze zuzugreifen?',
@@ -214,11 +216,15 @@ return [
     'name_in_currency'                           => ':name in :currency',
     'paid_in_currency'                           => 'Bezahlt in :currency',
     'unpaid_in_currency'                         => 'Unbezahlt in :currency',
+    'is_alpha_warning'                           => 'Sie nutzen eine ALPHA-Version. Seien Sie vorsichtig bei Fehlern und Problemen.',
+    'is_beta_warning'                            => 'Sie verwenden eine BETA-Version. Seien Sie vorsichtig bei Fehlern und Problemen.',
+    'all_destination_accounts'                   => 'Zielkonten',
+    'all_source_accounts'                        => 'Quellkonten',
 
     // check for updates:
     'update_check_title'                         => 'Nach Updates suchen',
     'admin_update_check_title'                   => 'Automatisch nach Updates suchen',
-    'admin_update_check_explain'                 => 'Firefly III kann automatisch nach Updates suchen. Wenn Sie diese Einstellung aktivieren, wird Github aufgerufen, um festzustellen, ob eine neue Version von Firefly III verfügbar ist. Falls dies der Fall ist, erhalten Sie eine Benachrichtigung. Sie können diese Benachrichtigung mit der Schaltfläche auf der rechten Seite testen. Bitte geben Sie unten an, ob Sie möchten, dass Firefly III nach Updates sucht.',
+    'admin_update_check_explain'                 => 'Firefly III kann automatisch nach Aktualisierungen suchen. Wenn Sie diese Einstellung aktivieren, wird der Firefly III Aktualisierungsserver kontaktiert, um zu prüfen, ob eine neue Version von Firefly III verfügbar ist. Wenn dies der Fall ist, erhalten Sie eine Benachrichtigung. Sie können diese Benachrichtigung mit der Schaltfläche auf der rechten Seite testen. Bitte geben Sie unten an, ob Firefly III nach Aktualisierungen suchen soll.',
     'check_for_updates_permission'               => 'Firefly III kann nach Updates suchen, benötigt jedoch Ihre Erlaubnis dazu. Bitte gehen Sie zur <a href=":link">Administration</a>, um anzugeben, ob diese Funktion aktiviert werden soll.',
     'updates_ask_me_later'                       => 'Später fragen',
     'updates_do_not_check'                       => 'Nicht nach Updates suchen',
@@ -231,7 +237,9 @@ return [
     'update_version_alpha'                       => 'Seien Sie vorsichtig bei der Verwendung dieser APLPHA-Version. Sie kann Fehler enthaltern.',
     'update_current_version_alert'               => 'Sie verwenden Version :version. Dies ist die neueste verfügbare Version.',
     'update_newer_version_alert'                 => 'Sie verwenden :your_version. Ihre Version ist neuer als die neueste Version (:new_version).',
-    'update_check_error'                         => 'Beim Suchen nach Updates ist ein Fehler aufgetreten. Bitte sehen Sie sich die Log-Dateien an.',
+    'update_check_error'                         => 'Bei der Suche nach Aktualisierungen ist ein Fehler aufgetreten: :error',
+    'unknown_error'                              => 'Leider ist ein unbekannter Fehler aufgetreten.',
+    'just_new_release'                           => 'Eine neue Version ist verfügbar! Version :version wurde veröffentlicht :date. Diese Version ist sehr jung. Warten Sie ein paar Tage, bis sich die neue Version etabliert hat.',
     'admin_update_channel_title'                 => 'Aktualisierungskanal',
     'admin_update_channel_explain'               => 'Firefly III verfügt über drei Aktualisierungskanäle, welche bestimmen, wie weit Sie in Bezug auf Funktionen, Verbesserungen und Fehler experimentierfreudig sind. Nutzen Sie den „Beta”-Kanal, wenn Sie abenteuerlustig sind, und den „Alpha”-Kanal, wenn Sie ein gefährliches Leben führen möchten.',
     'update_channel_stable'                      => 'Stabil — Alles sollte wie erwartet funktionieren.',
@@ -299,6 +307,9 @@ return [
     'created_new_rule_group'                     => 'Neue Regelgruppe ":title" gespeichert!',
     'updated_rule_group'                         => 'Regelgruppe ":title" erfolgreich aktualisiert.',
     'edit_rule_group'                            => 'Regelgruppe ":title" bearbeiten',
+    'duplicate_rule'                             => 'Regel „:title” duplizieren',
+    'rule_copy_of'                               => 'Kopie von „:title”',
+    'duplicated_rule'                            => 'Regel „:title” nach „:newTitle” dupliziert',
     'delete_rule_group'                          => 'Regelgruppe ":title" löschen',
     'deleted_rule_group'                         => 'Regelgruppe ":title" gelöscht',
     'update_rule_group'                          => 'Regelgruppe aktualisieren',
@@ -309,6 +320,7 @@ return [
     'make_new_rule'                              => 'Neue Regel in der Regelgruppe „:title” erstellen',
     'make_new_rule_no_group'                     => 'Neue Regel erstellen',
     'instructions_rule_from_bill'                => 'Um Buchungen an Ihre neue Rechnung „:name” anzupassen, kann Firefly III eine Regel erstellen, die automatisch gegen alle von Ihnen gespeicherten Buchungen geprüft wird. Bitte überprüfen Sie die folgenden Angaben und speichern Sie die Regel, damit Firefly III die Buchungen automatisch mit Ihrer neuen Rechnung abgleicht.',
+    'instructions_rule_from_journal'             => 'Erstellen Sie eine Regel auf der Grundlage einer Ihrer Buchungen. Ergänzen oder übermitteln Sie das nachfolgende Formular.',
     'rule_is_strict'                             => 'strikte Regel',
     'rule_is_not_strict'                         => 'nicht-strenge Regel',
     'rule_help_stop_processing'                  => 'Wenn Sie dieses Kontrollkästchen aktivieren, werden spätere Regeln in dieser Gruppe nicht ausgeführt.',
@@ -386,7 +398,7 @@ return [
     'rule_trigger_to_account_nr_ends'               => 'Zielkontonummer/IBAN endet auf „:trigger_value”',
     'rule_trigger_to_account_nr_is_choice'          => 'Zielkontonummer/IBAN ist …',
     'rule_trigger_to_account_nr_is'                 => 'Zielkontonummer/IBAN ist „:trigger_value”',
-    'rule_trigger_to_account_nr_contains_choice'    => 'Zielkontonummer/IBAN beginnt enthält …',
+    'rule_trigger_to_account_nr_contains_choice'    => 'Zielkontonummer/IBAN enthält …',
     'rule_trigger_to_account_nr_contains'           => 'Zielkontonummer/IBAN enthält „:trigger_value”',
 
     'rule_trigger_transaction_type_choice'       => 'Buchung ist vom Typ..',
@@ -444,7 +456,7 @@ return [
     'rule_action_set_category'                   => 'Kategorie auf ":action_value" setzen',
     'rule_action_clear_category'                 => 'Kategorie entfernen',
     'rule_action_set_budget'                     => 'Budget auf „:action_value” setzen',
-    'rule_action_clear_budget'                   => 'Budget löschen',
+    'rule_action_clear_budget'                   => 'Budget leeren',
     'rule_action_add_tag'                        => 'Schlagwort „:action_value” hinzufügen',
     'rule_action_remove_tag'                     => 'Schlagwort „:action_value” entfernen',
     'rule_action_remove_all_tags'                => 'Alle Schlüsselwörter entfernen',
@@ -493,6 +505,9 @@ return [
     'new_rule_for_bill_title'         => 'Regel für Rechnung „:name”',
     'new_rule_for_bill_description'   => 'Diese Regel kennzeichnet Buchungen für die Rechnung „:name”.',
 
+    'new_rule_for_journal_title'         => 'Regel basierend auf der Buchung „:description”',
+    'new_rule_for_journal_description'   => 'Diese Regel basiert auf der Buchung „:description”. Sie stimmt mit Buchungen überein, die identisch sind.',
+
     // tags
     'store_new_tag'                   => 'Neues Schlagwort speichern',
     'update_tag'                      => 'Schlüsselwort aktualisieren',
@@ -508,8 +523,10 @@ return [
     'delete_all_selected_tags'        => 'Alle markierten Stichwörter löschen',
     'select_tags_to_delete'           => 'Nicht vergessen, einige Schlagwörter auszuwählen.',
     'deleted_x_tags'                  => ':count Schlagwort/-wörter gelöscht.',
+    'create_rule_from_transaction'    => 'Regel auf Basis der Buchung erstellen',
 
     // preferences
+    'equal_to_language'               => '(entsprechend der Sprache)',
     'pref_home_screen_accounts'       => 'Konten auf dem Startbildschirm',
     'pref_home_screen_accounts_help'  => 'Welche Konten sollen auf dem Startbildschirm angezeigt werden?',
     'pref_view_range'                 => 'Sichtbarer Zeitraum',
@@ -521,7 +538,9 @@ return [
     'pref_6M'                         => 'Sechs Monate',
     'pref_1Y'                         => 'Ein Jahr',
     'pref_languages'                  => 'Sprachen',
+    'pref_locale'                     => 'Lokale Einstellungen',
     'pref_languages_help'             => 'Firefly III unterstützt mehrere Sprachen. Welche möchten Sie nutzen?',
+    'pref_locale_help'                => 'Mit Firefly III können Sie weitere lokale Einstellungen vornehmen, z.B. wie Währungen, Zahlen und Daten formatiert werden sollen. Einträge in dieser Liste werden von Ihrem System möglicherweise nicht unterstützt. Firefly III enthält nicht die korrekten Datumseinstellungen für jedes Gebietsschema. Kontaktieren Sie uns für Verbesserungen.',
     'pref_custom_fiscal_year'         => 'Einstellungen zum Geschäftsjahr',
     'pref_custom_fiscal_year_label'   => 'Aktiviert',
     'pref_custom_fiscal_year_help'    => 'In Ländern, in denen ein Geschäftsjahr nicht vom 1. Januar bis 31. Dezember dauert, können Sie diese Option ändern und Start / Ende des Geschäftsjahres angeben',
@@ -574,10 +593,10 @@ return [
 
     // profile:
     'permanent_delete_stuff'                    => 'Seien Sie vorsichtig mit diesen Schaltflächen. Das Löschen kann nicht widerrufen werden.',
-    'delete_all_budgets'                        => 'Alle Ihre Kostenrahmen löschen',
+    'delete_all_budgets'                        => 'ALLE Ihre Budgets löschen',
     'delete_all_categories'                     => 'Alle Ihre Kategorien löschen',
     'delete_all_tags'                           => 'Alle Ihre Stichwörter löschen',
-    'deleted_all_budgets'                       => 'Alle Kostenrahmen wurden gelöscht',
+    'deleted_all_budgets'                       => 'Alle Budgets wurden gelöscht',
     'deleted_all_categories'                    => 'Alle Kategorien wurden gelöscht',
     'deleted_all_tags'                          => 'Alle Schlagwörter wurden gelöscht',
     'change_your_password'                      => 'Passwort ändern',
@@ -700,6 +719,7 @@ return [
     'update_currency'                           => 'Währung aktualisieren',
     'new_default_currency'                      => '„:name” wird nun als Standardwährung verwendet.',
     'cannot_delete_currency'                    => '„:name” konnte nicht gelöscht werden, da diese noch verwendet wird.',
+    'cannot_delete_fallback_currency'           => ':name ist die Standardwährung des Systems und kann daher nicht gelöscht werden.',
     'cannot_disable_currency_journals'          => '„:name” konnte nicht deaktiviert werden, da dieser noch von Buchungen noch verwendet wird.',
     'cannot_disable_currency_last_left'         => '„:name” kann nicht deaktiviert werden, da es sich um die einzige aktivierte Währung handelt.',
     'cannot_disable_currency_account_meta'      => ':name konnte nicht deaktiviert werden, da dieser noch in Bestandskonten verwendet wird.',
@@ -771,6 +791,18 @@ return [
     'over_budget_warn'                          => '<i class="fa fa fa-money"></i>Normalerweise kalkulieren Sie etwa :amount pro Tag. Diesmal ist es :over_amount pro Tag. Möchten Sie fortfahren?',
     'transferred_in'                            => 'Übertragen (eingehend)',
     'transferred_away'                          => 'Übertragen (ausgehend)',
+    'auto_budget_none'                          => 'Kein Auto-Budget',
+    'auto_budget_reset'                         => 'Festbetrag für jeden Zeitraum festlegen',
+    'auto_budget_rollover'                      => 'Betrag pro Zeitraum hinzufügen',
+    'auto_budget_period_daily'                  => 'Täglich',
+    'auto_budget_period_weekly'                 => 'Wöchentlich',
+    'auto_budget_period_monthly'                => 'Monatlich',
+    'auto_budget_period_quarterly'              => 'Quartalsweise',
+    'auto_budget_period_half_year'              => 'Halbjährlich',
+    'auto_budget_period_yearly'                 => 'Jährlich',
+    'auto_budget_help'                          => 'Mehr über diese Funktion können Sie in der Hilfe nachlesen. Klicken Sie oben rechts auf das ❓-Symbol.',
+    'auto_budget_reset_icon'                    => 'Dieses Budget wird regelmäßig festgelegt',
+    'auto_budget_rollover_icon'                 => 'Der Budgetbetrag wird regelmäßig erhöht',
 
     // bills:
     'match_between_amounts'                     => 'Rechnung passt zu Transaktionen zwischen :low und :high.',
@@ -800,6 +832,7 @@ return [
     'skips_over'                                => 'überschreitet',
     'bill_store_error'                          => 'Beim Speichern Ihrer neuen Rechnung ist ein unerwarteter Fehler aufgetreten. Bitte überprüfen Sie die Protokolldateien.',
     'list_inactive_rule'                        => 'Inaktive Regeln',
+    'bill_edit_rules'                           => 'Firefly III wird versuchen, auch die :count Regel(n) in Bezug auf diese Rechnung ebenfalls zu bearbeiten. Wenn Sie diese Regel(n) jedoch selbst bearbeitet haben, wird Firefly III nichts ändern.',
 
     // accounts:
     'inactive_account_link'                     => 'Sie haben :count inaktive (archivierte) Konten, die Sie auf dieser separaten Seite einsehen können.',
@@ -932,6 +965,7 @@ return [
     'deleted_withdrawal'                        => 'Ausgabe ":description" erfolgreich gelöscht',
     'deleted_deposit'                           => 'Einnahme ":description" erfolgreich gelöscht',
     'deleted_transfer'                          => 'Umbuchung ":description" erfolgreich gelöscht',
+    'deleted_reconciliation'                    => 'Ausgleichsbuchung „:description” erfolgreich gelöscht',
     'stored_journal'                            => 'Neue Überweisung ":description" erfolgreich erstellt',
     'stored_journal_no_descr'                   => 'Ihre neue Buchung wurde erfolgreich erstellt',
     'updated_journal_no_descr'                  => 'Ihre Buchung wurde erfolgreich aktualisiert',
@@ -957,6 +991,7 @@ return [
     'no_budget'                                 => '(kein Budget)',
     'account_per_budget'                        => 'Konto je Budget',
     'account_per_category'                      => 'Konto je Kategorie',
+    'create_new_object'                         => 'Erstellen',
     'empty'                                     => '(leer)',
     'all_other_budgets'                         => '(alle anderen Budgets)',
     'all_other_accounts'                        => '(alle anderen Konten)',
@@ -1091,7 +1126,8 @@ return [
     'errors'                                    => 'Fehler',
     'debt_start_date'                           => 'Startdatum der Verschuldung',
     'debt_start_amount'                         => 'Startbetrag der Verschuldung',
-    'debt_start_amount_help'                    => 'Wenn Sie einen Betrag zu zahlen haben, ist es am besten, einen negativen Betrag einzugeben, da er Ihr Eigenkapital beeinflusst. Wenn Ihnen ein Betrag geschuldet wird, gilt das Gleiche. Auf den Hilfeseiten findest du weitere Informationen.',
+    'debt_start_amount_help'                    => 'Es wird empfohlen, diesen Wert auf einen negativen Betrag festzulegen. Lesen Sie die Hilfeseiten (oben rechts ❓-Symbol) für weitere Informationen.',
+    'interest_period_help'                      => 'Dieses Feld ist rein kosmetisch und wird für Sie nicht berechnet. Wie sich herausstellt, sind Banken sehr hinterhältig, so dass Firefly III es nie richtig macht.',
     'store_new_liabilities_account'             => 'Neue Verbindlichkeit speichern',
     'edit_liabilities_account'                  => 'Verbindlichkeit „:name” bearbeiten',
 
@@ -1125,8 +1161,8 @@ return [
     'inactive'                                  => 'Inaktiv',
     'active'                                    => 'Aktiv',
     'difference'                                => 'Unterschied',
-    'money_flowing_in'                          => 'Rein',
-    'money_flowing_out'                         => 'Raus',
+    'money_flowing_in'                          => 'Eingehend',
+    'money_flowing_out'                         => 'Ausgehend',
     'topX'                                      => 'Topnummer :number',
     'show_full_list'                            => 'Zeige die gesamte Liste',
     'show_only_top'                             => 'Nur die Top :number anzeigen',
@@ -1294,7 +1330,7 @@ return [
     'store_configuration'              => 'Konfiguration speichern',
     'single_user_administration'       => 'Benutzerverwaltung für :email',
     'edit_user'                        => 'Benutzer :email bearbeiten',
-    'hidden_fields_preferences'        => 'Sie können weitere Buchungsoptionen in Ihren <a href=":link">Einstellungen</a> aktivieren.',
+    'hidden_fields_preferences'        => 'Sie können weitere Buchungsoptionen in Ihren <a href="/preferences">Einstellungen</a> aktivieren.',
     'user_data_information'            => 'Nutzerdaten',
     'user_information'                 => 'Benutzerinformationen',
     'total_size'                       => 'Gesamtgröße',
@@ -1318,14 +1354,15 @@ return [
     'send_test_email_text'             => 'Um zu sehen, ob Ihre Installation E-Mails senden kann, drücken Sie bitte diese Taste. Sie werden hier keinen Fehler sehen, <strong>die Protokolldateien werden etwaige Fehler anzeigen</strong>. Sie können diese Taste so oft drücken, wie Sie möchten. Es gibt keine Spamüberprüfung. Die Nachricht wird an <code>:email</code> gesendet und sollte in Kürze ankommen.',
     'send_message'                     => 'Nachricht senden',
     'send_test_triggered'              => 'Der Test wurde ausgelöst. Überprüfen Sie Ihren Posteingang und die Protokolldateien.',
+    'give_admin_careful'               => 'Benutzer mit Admin-Rechten können Ihnen Ihre Rechte entziehen. Seien Sie vorsichtig.',
 
     'split_transaction_title'               => 'Beschreibung der Splittbuchung',
     'split_transaction_title_help'          => 'Wenn Sie eine Splittbuchung anlegen, muss es eine eindeutige Beschreibung für alle Aufteilungen der Buchung geben.',
     'split_title_help'                      => 'Wenn Sie eine Splittbuchung anlegen, muss es eine eindeutige Beschreibung für alle Aufteilungen der Buchhaltung geben.',
     'transaction_information'               => 'Buchungsinformation',
-    'you_create_transfer'                   => 'Sie erstellen gerade eine <strong>Umbuchung</strong>.',
-    'you_create_withdrawal'                 => 'Sie erstellen gerade eine <strong>Ausgabe</strong>.',
-    'you_create_deposit'                    => 'Sie erstellen gerade eine <strong>Einzahlung</strong>.',
+    'you_create_transfer'                   => 'Sie haben eine Buchung erstellt.',
+    'you_create_withdrawal'                 => 'Sie haben eine Auszahlung erstellt.',
+    'you_create_deposit'                    => 'Sie haben eine Einzahlung erstellt.',
 
 
     // links
@@ -1382,6 +1419,13 @@ return [
     '(partially) refunds_outward'           => '(Teil-)Erstattungen',
     '(partially) pays for_outward'          => '(teilweise) bezahlt für',
     '(partially) reimburses_outward'        => '(Teil-)Erstattungen',
+    'is (partially) refunded by'            => 'wird (teilweise) zurückerstattet von',
+    'is (partially) paid for by'            => 'wird (teilweise) bezahlt von',
+    'is (partially) reimbursed by'          => 'wird (teilweise) erstattet von',
+    'relates to'                            => 'bezieht sich auf',
+    '(partially) refunds'                   => '(Teil-)Rückerstattungen',
+    '(partially) pays for'                  => '(Teil-)Zahlung für',
+    '(partially) reimburses'                => '(Teil-)Erstattungen',
 
     // split a transaction:
     'splits'                                => 'Teile',
@@ -1406,7 +1450,13 @@ return [
     'import_index_title'                    => 'Buchungen in Firefly III importieren',
     'import_data'                           => 'Daten importieren',
     'import_transactions'                   => 'Buchungen importieren',
-
+    'import_tools_title'                    => 'Werkzeuge importieren',
+    'tools_index_intro'                     => 'Es gibt mehrere Werkzeuge, um Daten in Firefly III zu importieren (Diese werden unten vorgestellt). Weitere Informationen finden Sie unter <a href="https://docs.firefly-iii.org/importing-data/introduction">hier auf dieser Seite</a>.',
+    'firefly_iii_csv_importer_name'         => 'Firefly III • CSV-Import',
+    'firefly_iii_bunq_importer_name'        => 'Firefly III Bunq 🌈 importieren',
+    'firefly_iii_ynab_importer_name'        => 'Firefly III • YNAB-Import',
+    'ludo_revolut_importer_name'            => 'Ludo444\'s Revolut-Importer',
+    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Diese Funktion ist nicht verfügbar, wenn Sie Firefly III in einer Sandstorm.io-Umgebung verwenden.',
 
@@ -1518,7 +1568,7 @@ return [
     'updated_recurrence'                 => 'Dauerauftrag ":title" aktualisiert',
     'recurrence_is_inactive'             => 'Dieser Dauerauftrag ist nicht aktiv und erzeugt keine neuen Buchungen.',
     'delete_recurring'                   => 'Dauerauftrag „:title” löschen',
-    'new_recurring_transaction'          => 'Neue Dauerauftrag',
+    'new_recurring_transaction'          => 'Neuer Dauerauftrag',
     'help_weekend'                       => 'Was sollte Firefly III tun, wenn der Dauerauftrag auf einen Samstag oder Sonntag fällt?',
     'do_nothing'                         => 'Einfach die Buchung anlegen',
     'skip_transaction'                   => 'Ereignis überspringen',
@@ -1541,4 +1591,27 @@ return [
     'box_net_worth_in_currency'          => 'Eigenkapital (:currency)',
     'box_spend_per_day'                  => 'Pro Tag verbleibend zum Ausgeben: :amount',
 
+    // telemetry
+    'telemetry_admin_index'              => 'Telemetrie',
+    'telemetry_intro'                    => 'Firefly III unterstützt das Erfassen und Versenden von Telemetriedaten zu dessen Nutzung. Das bedeutet, dass Firefly III versuchen wird, Informationen darüber zu sammeln, wie Sie Firefly III verwenden, und diese an den Entwickler von Firefly III zu senden. Dies ist immer optional und standardmäßig deaktiviert. Firefly III wird niemals finanzielle Informationen sammeln oder senden. Firefly III wird auch niemals finanzielle Meta-Informationen, wie Summen oder Berechnungen, sammeln oder versenden. Die gesammelten Daten werden niemals öffentlich zugänglich sein.',
+    'telemetry_what_collected'           => 'Was Firefly III genau zusammenträgt und versendet, ist bei jeder Version anders. Sie verwenden Version :version. Was Firefly III in Version :version sammelt, können Sie auf den Hilfeseiten nachlesen. Klicken Sie auf das „❓” in der rechten oberen Ecke <a href="https://docs.firefly-iii.org/support/telemetry">oder besuchen Sie die Dokumentationsseite</a>.',
+    'telemetry_is_enabled_yes_no'        => 'Ist die Firefly-III-Telemetrie aktiviert?',
+    'telemetry_disabled_no'              => 'Die Telemetrie ist NICHT aktiviert',
+    'telemetry_disabled_yes'             => 'Die Telemetrie ist aktiviert',
+    'telemetry_enabled_now_what'         => 'Sie können die Telemetrie auf dieselbe Weise deaktivieren, wie Sie sie aktiviert haben: in Ihrer .env-Datei oder in Ihrer Docker-Konfiguration.',
+    'telemetry_disabled_now_what'        => 'Wenn Sie möchten, können Sie die Telemetrie in Ihrer .env-Datei oder in Ihrer Docker-Konfiguration aktivieren.',
+    'telemetry_collected_info'           => 'Gesammelte Informationen',
+    'no_telemetry_present'               => 'Firefly III hat keinerlei Telemetriedaten aufgezeichnet.',
+    'records_telemetry_present'          => 'Firefly III hat :count Telemetriedaten erfasst.',
+    'telemetry_button_view'              => 'Telemetrie anzeigen',
+    'telemetry_button_delete'            => 'Alle Telemetriedaten löschen',
+    'telemetry_admin_overview'           => 'Telemetrieübersicht',
+    'telemetry_back_to_index'            => 'Zurück zum Telemetrieindex',
+    'not_yet_submitted'                  => 'Noch nicht übermittelt',
+    'telemetry_type_feature'             => 'Funktions-Flag',
+    'telemetry_submit_all'               => 'Datensätze übermitteln',
+    'telemetry_delete_submitted_records' => 'Übertragene Datensätze löschen',
+    'telemetry_submission_executed'      => 'Datensätze wurden übermittelt. Überprüfen Sie Ihre Protokolldateien für weitere Informationen.',
+    'telemetry_all_deleted'              => 'Alle Telemetriedaten wurden gelöscht.',
+    'telemetry_submitted_deleted'        => 'Alle übermittelten Telemetriedaten wurden gelöscht.'
 ];

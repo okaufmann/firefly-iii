@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * FixLongDescriptions.php
  * Copyright (c) 2020 james@firefly-iii.org
@@ -51,7 +52,7 @@ class FixLongDescriptions extends Command
      */
     public function handle(): int
     {
-        $start = microtime(true);
+        $start    = microtime(true);
         $journals = TransactionJournal::get(['id', 'description']);
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
@@ -65,7 +66,7 @@ class FixLongDescriptions extends Command
         $groups = TransactionGroup::get(['id', 'title']);
         /** @var TransactionGroup $group */
         foreach ($groups as $group) {
-            if (strlen($group->title) > self::MAX_LENGTH) {
+            if (strlen((string)$group->title) > self::MAX_LENGTH) {
                 $group->title = substr($group->title, 0, self::MAX_LENGTH);
                 $group->save();
                 $this->line(sprintf('Truncated description of transaction group #%d', $group->id));
@@ -73,6 +74,8 @@ class FixLongDescriptions extends Command
         }
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Verified all transaction group and journal title lengths in %s seconds.', $end));
+
+        // app('telemetry')->feature('executed-command', $this->signature);
         return 0;
     }
 }

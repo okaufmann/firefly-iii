@@ -109,9 +109,12 @@ Many more features are listed in the [documentation](https://docs.firefly-iii.or
 Several users have built pretty awesome stuff around the Firefly III API. Check out these tools:
 
 * [An Android app by Mike Conway](https://play.google.com/store/apps/details?id=com.zerobyte.firefly)
-* [A Telegram bot by Igor Tsupko](https://github.com/may-cat/firefly-iii-telegram-bot)
+* [A Telegram bot by Valmik](https://github.com/vjFaLk/firefly-bot)
 * [An Android app by Daniel Quah](https://github.com/emansih/FireflyMobile)
 * [A tool to import from Plaid by George Hahn](https://gitlab.com/GeorgeHahn/firefly-plaid-connector)
+* [Firefly III CSV importer](http://github.com/firefly-iii/csv-importer)
+* [Firefly III bunq 🌈 importer](http://github.com/firefly-iii/bunq-importer)
+* [Firefly III YNAB importer](http://github.com/firefly-iii/ynab-importer)
 
 ## Getting Started
 
@@ -122,6 +125,7 @@ There are many ways to run Firefly III
 4. You can [install it using Softaculous](https://softaculous.com/). These guys even have made [another demo site](https://www.softaculous.com/softaculous/apps/others/Firefly_III)!
 5. You can [install it using AMPPS](https://www.ampps.com/).
 6. You can [install it on Cloudron](https://cloudron.io/store/org.fireflyiii.cloudronapp.html).
+7. You can [install it on Lando](https://gist.github.com/ArtisKrumins/ccb24f31d6d4872b57e7c9343a9d1bf0).
 
 ## Contributing
 

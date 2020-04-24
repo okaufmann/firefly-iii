@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
 /**
  * Location.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -22,12 +23,42 @@
 namespace FireflyIII\Models;
 
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Support\Carbon;
 
 /**
  * Class Location
+ *
+ * @property int                                                     $id
+ * @property Carbon|null                         $created_at
+ * @property Carbon|null                         $updated_at
+ * @property Carbon|null                         $deleted_at
+ * @property int                                                     $locatable_id
+ * @property string                                                  $locatable_type
+ * @property float|null                                              $latitude
+ * @property float|null                                              $longitude
+ * @property int|null                                                $zoom_level
+ * @property-read Collection|Account[] $accounts
+ * @property-read int|null                                           $accounts_count
+ * @property-read Model|Eloquent                                     $locatable
+ * @method static Builder|Location newModelQuery()
+ * @method static Builder|Location newQuery()
+ * @method static Builder|Location query()
+ * @method static Builder|Location whereCreatedAt($value)
+ * @method static Builder|Location whereDeletedAt($value)
+ * @method static Builder|Location whereId($value)
+ * @method static Builder|Location whereLatitude($value)
+ * @method static Builder|Location whereLocatableId($value)
+ * @method static Builder|Location whereLocatableType($value)
+ * @method static Builder|Location whereLongitude($value)
+ * @method static Builder|Location whereUpdatedAt($value)
+ * @method static Builder|Location whereZoomLevel($value)
+ * @mixin Eloquent
  */
 class Location extends Model
 {
@@ -50,6 +81,22 @@ class Location extends Model
     protected $fillable = ['locatable_id', 'locatable_type', 'latitude', 'longitude', 'zoom_level'];
 
     /**
+     * Add rules for locations.
+     *
+     * @param array $rules
+     *
+     * @return array
+     */
+    public static function requestRules(array $rules): array
+    {
+        $rules['latitude']   = 'numeric|min:-90|max:90|nullable|required_with:longitude';
+        $rules['longitude']  = 'numeric|min:-180|max:180|nullable|required_with:latitude';
+        $rules['zoom_level'] = 'numeric|min:0|max:80|nullable|required_with:latitude';
+
+        return $rules;
+    }
+
+    /**
      * @codeCoverageIgnore
      * Get all of the accounts.
      */
@@ -68,22 +115,6 @@ class Location extends Model
     public function locatable(): MorphTo
     {
         return $this->morphTo();
-    }
-
-    /**
-     * Add rules for locations.
-     *
-     * @param array $rules
-     *
-     * @return array
-     */
-    public static function requestRules(array $rules): array
-    {
-        $rules['latitude']   = 'numeric|min:-90|max:90|nullable|required_with:longitude';
-        $rules['longitude']  = 'numeric|min:-180|max:180|nullable|required_with:latitude';
-        $rules['zoom_level'] = 'numeric|min:0|max:80|nullable|required_with:latitude';
-
-        return $rules;
     }
 
 }

@@ -2,7 +2,7 @@
 
 /**
  * form.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -43,6 +43,7 @@ return [
     'journal_currency_id'       => 'Währung',
     'currency_id'               => 'Währung',
     'transaction_currency_id'   => 'Währung',
+    'auto_budget_currency_id'   => 'Währung',
     'external_ip'               => 'Die externe IP-Adresse Ihres Servers',
     'attachments'               => 'Anhänge',
     'journal_amount'            => 'Betrag',
@@ -180,11 +181,11 @@ return [
     'also_delete_connections'     => 'Die einzige Transaktion, die mit diesem Verknüpfungstyp verknüpft ist, verliert diese Verbindung. • Alle :count Buchungen, die mit diesem Verknüpfungstyp verknüpft sind, verlieren ihre Verbindung.',
     'also_delete_rules'           => 'Die einzige Regel, die mit diesem Konto verknüpft ist, wird ebenfalls gelöscht. | Alle :count Regeln, die mit diesem Konto verknüpft sind, werden ebenfalls gelöscht.',
     'also_delete_piggyBanks'      => 'Das einzige Sparschwein, das mit diesem Konto verknüpft ist, wird ebenfalls gelöscht. | Alle :count Sparschweine, die mit diesem Konto verknüpft sind, werden ebenfalls gelöscht.',
-    'bill_keep_transactions'      => 'Die einzige mit dieser Rechnung verbundene Buchung wird nicht gelöscht. | Alle :count Buchungen, die mit dieser Rechnung verbunden sind, werden nicht gelöscht.',
-    'budget_keep_transactions'    => 'Die einzige diesem Budget zugeordnete Buchung wird nicht gelöscht. | Alle :count Buchungen, die diesem Budget zugeordnet sind, werden nicht gelöscht.',
-    'category_keep_transactions'  => 'Die einzige Buchung, die mit dieser Kategorie verbunden ist, wird nicht gelöscht. | Alle :count Buchungen, die mit dieser Kategorie verbunden sind, werden nicht gelöscht.',
-    'recurring_keep_transactions' => 'Die einzige Buchung, die durch diesen Dauerauftrag erstellt wurde, wird nicht gelöscht. | Alle :count Buchungen, die durch diesen Dauerauftrag erstellt wurden, werden nicht gelöscht.',
-    'tag_keep_transactions'       => 'Das einzige mit dieser Rechnung verbundene Schlagwort wird nicht gelöscht. | Alle :count Schlagwörter, die mit dieser Rechnung verbunden sind, werden nicht gelöscht.',
+    'bill_keep_transactions'      => 'Die einzige mit dieser Rechnung verbundene Buchung wird nicht gelöscht. | Keine der :count Buchungen, die mit dieser Rechnung verbunden sind, wird gelöscht.',
+    'budget_keep_transactions'    => 'Die einzige diesem Budget zugeordnete Buchung wird nicht gelöscht. | Keine der :count Buchungen, die diesem Budget zugeordnet sind, wird gelöscht.',
+    'category_keep_transactions'  => 'Die einzige Buchung, die mit dieser Kategorie verbunden ist, wird nicht gelöscht. | Keine der :count Buchungen, die mit dieser Kategorie verbunden sind, wird gelöscht.',
+    'recurring_keep_transactions' => 'Die einzige Buchung, die durch diesen Dauerauftrag erstellt wurde, wird nicht gelöscht. | Keine der :count Buchungen, die durch diesen Dauerauftrag erstellt wurden, wird gelöscht.',
+    'tag_keep_transactions'       => 'Das einzige mit dieser Rechnung verbundene Schlagwort wird nicht gelöscht. | Keines der :count Schlagwörter, die mit dieser Rechnung verbunden sind, wird gelöscht.',
     'check_for_updates'           => 'Nach Updates suchen',
 
     'email'                 => 'E-Mail Adresse',
@@ -193,6 +194,7 @@ return [
     'blocked'               => 'Ist blockiert?',
     'blocked_code'          => 'Grund für Block',
     'login_name'            => 'Login',
+    'is_owner'              => 'Ist Administrator?',
 
     // import
     'apply_rules'           => 'Regeln anwenden',
@@ -259,5 +261,15 @@ return [
     'deposit_source_id'         => 'Quellkonto',
     'expected_on'               => 'Erwartet am',
     'paid'                      => 'Bezahlt',
+
+    'auto_budget_type'            => 'Automatisches Budget',
+    'auto_budget_amount'            => 'Betrag des automatischen Budget',
+    'auto_budget_period'            => 'Zeitraum des automatischen Budget',
+
+    'collected' => 'Gesammelt',
+    'submitted' => 'Übermittelt',
+    'key' => 'Schlüssel',
+    'value' => 'Inhalt der Aufzeichnungen'
+
 
 ];

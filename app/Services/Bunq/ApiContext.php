@@ -1,7 +1,7 @@
 <?php
 /**
  * ApiContext.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -35,7 +35,9 @@ use Tests\Object\FakeApiContext;
  * Special class to hide away bunq's static initialisation methods.
  *
  * Class ApiContext
+ *
  * @codeCoverageIgnore
+ * @deprecated
  */
 class ApiContext
 {

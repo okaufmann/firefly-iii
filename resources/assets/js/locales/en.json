@@ -8,7 +8,9 @@
         "errors_submission": "There was something wrong with your submission. Please check out the errors below.",
         "split": "Split",
         "transaction_journal_information": "Transaction information",
+        "no_budget_pointer": "You seem to have no budgets yet. You should create some on the <a href=\"\/budgets\">budgets<\/a>-page. Budgets can help you keep track of expenses.",
         "source_account": "Source account",
+        "hidden_fields_preferences": "You can enable more transaction options in your <a href=\"\/preferences\">settings<\/a>.",
         "destination_account": "Destination account",
         "add_another_split": "Add another split",
         "submission": "Submission",
@@ -32,7 +34,10 @@
         "split_transaction_title_help": "If you create a split transaction, there must be a global description for all splits of the transaction.",
         "destination_account_reconciliation": "You can't edit the destination account of a reconciliation transaction.",
         "source_account_reconciliation": "You can't edit the source account of a reconciliation transaction.",
-        "budget": "Budget"
+        "budget": "Budget",
+        "you_create_withdrawal": "You're creating a withdrawal.",
+        "you_create_transfer": "You're creating a transfer.",
+        "you_create_deposit": "You're creating a deposit."
     },
     "form": {
         "interest_date": "Interest date",

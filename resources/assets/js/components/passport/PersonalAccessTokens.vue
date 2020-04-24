@@ -1,6 +1,6 @@
 <!--
   - PersonalAccessTokens.vue
-  - Copyright (c) 2019 thegrumpydictator@gmail.com
+  - Copyright (c) 2019 james@firefly-iii.org
   -
   - This file is part of Firefly III (https://github.com/firefly-iii).
   -
@@ -45,10 +45,11 @@
 
                     <!-- Personal Access Tokens -->
                     <table class="table table-borderless m-b-none" v-if="tokens.length > 0">
+                        <caption>Personal Access Tokens</caption>
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th></th>
+                                <th scope="col">Name</th>
+                                <th scope="col"></th>
                             </tr>
                         </thead>
 

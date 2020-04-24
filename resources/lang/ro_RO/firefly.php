@@ -2,7 +2,7 @@
 
 /**
  * firefly.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -58,7 +58,8 @@ return [
     'no_rules_for_bill'                          => 'Acestă factură nu are asociate reguli.',
     'go_to_asset_accounts'                       => 'Vizualizați conturile de active',
     'go_to_budgets'                              => 'Mergi la bugete',
-    'clone_instructions'                         => 'Pentru a clona o tranzacție, căutați caseta de selectare „Stocare ca nou” în ecranul de editare',
+    'new_clone_instructions'                     => 'This button will automatically clone the transaction and set the date to today. Are you sure?',
+    'clones_journal_x'                           => 'This transaction is a clone of ":description" (#:id)',
     'go_to_categories'                           => 'Mergi la categorii',
     'go_to_bills'                                => 'Mergi la facturi',
     'go_to_expense_accounts'                     => 'Vezi cheltuielile contabile',
@@ -94,7 +95,7 @@ return [
     'two_factor_forgot'                          => 'Am uitat autentificarea cu doi factori.',
     'two_factor_lost_header'                     => 'Ai uitat autentificarea cu doi factori?',
     'two_factor_lost_intro'                      => 'Dacă ați pierdut și codurile de rezervă, aveți ghinion. Nu este un lucru pe care îl puteți remedia din interfața web. Aveți două opțiuni.',
-    'two_factor_lost_fix_self'                   => 'Dacă rulați propria instanță a Firefly III, verificați log-urile în <code>storage/logs</code> pentru instrucțiuni sau rulați <code>docker logs &lt;container_id&gt;</code> pentru a vedea instrucțiunile (actualizați această pagină).',
+    'two_factor_lost_fix_self'                   => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/faq/other#i-lost-my-two-factor-authentication-codes-and-backup-codes">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                  => 'În caz contrar, trimiteți prin e-mail proprietarului site-ului <a href="mailto::site_owner">: proprietarul site-ului </a> și solicitați-i să reseteze autentificarea cu doi factori.',
     'mfa_backup_code'                            => 'You have used a backup code to login to Firefly III. It can\'t be used again, so cross it from your list.',
     'pref_two_factor_new_backup_codes'           => 'Obțineți noi coduri de rezervă',
@@ -103,7 +104,7 @@ return [
     'warning_much_data'                          => ':days zilele de date pot dura o perioadă până încărcare.',
     'registered'                                 => 'Te-ai inregistrat cu succes!',
     'Default asset account'                      => 'Ccont de active implicit',
-    'no_budget_pointer'                          => 'Se pare că nu ai încă bugete. Ar trebui să creați unele pe pagina <a href=":link"> bugete </a>. Bugetele vă pot ajuta să țineți evidența cheltuielilor.',
+    'no_budget_pointer'                          => 'You seem to have no budgets yet. You should create some on the <a href="/budgets">budgets</a>-page. Budgets can help you keep track of expenses.',
     'Savings account'                            => 'Cont de economii',
     'Credit card'                                => 'Card de credit',
     'source_accounts'                            => 'Cont (uri) sursă',
@@ -204,6 +205,7 @@ return [
     'active_exp_bills_only'                      => 'numai facturi active și așteptate',
     'average_per_bill'                           => 'media pe factură',
     'expected_total'                             => 'total așteptat',
+    'reconciliation_account_name'                => ':name reconciliation',
     // API access
     'authorization_request'                      => 'v: Solicitare de autorizare',
     'authorization_request_intro'                => '<strong> :client </ strong> solicită permisiunea de a accesa administrația financiară. Doriți să autorizați <strong> :client </ strong> pentru a accesa aceste înregistrări?',
@@ -214,11 +216,15 @@ return [
     'name_in_currency'                           => ':name în :currency',
     'paid_in_currency'                           => 'Plătit în :currency',
     'unpaid_in_currency'                         => 'Neplătit în :currency',
+    'is_alpha_warning'                           => 'You are running an ALPHA version. Be wary of bugs and issues.',
+    'is_beta_warning'                            => 'You are running an BETA version. Be wary of bugs and issues.',
+    'all_destination_accounts'                   => 'Destination accounts',
+    'all_source_accounts'                        => 'Source accounts',
 
     // check for updates:
     'update_check_title'                         => 'Verifică actualizări',
     'admin_update_check_title'                   => 'Verificați automat actualizarea',
-    'admin_update_check_explain'                 => 'Firefly III poate verifica automat actualizările. Când activați această setare, va contacta Github pentru a vedea dacă este disponibilă o nouă versiune de Firefly III. Când este, veți primi o notificare. Puteți testa această notificare utilizând butonul din dreapta. Indicați mai jos dacă doriți ca Firefly III să verifice actualizările.',
+    'admin_update_check_explain'                 => 'Firefly III can check for updates automatically. When you enable this setting, it will contact the Firefly III update server to see if a new version of Firefly III is available. When it is, you will get a notification. You can test this notification using the button on the right. Please indicate below if you want Firefly III to check for updates.',
     'check_for_updates_permission'               => 'Firefly III poate verifica actualizările, dar are nevoie de permisiunea dvs. pentru a face acest lucru. Accesați <a href=":link"> link-ul </a> pentru a indica dacă doriți ca această funcție să fie activată.',
     'updates_ask_me_later'                       => 'Intreabă-mă mai târziu',
     'updates_do_not_check'                       => 'Nu verificați actualizările',
@@ -231,7 +237,9 @@ return [
     'update_version_alpha'                       => 'Această versiune este o versiune ALFA. Este posibil să aveți probleme.',
     'update_current_version_alert'               => 'Aveți versiunea :version, care este ultima disponibilă.',
     'update_newer_version_alert'                 => 'Aveți versiunea :your_version, care este mai nouă decât cea mai recentă versiune, :new_version.',
-    'update_check_error'                         => 'A apărut o eroare la verificarea actualizărilor. Consultați log-urile.',
+    'update_check_error'                         => 'An error occurred while checking for updates: :error',
+    'unknown_error'                              => 'Unknown error. Sorry about that.',
+    'just_new_release'                           => 'A new version is available! Version :version was released :date. This release is very fresh. Wait a few days for the new release to stabilize.',
     'admin_update_channel_title'                 => 'Actualizare canal',
     'admin_update_channel_explain'               => 'Firefly III are trei "canale" de actualizare, care determină cât de avansați sunteți în termeni de caracteristici, îmbunătățiri și bug-uri. Folosiți canalul „beta” dacă sunteți aventuroși și „alfa” atunci când vă place să trăiți periculos viața.',
     'update_channel_stable'                      => 'Stabil. Totul ar trebui să funcționeze așa cum este de așteptat.',
@@ -299,6 +307,9 @@ return [
     'created_new_rule_group'                     => 'Grup nou de reguli ":title" stocat!',
     'updated_rule_group'                         => 'Grup de reguli actualizat cu succes ":title".',
     'edit_rule_group'                            => 'Editați grupul de reguli ":title"',
+    'duplicate_rule'                             => 'Duplicate rule ":title"',
+    'rule_copy_of'                               => 'Copy of ":title"',
+    'duplicated_rule'                            => 'Duplicated rule ":title" into ":newTitle"',
     'delete_rule_group'                          => 'Ștergeți  grupul de reguli ":title"',
     'deleted_rule_group'                         => 'Grupul de reguli ":title" a fost șters',
     'update_rule_group'                          => 'Actualizați grupul de reguli',
@@ -309,6 +320,7 @@ return [
     'make_new_rule'                              => 'Creați o nouă regulă în grupul de reguli ":title"',
     'make_new_rule_no_group'                     => 'Creați o nouă regulă',
     'instructions_rule_from_bill'                => 'Pentru a potrivi tranzacția cu noua factură ":name", Firefly III poate crea o regulă care va fi verificată automat împotriva tranzacțiilor pe care le stocați. Verificați detaliile de mai jos și păstrați regula pentru ca Firefly III să potrivească automat tranzacțiile cu factura nouă.',
+    'instructions_rule_from_journal'             => 'Create a rule based on one of your transactions. Complement or submit the form below.',
     'rule_is_strict'                             => 'regulă strictă',
     'rule_is_not_strict'                         => 'regulă nestrictă',
     'rule_help_stop_processing'                  => 'Când bifați această casetă, regulile ulterioare din acest grup nu vor fi executate.',
@@ -493,6 +505,9 @@ return [
     'new_rule_for_bill_title'         => 'Regula privind factura ":name"',
     'new_rule_for_bill_description'   => 'Această regulă marchează tranzacțiile pentru factura ":name".',
 
+    'new_rule_for_journal_title'         => 'Rule based on transaction ":description"',
+    'new_rule_for_journal_description'   => 'This rule is based on transaction ":description". It will match transactions that are exactly the same.',
+
     // tags
     'store_new_tag'                   => 'Salvați o nouă etichetă',
     'update_tag'                      => 'Actualizați eticheta',
@@ -508,8 +523,10 @@ return [
     'delete_all_selected_tags'        => 'Şterge toate etichetele selectate',
     'select_tags_to_delete'           => 'Nu uitați să selectați unele etichete.',
     'deleted_x_tags'                  => ':count etichete șterse.',
+    'create_rule_from_transaction'    => 'Create rule based on transaction',
 
     // preferences
+    'equal_to_language'               => '(equal to language)',
     'pref_home_screen_accounts'       => 'Ecranul de start al conturilor',
     'pref_home_screen_accounts_help'  => 'Ce conturi ar trebui afișate pe pagina de pornire?',
     'pref_view_range'                 => 'Vedeți intervalul',
@@ -521,7 +538,9 @@ return [
     'pref_6M'                         => 'Șase luni',
     'pref_1Y'                         => 'Un an',
     'pref_languages'                  => 'Limbi',
+    'pref_locale'                     => 'Locale settings',
     'pref_languages_help'             => 'Firefly III acceptă mai multe limbi. Pe care o preferați?',
+    'pref_locale_help'                => 'Firefly III allows you to set other local settings, like how currencies, numbers and dates are formatted. Entries in this list may not be supported by your system. Firefly III doesn\'t have the correct date settings for every locale; contact me for improvements.',
     'pref_custom_fiscal_year'         => 'Setări an fiscal',
     'pref_custom_fiscal_year_label'   => 'Activat',
     'pref_custom_fiscal_year_help'    => 'În țările care utilizează un exercițiu financiar, altul decât 1 ianuarie până la 31 decembrie, puteți să le activați și să specificați zilele de începere / sfârșit ale anului fiscal',
@@ -700,6 +719,7 @@ return [
     'update_currency'                           => 'Actualizați monedă',
     'new_default_currency'                      => ':name este acum moneda implicită.',
     'cannot_delete_currency'                    => 'Nu se poate șterge :nume deoarece este încă în uz.',
+    'cannot_delete_fallback_currency'           => ':name is the system fallback currency and can\'t be deleted.',
     'cannot_disable_currency_journals'          => 'Nu se poate dezactiva :name, deoarece tranzacțiile încă îl utilizează.',
     'cannot_disable_currency_last_left'         => 'Nu se poate dezactiva :name, deoarece este ultima monedă activată.',
     'cannot_disable_currency_account_meta'      => 'Nu se poate dezactiva :name deoarece este utilizat în conturile de active.',
@@ -771,6 +791,18 @@ return [
     'over_budget_warn'                          => '<i class="fa fa-money"></i> În mod normal bugetați aproximativ :amount pe zi. Acum este :over_amount pe zi. Sunteți sigur?',
     'transferred_in'                            => 'Transferat (în)',
     'transferred_away'                          => 'Transferat (departe)',
+    'auto_budget_none'                          => 'No auto-budget',
+    'auto_budget_reset'                         => 'Set a fixed amount every period',
+    'auto_budget_rollover'                      => 'Add an amount every period',
+    'auto_budget_period_daily'                  => 'Daily',
+    'auto_budget_period_weekly'                 => 'Weekly',
+    'auto_budget_period_monthly'                => 'Monthly',
+    'auto_budget_period_quarterly'              => 'Quarterly',
+    'auto_budget_period_half_year'              => 'Every half year',
+    'auto_budget_period_yearly'                 => 'Yearly',
+    'auto_budget_help'                          => 'You can read more about this feature in the help. Click the top-right (?) icon.',
+    'auto_budget_reset_icon'                    => 'This budget will be set periodically',
+    'auto_budget_rollover_icon'                 => 'The budget amount will increase periodically',
 
     // bills:
     'match_between_amounts'                     => 'Factura se potrivește tranzacțiilor între :low și :high.',
@@ -800,6 +832,7 @@ return [
     'skips_over'                                => 'sari peste',
     'bill_store_error'                          => 'A apărut o eroare neașteptată în timpul stocării facturii noi. Verificați log-urile',
     'list_inactive_rule'                        => 'regulă inactivă',
+    'bill_edit_rules'                           => 'Firefly III will attempt to edit the :count rule(s) related to this bill as well. If you\'ve edited these rule(s) yourself however, Firefly III won\'t change anything.',
 
     // accounts:
     'inactive_account_link'                     => 'Aveți :count conturi inactive (arhivate), pe care le puteți vizualiza în această pagină separată.',
@@ -932,6 +965,7 @@ return [
     'deleted_withdrawal'                        => 'Retragerea ":description" ștearsă cu succes',
     'deleted_deposit'                           => 'Depozitul ":description" șters cu succes',
     'deleted_transfer'                          => 'Transferul ":description" șters cu succes',
+    'deleted_reconciliation'                    => 'Successfully deleted reconciliation transaction ":description"',
     'stored_journal'                            => 'A fost creată cu succes o tranzacție nouă ":description"',
     'stored_journal_no_descr'                   => 'Tranzacția s-a creat cu succes',
     'updated_journal_no_descr'                  => 'Tranzacția s-a actualizat cu succes',
@@ -957,6 +991,7 @@ return [
     'no_budget'                                 => '(nici un buget)',
     'account_per_budget'                        => 'Cont pe buget',
     'account_per_category'                      => 'Cont pe categorie',
+    'create_new_object'                         => 'Create',
     'empty'                                     => '(gol)',
     'all_other_budgets'                         => '(toate celelalte bugete)',
     'all_other_accounts'                        => '(toate celelalte conturi)',
@@ -1091,7 +1126,8 @@ return [
     'errors'                                    => 'Erori',
     'debt_start_date'                           => 'Data de începere a datoriilor',
     'debt_start_amount'                         => 'Valoarea inițială a datoriei',
-    'debt_start_amount_help'                    => 'Dacă datorați o sumă este bine să introduceți o sumă negativă, deoarece influențează valoarea netă. Dacă vi se datorează o sumă, se aplică același lucru. Consultați paginile de ajutor pentru mai multe informații.',
+    'debt_start_amount_help'                    => 'It\'s always best to set this value to a negative amount. Read the help pages (top right (?)-icon) for more information.',
+    'interest_period_help'                      => 'This field is purely cosmetic and won\'t be calculated for you. As it turns out banks are very sneaky so Firefly III never gets it right.',
     'store_new_liabilities_account'             => 'Salvați provizion nou',
     'edit_liabilities_account'                  => 'Editați provizion ":name"',
 
@@ -1294,7 +1330,7 @@ return [
     'store_configuration'              => 'Salvați configurarea',
     'single_user_administration'       => 'Administrare utilizator pentru :email',
     'edit_user'                        => 'Editați user :email',
-    'hidden_fields_preferences'        => 'Aveți mai multe opțiuni pentru tranzacții în <a href=":link">setări</a>.',
+    'hidden_fields_preferences'        => 'You can enable more transaction options in your <a href="/preferences">settings</a>.',
     'user_data_information'            => 'Datele utilizatorului',
     'user_information'                 => 'Informații utilizator',
     'total_size'                       => 'marimea totală',
@@ -1318,14 +1354,15 @@ return [
     'send_test_email_text'             => 'Pentru a vedea dacă instalarea dvs. este capabilă să trimită un e-mail, vă rugăm să apăsați acest buton. Nu veți vedea o eroare aici (dacă există), <strong> log-urile vor reflecta orice eroare </ strong>. Puteți apăsa acest buton ori de câte ori doriți. Nu există niciun control spam. Mesajul va fi trimis la <code>:email</ code> și ar trebui să sosească în scurt timp.',
     'send_message'                     => 'Trimite mesaj',
     'send_test_triggered'              => 'Testul a fost declanșat. Verificați mesajele primite și log-urile.',
+    'give_admin_careful'               => 'Users who are given admin rights can take away yours. Be careful.',
 
     'split_transaction_title'               => 'Descrierea tranzacției divizate',
     'split_transaction_title_help'          => 'Dacă creați o tranzacție divizată, trebuie să existe o descriere globală pentru toate diviziunile tranzacției.',
     'split_title_help'                      => 'Dacă creați o tranzacție divizată, trebuie să existe o descriere globală pentru toate diviziunile tranzacției.',
     'transaction_information'               => 'Informații despre tranzacții',
-    'you_create_transfer'                   => 'Creați un <strong> transfer </strong>.',
-    'you_create_withdrawal'                 => 'Creați o <strong> retragere</strong>.',
-    'you_create_deposit'                    => 'Creați un <strong> depozit</strong>.',
+    'you_create_transfer'                   => 'You\'re creating a transfer.',
+    'you_create_withdrawal'                 => 'You\'re creating a withdrawal.',
+    'you_create_deposit'                    => 'You\'re creating a deposit.',
 
 
     // links
@@ -1382,6 +1419,13 @@ return [
     '(partially) refunds_outward'           => '(parțial) restituiri',
     '(partially) pays for_outward'          => '(parțial) plătește pentru',
     '(partially) reimburses_outward'        => '(parțial) ramburseaza',
+    'is (partially) refunded by'            => 'is (partially) refunded by',
+    'is (partially) paid for by'            => 'is (partially) paid for by',
+    'is (partially) reimbursed by'          => 'is (partially) reimbursed by',
+    'relates to'                            => 'relates to',
+    '(partially) refunds'                   => '(partially) refunds',
+    '(partially) pays for'                  => '(partially) pays for',
+    '(partially) reimburses'                => '(partially) reimburses',
 
     // split a transaction:
     'splits'                                => 'Desparte',
@@ -1406,7 +1450,13 @@ return [
     'import_index_title'                    => 'Importă tranzacții în Firefly III',
     'import_data'                           => 'Importă date',
     'import_transactions'                   => 'Importă tranzacții',
-
+    'import_tools_title'                    => 'Import tools',
+    'tools_index_intro'                     => 'Several tools exist to import data into Firefly III. Check them out below. For more information, check out <a href="https://docs.firefly-iii.org/importing-data/introduction">this page</a>.',
+    'firefly_iii_csv_importer_name'         => 'Firefly III CSV importer',
+    'firefly_iii_bunq_importer_name'        => 'Firefly III bunq 🌈 importer',
+    'firefly_iii_ynab_importer_name'        => 'Firefly III YNAB importer',
+    'ludo_revolut_importer_name'            => 'Ludo444\'s Revolut importer',
+    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Această funcție nu este disponibilă când utilizați Firefly III într-un mediu Sandstorm.io.',
 
@@ -1541,4 +1591,27 @@ return [
     'box_net_worth_in_currency'          => 'Valoarea netă (:currency)',
     'box_spend_per_day'                  => 'Rămas de cheltui pe zi: :amount',
 
+    // telemetry
+    'telemetry_admin_index'              => 'Telemetry',
+    'telemetry_intro'                    => 'Firefly III supports the collection and sending of usage telemetry. This means that Firefly III will try to collect info on how you use Firefly III, and send it to the developer of Firefly III. This is always opt-in, and is disabled by default. Firefly III will never collect or send financial information. Firefly III will also never collect or send financial meta-information, like sums or calculations. The collected data will never be made publicly accessible.',
+    'telemetry_what_collected'           => 'What Firefly III collects and sends exactly is different for each version. You are running version :version. What Firefly III collects in version :version is something you can read in the help pages. Click the (?)-icon in the top-right corner <a href="https://docs.firefly-iii.org/support/telemetry">or visit the documentation page</a>.',
+    'telemetry_is_enabled_yes_no'        => 'Is Firefly III telemetry enabled?',
+    'telemetry_disabled_no'              => 'Telemetry is NOT enabled',
+    'telemetry_disabled_yes'             => 'Telemetry is enabled',
+    'telemetry_enabled_now_what'         => 'You can disable telemetry the same way you enabled it: in your .env file or in your Docker configuration.',
+    'telemetry_disabled_now_what'        => 'If you want to, you can enable telemetry in your .env file or in your Docker configuration.',
+    'telemetry_collected_info'           => 'Collected information',
+    'no_telemetry_present'               => 'Firefly III has collected zero telemetry records.',
+    'records_telemetry_present'          => 'Firefly III has collected :count telemetry record(s).',
+    'telemetry_button_view'              => 'View telemetry',
+    'telemetry_button_delete'            => 'Delete all telemetry',
+    'telemetry_admin_overview'           => 'Telemetry overview',
+    'telemetry_back_to_index'            => 'Back to telemetry index',
+    'not_yet_submitted'                  => 'Not yet submitted',
+    'telemetry_type_feature'             => 'Feature flag',
+    'telemetry_submit_all'               => 'Submit records',
+    'telemetry_delete_submitted_records' => 'Delete submitted records',
+    'telemetry_submission_executed'      => 'Records have been submitted. Check your log files for more info.',
+    'telemetry_all_deleted'              => 'All telemetry records have been deleted.',
+    'telemetry_submitted_deleted'        => 'All submitted telemetry records have been deleted.'
 ];

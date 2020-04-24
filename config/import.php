@@ -2,7 +2,7 @@
 
 /**
  * import.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -44,7 +44,7 @@ return [
     // these import providers are available:
     'enabled'          => [
         'fake'    => true,
-        'file'    => true,
+        'file'    => false,
         'bunq'    => false,
         'spectre' => true,
         'ynab'    => true,
@@ -70,7 +70,7 @@ return [
     'allowed_for_user' => [
         'fake'    => false,
         'file'    => true,
-        'bunq'    => true,
+        'bunq'    => false,
         'spectre' => true,
         'ynab'    => true,
         'plaid'   => true,
@@ -82,7 +82,7 @@ return [
     'has_prereq'       => [
         'fake'    => true,
         'file'    => false,
-        'bunq'    => true,
+        'bunq'    => false,
         'spectre' => true,
         'ynab'    => true,
         'plaid'   => true,

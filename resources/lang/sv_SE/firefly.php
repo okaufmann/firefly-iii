@@ -2,7 +2,7 @@
 
 /**
  * firefly.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -58,7 +58,8 @@ return [
     'no_rules_for_bill'                          => 'Notan saknar associerade regler.',
     'go_to_asset_accounts'                       => 'Visa dina tillgångskonton',
     'go_to_budgets'                              => 'Gå till dina budgetar',
-    'clone_instructions'                         => 'För att klona en transaktion, sök efter kryssrutan "lagra som ny" på redigeringsskärmen',
+    'new_clone_instructions'                     => 'This button will automatically clone the transaction and set the date to today. Are you sure?',
+    'clones_journal_x'                           => 'This transaction is a clone of ":description" (#:id)',
     'go_to_categories'                           => 'Gå till dina kategorier',
     'go_to_bills'                                => 'Gå till dina notor',
     'go_to_expense_accounts'                     => 'Se dina utgiftskonton',
@@ -94,7 +95,7 @@ return [
     'two_factor_forgot'                          => 'Jag har glömt min tvåfaktors-pryl.',
     'two_factor_lost_header'                     => 'Förlorad tvåfaktorsautentisering?',
     'two_factor_lost_intro'                      => 'Om du har förlorat även dina backupkoder har du otur. Detta är inte något du kan fixa från webbgränssnittet. Du har två val.',
-    'two_factor_lost_fix_self'                   => 'Om du kör din egen instans av Firefly III, kontrollera loggarna i <code>storage/logs</code> efter instruktioner, eller kör <code>docker logs &lt;container_id&gt;</code> för att se instruktioner (ladda om den här sidan).',
+    'two_factor_lost_fix_self'                   => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/faq/other#i-lost-my-two-factor-authentication-codes-and-backup-codes">this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'                  => 'Annars, skicka epost till sajt-ägaren, <a href="mailto::site_owner">:site_owner</a> och be hen att återställa din tvåfaktorsautentisering.',
     'mfa_backup_code'                            => 'Du har använt en engångskod för att logga in i Firefly III. Den kan inte användas igen, så stryk den från din lista.',
     'pref_two_factor_new_backup_codes'           => 'Generera nya engångskoder',
@@ -103,7 +104,7 @@ return [
     'warning_much_data'                          => ':days dagar med data kan ta ett tag att ladda.',
     'registered'                                 => 'Din registrering lyckades!',
     'Default asset account'                      => 'Förvalt tillgångskonto',
-    'no_budget_pointer'                          => 'Du verkar inte ha några budgetar än. Du borde skapa några på <a href=":link">budget</a>-sidan. Budgetar kan hjälpa dig att hålla reda på utgifterna.',
+    'no_budget_pointer'                          => 'You seem to have no budgets yet. You should create some on the <a href="/budgets">budgets</a>-page. Budgets can help you keep track of expenses.',
     'Savings account'                            => 'Sparkonto',
     'Credit card'                                => 'Kreditkort',
     'source_accounts'                            => 'Från konto',
@@ -204,6 +205,7 @@ return [
     'active_exp_bills_only'                      => 'endast aktiva och väntade notor',
     'average_per_bill'                           => 'medel per nota',
     'expected_total'                             => 'total förväntad',
+    'reconciliation_account_name'                => ':name reconciliation',
     // API access
     'authorization_request'                      => 'Firefly III v:version Auktorisationsbegäran',
     'authorization_request_intro'                => '<strong>:client</strong> begär tillstånd för åtkomst till din ekonomi administration. Vill du tillåta <strong>:client</strong> åtkomst till dessa poster?',
@@ -214,11 +216,15 @@ return [
     'name_in_currency'                           => ':name i :currency',
     'paid_in_currency'                           => 'Betalad i :currency',
     'unpaid_in_currency'                         => 'Obetalad i :currency',
+    'is_alpha_warning'                           => 'You are running an ALPHA version. Be wary of bugs and issues.',
+    'is_beta_warning'                            => 'You are running an BETA version. Be wary of bugs and issues.',
+    'all_destination_accounts'                   => 'Destination accounts',
+    'all_source_accounts'                        => 'Source accounts',
 
     // check for updates:
     'update_check_title'                         => 'Sök uppdateringar',
     'admin_update_check_title'                   => 'Sök automatiskt efter uppdateringar',
-    'admin_update_check_explain'                 => 'Firefly III kan söka efter uppdateringara automatiskt. När du aktiverar denna inställning, kommer den kolla på Github om nya versioner av Firefly III är tillgängliga. När det är så, får du en notifiering. Du kan testa detta via knappen till höger. Välj nedan om du vill att Firefly III ska automatiskt söka efter uppdateringar.',
+    'admin_update_check_explain'                 => 'Firefly III can check for updates automatically. When you enable this setting, it will contact the Firefly III update server to see if a new version of Firefly III is available. When it is, you will get a notification. You can test this notification using the button on the right. Please indicate below if you want Firefly III to check for updates.',
     'check_for_updates_permission'               => 'Firefly III kan söka efter uppdateringara, men den behöver din tillåtelse att göra så. Vänligen gå till <a href=":link">inställningar</a> för att ställa in om denna funktion ska aktiveras.',
     'updates_ask_me_later'                       => 'Fråga mig senare',
     'updates_do_not_check'                       => 'Sök inte efter uppdateringar',
@@ -231,7 +237,9 @@ return [
     'update_version_alpha'                       => 'Denna version är en ALPHA version. Det kan förekomma problem.',
     'update_current_version_alert'               => 'Du har :version, vilken är den senaste tillgängliga utgåva.',
     'update_newer_version_alert'                 => 'Du har :your_version, vilken är nyare än senaste utgåva, :new_version.',
-    'update_check_error'                         => 'Ett fel uppstod vid kontroll av uppdatering. Vänligen se logg filerna.',
+    'update_check_error'                         => 'An error occurred while checking for updates: :error',
+    'unknown_error'                              => 'Unknown error. Sorry about that.',
+    'just_new_release'                           => 'A new version is available! Version :version was released :date. This release is very fresh. Wait a few days for the new release to stabilize.',
     'admin_update_channel_title'                 => 'Uppdatera kanal',
     'admin_update_channel_explain'               => 'Firefly III har tre uppdaterings "kanaler" som bestämmer hur frammåt i kurvan du är i form av funktioner, förbättringar och buggar. Använd "beta" kanalen om du är äventyrslysten och "alpha" om du tycket om att leva farligt.',
     'update_channel_stable'                      => 'Stabil. Allting fungerar som förväntat.',
@@ -299,6 +307,9 @@ return [
     'created_new_rule_group'                     => 'Ny regelgrupp ":title" sparad!',
     'updated_rule_group'                         => 'Lyckades uppdatera regelgrupp ":title".',
     'edit_rule_group'                            => 'Ändra regelgrupp ":title"',
+    'duplicate_rule'                             => 'Duplicate rule ":title"',
+    'rule_copy_of'                               => 'Copy of ":title"',
+    'duplicated_rule'                            => 'Duplicated rule ":title" into ":newTitle"',
     'delete_rule_group'                          => 'Ta bort regelgrupp ":title"',
     'deleted_rule_group'                         => 'Tog bort regelgrupp ":title"',
     'update_rule_group'                          => 'Uppdatera regelgrupp',
@@ -309,6 +320,7 @@ return [
     'make_new_rule'                              => 'Skapa en ny regel i regelgrupp ":title"',
     'make_new_rule_no_group'                     => 'Skapa en ny regel',
     'instructions_rule_from_bill'                => 'För att matcha transaktioner till din nya nota ":name", så kan Firefly III skapa en regel för att automatiskt kontrollera mot alla transaktioner du sparar. Vänligen verifiera detaljerna nedan och spara regeln för att Firefly III automatisk ska matcha transaktioner till din nya nota.',
+    'instructions_rule_from_journal'             => 'Create a rule based on one of your transactions. Complement or submit the form below.',
     'rule_is_strict'                             => 'strikt regel',
     'rule_is_not_strict'                         => 'icke-strikt regel',
     'rule_help_stop_processing'                  => 'Med denna ruta ikryssad körs inte efterkommande regler i denna grupp.',
@@ -493,6 +505,9 @@ return [
     'new_rule_for_bill_title'         => 'Regel för nota ":name"',
     'new_rule_for_bill_description'   => 'Denna regel markerar transaktion för nota ":name".',
 
+    'new_rule_for_journal_title'         => 'Rule based on transaction ":description"',
+    'new_rule_for_journal_description'   => 'This rule is based on transaction ":description". It will match transactions that are exactly the same.',
+
     // tags
     'store_new_tag'                   => 'Spara ny etikett',
     'update_tag'                      => 'Uppdatera etikett',
@@ -508,8 +523,10 @@ return [
     'delete_all_selected_tags'        => 'Delete all selected tags',
     'select_tags_to_delete'           => 'Don\'t forget to select some tags.',
     'deleted_x_tags'                  => 'Deleted :count tag(s).',
+    'create_rule_from_transaction'    => 'Create rule based on transaction',
 
     // preferences
+    'equal_to_language'               => '(equal to language)',
     'pref_home_screen_accounts'       => 'Startskäm konton',
     'pref_home_screen_accounts_help'  => 'Vilka konton ska visas på startskärmen?',
     'pref_view_range'                 => 'Visa intervall',
@@ -521,7 +538,9 @@ return [
     'pref_6M'                         => 'Sex månader',
     'pref_1Y'                         => 'Ett år',
     'pref_languages'                  => 'Språk',
+    'pref_locale'                     => 'Locale settings',
     'pref_languages_help'             => 'Firefly III stödjer flera språk. Vilket föredrar du?',
+    'pref_locale_help'                => 'Firefly III allows you to set other local settings, like how currencies, numbers and dates are formatted. Entries in this list may not be supported by your system. Firefly III doesn\'t have the correct date settings for every locale; contact me for improvements.',
     'pref_custom_fiscal_year'         => 'Räkneskapsårs inställningar',
     'pref_custom_fiscal_year_label'   => 'Aktiverad',
     'pref_custom_fiscal_year_help'    => 'I länder som använder räkneskapsår annat än 1a Januari till 31a December, går det att ändra detta och välja start / slut dagar för räkneskapsåret',
@@ -623,7 +642,7 @@ return [
     'export_data_bc'                => 'Export data from Firefly III',
     'export_data_main_title'        => 'Export data from Firefly III',
     'export_data_expl'              => 'This link allows you to export all transactions + meta data from Firefly III. Please refer to the help (top right (?)-icon) for more information about the process.',
-    'export_data_all_transactions'  => 'Export all transactions',
+    'export_data_all_transactions'  => 'Exportera alla transaktioner',
     'export_data_advanced_expl'     => 'If you need a more advanced or specific type of export, read the help on how to use the console command <code>php artisan help firefly-iii:export-data</code>.',
 
     // attachments
@@ -700,6 +719,7 @@ return [
     'update_currency'                           => 'Uppdatera valuta',
     'new_default_currency'                      => ':name är nu standard valuta.',
     'cannot_delete_currency'                    => 'Kan ej ta bort :name då den fortfarande används.',
+    'cannot_delete_fallback_currency'           => ':name is the system fallback currency and can\'t be deleted.',
     'cannot_disable_currency_journals'          => 'Kan inte inaktivera :name då transaktioner fortfarande använder den.',
     'cannot_disable_currency_last_left'         => 'Kan inte inaktivera :name efter det är den sista aktiverade valutan.',
     'cannot_disable_currency_account_meta'      => 'Kan inte inaktivera :name, används i tillgångskonton.',
@@ -771,6 +791,18 @@ return [
     'over_budget_warn'                          => '<i class="fa fa-money"></i>Vanligen budgeterar du :amount per dag. Nu är det :over_amount per dag. Är du säker?',
     'transferred_in'                            => 'Överfört (in)',
     'transferred_away'                          => 'Överfört (bort)',
+    'auto_budget_none'                          => 'No auto-budget',
+    'auto_budget_reset'                         => 'Set a fixed amount every period',
+    'auto_budget_rollover'                      => 'Add an amount every period',
+    'auto_budget_period_daily'                  => 'Daily',
+    'auto_budget_period_weekly'                 => 'Weekly',
+    'auto_budget_period_monthly'                => 'Monthly',
+    'auto_budget_period_quarterly'              => 'Quarterly',
+    'auto_budget_period_half_year'              => 'Every half year',
+    'auto_budget_period_yearly'                 => 'Yearly',
+    'auto_budget_help'                          => 'You can read more about this feature in the help. Click the top-right (?) icon.',
+    'auto_budget_reset_icon'                    => 'This budget will be set periodically',
+    'auto_budget_rollover_icon'                 => 'The budget amount will increase periodically',
 
     // bills:
     'match_between_amounts'                     => 'Nota matchar transaktioner mellan :low och :high.',
@@ -800,6 +832,7 @@ return [
     'skips_over'                                => 'hoppas över',
     'bill_store_error'                          => 'Ett oväntat fel uppstod vid lagring av den nya notan. Vänligen se loggfilerna',
     'list_inactive_rule'                        => 'inaktiv regel',
+    'bill_edit_rules'                           => 'Firefly III will attempt to edit the :count rule(s) related to this bill as well. If you\'ve edited these rule(s) yourself however, Firefly III won\'t change anything.',
 
     // accounts:
     'inactive_account_link'                     => 'Du har :count inaktiva (arkiverade) konton, vilka kan ses på denna separata sida.',
@@ -932,6 +965,7 @@ return [
     'deleted_withdrawal'                        => 'Uttag ":description" har tagits bort',
     'deleted_deposit'                           => 'Insättning ":description" har tagits bort',
     'deleted_transfer'                          => 'Överföring ":description" har tagits bort',
+    'deleted_reconciliation'                    => 'Successfully deleted reconciliation transaction ":description"',
     'stored_journal'                            => 'Transaktion ":description" har tagits bort',
     'stored_journal_no_descr'                   => 'Ny transaktion skapades lyckat',
     'updated_journal_no_descr'                  => 'Transaktion har uppdaterats',
@@ -957,6 +991,7 @@ return [
     'no_budget'                                 => '(ingen budget)',
     'account_per_budget'                        => 'Konto per budget',
     'account_per_category'                      => 'Konto per etikett',
+    'create_new_object'                         => 'Create',
     'empty'                                     => '(tom)',
     'all_other_budgets'                         => '(övriga budgetar)',
     'all_other_accounts'                        => '(alla övriga konton)',
@@ -1091,7 +1126,8 @@ return [
     'errors'                                    => 'Fel',
     'debt_start_date'                           => 'Skuldens startdatum',
     'debt_start_amount'                         => 'Skuldens startsumma',
-    'debt_start_amount_help'                    => 'Om du är skyldig ett belopp är det bäst att ange ett negativt värde, detta influenserar ditt nettovärde. Om du har lånat ut ett belopp gäller det samma. Se hjälpsidorna för mer information.',
+    'debt_start_amount_help'                    => 'It\'s always best to set this value to a negative amount. Read the help pages (top right (?)-icon) for more information.',
+    'interest_period_help'                      => 'This field is purely cosmetic and won\'t be calculated for you. As it turns out banks are very sneaky so Firefly III never gets it right.',
     'store_new_liabilities_account'             => 'Spara en ny skuld',
     'edit_liabilities_account'                  => 'Ändra skuld ":name"',
 
@@ -1294,7 +1330,7 @@ return [
     'store_configuration'              => 'Spara konfiguration',
     'single_user_administration'       => 'Användaradministration för :email',
     'edit_user'                        => 'Redigera användare :email',
-    'hidden_fields_preferences'        => 'Du kan aktivera mer transaktionsalternativ under dina <a href=":link">inställningar</a>.',
+    'hidden_fields_preferences'        => 'You can enable more transaction options in your <a href="/preferences">settings</a>.',
     'user_data_information'            => 'Användardata',
     'user_information'                 => 'Användar information',
     'total_size'                       => 'total storlek',
@@ -1318,14 +1354,15 @@ return [
     'send_test_email_text'             => 'To see if your installation is capable of sending email, please press this button. You will not see an error here (if any), <strong>the log files will reflect any errors</strong>. You can press this button as many times as you like. There is no spam control. The message will be sent to <code>:email</code> and should arrive shortly.',
     'send_message'                     => 'Send message',
     'send_test_triggered'              => 'Test was triggered. Check your inbox and the log files.',
+    'give_admin_careful'               => 'Users who are given admin rights can take away yours. Be careful.',
 
     'split_transaction_title'               => 'Description of the split transaction',
     'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'split_title_help'                      => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'transaction_information'               => 'Transaktionsinformation',
-    'you_create_transfer'                   => 'Du skapar en <strong>överföring</strong>.',
-    'you_create_withdrawal'                 => 'Du skapar ett <strong>uttag</strong>.',
-    'you_create_deposit'                    => 'Du skapar en <strong>insättning</strong>.',
+    'you_create_transfer'                   => 'You\'re creating a transfer.',
+    'you_create_withdrawal'                 => 'You\'re creating a withdrawal.',
+    'you_create_deposit'                    => 'You\'re creating a deposit.',
 
 
     // links
@@ -1382,6 +1419,13 @@ return [
     '(partially) refunds_outward'           => '(delvis) återbetalningar',
     '(partially) pays for_outward'          => '(delvis) betalning för',
     '(partially) reimburses_outward'        => '(delvis) ersättning',
+    'is (partially) refunded by'            => 'is (partially) refunded by',
+    'is (partially) paid for by'            => 'is (partially) paid for by',
+    'is (partially) reimbursed by'          => 'is (partially) reimbursed by',
+    'relates to'                            => 'relates to',
+    '(partially) refunds'                   => '(partially) refunds',
+    '(partially) pays for'                  => '(partially) pays for',
+    '(partially) reimburses'                => '(partially) reimburses',
 
     // split a transaction:
     'splits'                                => 'Dela upp',
@@ -1406,7 +1450,13 @@ return [
     'import_index_title'                    => 'Importera transaktioner till Firefly III',
     'import_data'                           => 'Importera data',
     'import_transactions'                   => 'Importera transaktioner',
-
+    'import_tools_title'                    => 'Import tools',
+    'tools_index_intro'                     => 'Several tools exist to import data into Firefly III. Check them out below. For more information, check out <a href="https://docs.firefly-iii.org/importing-data/introduction">this page</a>.',
+    'firefly_iii_csv_importer_name'         => 'Firefly III CSV importer',
+    'firefly_iii_bunq_importer_name'        => 'Firefly III bunq 🌈 importer',
+    'firefly_iii_ynab_importer_name'        => 'Firefly III YNAB importer',
+    'ludo_revolut_importer_name'            => 'Ludo444\'s Revolut importer',
+    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Denna funktion är inte tillgänglig om Firefly III används i en Sandstorm.io miljö.',
 
@@ -1541,4 +1591,27 @@ return [
     'box_net_worth_in_currency'          => 'Net worth (:currency)',
     'box_spend_per_day'                  => 'Left to spend per day: :amount',
 
+    // telemetry
+    'telemetry_admin_index'              => 'Telemetry',
+    'telemetry_intro'                    => 'Firefly III supports the collection and sending of usage telemetry. This means that Firefly III will try to collect info on how you use Firefly III, and send it to the developer of Firefly III. This is always opt-in, and is disabled by default. Firefly III will never collect or send financial information. Firefly III will also never collect or send financial meta-information, like sums or calculations. The collected data will never be made publicly accessible.',
+    'telemetry_what_collected'           => 'What Firefly III collects and sends exactly is different for each version. You are running version :version. What Firefly III collects in version :version is something you can read in the help pages. Click the (?)-icon in the top-right corner <a href="https://docs.firefly-iii.org/support/telemetry">or visit the documentation page</a>.',
+    'telemetry_is_enabled_yes_no'        => 'Is Firefly III telemetry enabled?',
+    'telemetry_disabled_no'              => 'Telemetry is NOT enabled',
+    'telemetry_disabled_yes'             => 'Telemetry is enabled',
+    'telemetry_enabled_now_what'         => 'You can disable telemetry the same way you enabled it: in your .env file or in your Docker configuration.',
+    'telemetry_disabled_now_what'        => 'If you want to, you can enable telemetry in your .env file or in your Docker configuration.',
+    'telemetry_collected_info'           => 'Collected information',
+    'no_telemetry_present'               => 'Firefly III has collected zero telemetry records.',
+    'records_telemetry_present'          => 'Firefly III has collected :count telemetry record(s).',
+    'telemetry_button_view'              => 'View telemetry',
+    'telemetry_button_delete'            => 'Delete all telemetry',
+    'telemetry_admin_overview'           => 'Telemetry overview',
+    'telemetry_back_to_index'            => 'Back to telemetry index',
+    'not_yet_submitted'                  => 'Not yet submitted',
+    'telemetry_type_feature'             => 'Feature flag',
+    'telemetry_submit_all'               => 'Submit records',
+    'telemetry_delete_submitted_records' => 'Delete submitted records',
+    'telemetry_submission_executed'      => 'Records have been submitted. Check your log files for more info.',
+    'telemetry_all_deleted'              => 'All telemetry records have been deleted.',
+    'telemetry_submitted_deleted'        => 'All submitted telemetry records have been deleted.'
 ];

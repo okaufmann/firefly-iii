@@ -1,7 +1,7 @@
 <?php
 /**
  * AccountRepository.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -311,7 +311,7 @@ class AccountRepository implements AccountRepositoryInterface
         $query = $this->user->accounts()->with(
             ['accountmeta' => function (HasMany $query) {
                 $query->where('name', 'account_role');
-            }]
+            }, 'attachments']
         );
         if (count($types) > 0) {
             $query->accountTypeIn($types);
@@ -473,7 +473,9 @@ class AccountRepository implements AccountRepositoryInterface
         if (AccountType::ASSET !== $account->accountType->type) {
             throw new FireflyException(sprintf('%s is not an asset account.', $account->name));
         }
-        $name = $account->name . ' reconciliation';
+
+        $name = trans('firefly.reconciliation_account_name', ['name' => $account->name]);
+
         /** @var AccountType $type */
         $type     = AccountType::where('type', AccountType::RECONCILIATION)->first();
         $accounts = $this->user->accounts()->where('account_type_id', $type->id)->get();
@@ -642,5 +644,29 @@ class AccountRepository implements AccountRepositoryInterface
     public function getLocation(Account $account): ?Location
     {
         return $account->locations()->first();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAttachments(Account $account): Collection
+    {
+        return $account->attachments()->get();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getUsedCurrencies(Account $account): Collection
+    {
+        $info        = $account->transactions()->get(['transaction_currency_id', 'foreign_currency_id'])->toArray();
+        $currencyIds = [];
+        foreach ($info as $entry) {
+            $currencyIds[] = (int) $entry['transaction_currency_id'];
+            $currencyIds[] = (int) $entry['foreign_currency_id'];
+        }
+        $currencyIds = array_unique($currencyIds);
+
+        return TransactionCurrency::whereIn('id', $currencyIds)->get();
     }
 }

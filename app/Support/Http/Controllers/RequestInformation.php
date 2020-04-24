@@ -1,7 +1,7 @@
 <?php
 /**
  * RequestInformation.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -117,19 +117,6 @@ trait RequestInformation
         }
 
         return '<p>' . trans('firefly.route_has_no_help') . '</p>'; // @codeCoverageIgnore
-    }
-
-    /**
-     * Get user's language.
-     *
-     * @return string
-     */
-    protected function getLanguage(): string // get preference
-    {
-        /** @var string $language */
-        $language = app('preferences')->get('language', config('firefly.default_language', 'en_US'))->data;
-
-        return $language;
     }
 
     /**
@@ -300,7 +287,7 @@ trait RequestInformation
             $data,
             [
                 'email'    => 'required|string|email|max:255|unique:users',
-                'password' => 'required|string|min:6|secure_password|confirmed',
+                'password' => 'required|string|min:16|secure_password|confirmed',
             ]
         );
     }

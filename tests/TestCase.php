@@ -2,7 +2,7 @@
 
 /**
  * TestCase.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -231,7 +231,11 @@ abstract class TestCase extends BaseTestCase
         $falseConfig       = new Configuration;
         $falseConfig->data = false;
 
+        $idConfig = new Configuration;
+        $idConfig->data = 'abc';
+
         FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->andReturn($falseConfig);
+        FireflyConfig::shouldReceive('get')->withArgs(['installation_id', null])->andReturn($idConfig);
     }
 
     /**

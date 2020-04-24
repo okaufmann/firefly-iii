@@ -1,7 +1,7 @@
 <?php
 /**
  * AccountRepositoryInterface.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -46,6 +46,20 @@ interface AccountRepositoryInterface
      * @return int
      */
     public function count(array $types): int;
+
+    /**
+     * @param Account $account
+     *
+     * @return Collection
+     */
+    public function getUsedCurrencies(Account $account): Collection;
+
+    /**
+     * @param Account $account
+     *
+     * @return Collection
+     */
+    public function getAttachments(Account $account): Collection;
 
     /**
      * Get account location, if any.

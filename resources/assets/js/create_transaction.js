@@ -1,6 +1,6 @@
 /*
- * app.js
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * create_transactions.js
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,15 +18,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import Vue from 'vue'
-import VueI18n from 'vue-i18n'
-import * as uiv from 'uiv';
 import CustomAttachments from "./components/transactions/CustomAttachments";
 import CreateTransaction from './components/transactions/CreateTransaction';
-import EditTransaction from './components/transactions/EditTransaction';
-import Clients from './components/passport/Clients';
-import AuthorizedClients from "./components/passport/AuthorizedClients";
-import PersonalAccessTokens from "./components/passport/PersonalAccessTokens";
 import CustomDate from "./components/transactions/CustomDate";
 import CustomString from "./components/transactions/CustomString";
 import CustomTextarea from "./components/transactions/CustomTextarea";
@@ -44,18 +37,12 @@ import AccountSelect from "./components/transactions/AccountSelect";
 import Budget from "./components/transactions/Budget";
 
 /**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
+ * First we will load Axios via bootstrap.js
+ * jquery and bootstrap-sass preloaded in app.js
+ * vue, uiv and vuei18n are in app_vue.js
  */
 
-require('./bootstrap');
-
-Vue.use(VueI18n);
-window.Vue = Vue;
-
-Vue.use(uiv);
-
+ require('./bootstrap');
 
 // components for create and edit transactions.
 Vue.component('budget', Budget);
@@ -66,7 +53,6 @@ Vue.component('custom-textarea', CustomTextarea);
 Vue.component('standard-date', StandardDate);
 Vue.component('group-description', GroupDescription);
 Vue.component('transaction-description', TransactionDescription);
-
 Vue.component('custom-transaction-fields', CustomTransactionFields);
 Vue.component('piggy-bank', PiggyBank);
 Vue.component('tags', Tags);
@@ -80,7 +66,7 @@ Vue.component('create-transaction', CreateTransaction);
 
 
 // Create VueI18n instance with options
-const i18n = new VueI18n({
+const i18n = new vuei18n({
                              locale: document.documentElement.lang, // set locale
                              fallbackLocale: 'en',
                              messages: {
@@ -88,6 +74,7 @@ const i18n = new VueI18n({
                                  'de': require('./locales/de.json'),
                                  'en': require('./locales/en.json'),
                                  'es': require('./locales/es.json'),
+                                 'el': require('./locales/el.json'),
                                  'fr': require('./locales/fr.json'),
                                  'hu': require('./locales/hu.json'),
                                  'id': require('./locales/id.json'),
@@ -95,6 +82,7 @@ const i18n = new VueI18n({
                                  'nl': require('./locales/nl.json'),
                                  'no': require('./locales/no.json'),
                                  'pl': require('./locales/pl.json'),
+                                 'fi': require('./locales/fi.json'),
                                  'pt-br': require('./locales/pt-br.json'),
                                  'ro': require('./locales/ro.json'),
                                  'ru': require('./locales/ru.json'),
@@ -102,6 +90,7 @@ const i18n = new VueI18n({
                                  'zh-tw': require('./locales/zh-tw.json'),
                                  'zh-cn': require('./locales/zh-cn.json'),
                                  'sv': require('./locales/sv.json'),
+                                 'vi': require('./locales/vi.json'),
                              }
                          });
 
@@ -110,6 +99,6 @@ new Vue({
             i18n,
             el: "#create_transaction",
             render: (createElement) => {
-                return createElement(CreateTransaction, { props: props })
+                return createElement(CreateTransaction, { props: props });
             },
         });

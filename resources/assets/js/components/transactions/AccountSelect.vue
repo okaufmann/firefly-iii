@@ -1,6 +1,6 @@
 <!--
   - AccountSelect.vue
-  - Copyright (c) 2019 thegrumpydictator@gmail.com
+  - Copyright (c) 2019 james@firefly-iii.org
   -
   - This file is part of Firefly III (https://github.com/firefly-iii).
   -
@@ -41,6 +41,7 @@
             <button
                     v-on:click="clearSource"
                     class="btn btn-default"
+                    tabIndex="-1"
                     type="button"><i class="fa fa-trash-o"></i></button>
         </span>
             </div>
@@ -113,6 +114,10 @@
         watch: {
             transactionType() {
                 this.triggerTransactionType();
+            },
+            accountName() {
+              // console.log('AccountSelect watch accountName!');
+              this.name = this.accountName;
             },
             accountTypeFilters() {
                 let types = this.accountTypeFilters.join(',');
@@ -192,7 +197,7 @@
                 handleEnter: function (e) {
                     // todo feels sloppy
                     if (e.keyCode === 13) {
-                        e.preventDefault();
+                        //e.preventDefault();
                     }
                 }
             }

@@ -2,7 +2,7 @@
 
 /**
  * validation.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -130,6 +130,7 @@ return [
     'amount_zero'                    => 'La cantidad total no puede ser cero.',
     'current_target_amount'          => 'La cantidad actual debe ser menor que la cantidad de destino.',
     'unique_piggy_bank_for_user'     => 'En nombre de la hucha debe ser único.',
+
     'secure_password'                => 'Esta contraseña no es segura. Por favor inténtalo de nuevo. Para más información, visita https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Tipo de repetición no válido para transacciones recurrentes.',
     'valid_recurrence_rep_moment'    => 'Momento de repetición no válido para este tipo de repetición.',
@@ -200,4 +201,8 @@ return [
     'gte.file'    => 'El :attribute debe ser mayor o igual a :value kilobytes.',
     'gte.string'  => ':attribute debe tener :value caracteres o más.',
     'gte.array'   => ':attribute debe tener :value objetos o más.',
+
+    'amount_required_for_auto_budget' => 'Se requiere la cantidad.',
+    'auto_budget_amount_positive'     => 'La cantidad debe ser mayor a cero.',
+    'auto_budget_period_mandatory' => 'El período del autopresupuesto es un campo obligatorio.',
 ];

@@ -1,7 +1,7 @@
 <?php
 /**
  * Account.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -30,6 +30,7 @@ use Carbon\Carbon;
  *
  * @codeCoverageIgnore
  * @SuppressWarnings(PHPMD.ShortVariable)
+ * @deprecated
  */
 class Account extends SpectreObject
 {

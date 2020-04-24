@@ -1,7 +1,7 @@
 <?php
 /**
  * IPRetrievalInterface.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -25,7 +25,8 @@ namespace FireflyIII\Services\IP;
 
 /**
  * Interface IPRetrievalInterface
- *
+ * @codeCoverageIgnore
+ * @deprecated
  */
 interface IPRetrievalInterface
 {

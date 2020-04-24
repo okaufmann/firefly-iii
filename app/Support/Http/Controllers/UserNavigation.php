@@ -1,7 +1,7 @@
 <?php
 /**
  * UserNavigation.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -97,8 +97,8 @@ trait UserNavigation
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
             $type = $transaction->account->accountType->type;
-            if (!in_array($type, $ignore)) {
-                return redirect(route('accounts.show', [$transaction->account_id]));
+            if (!in_array($type, $ignore, true)) {
+                return redirect(route('accounts.edit', [$transaction->account_id]));
             }
         }
 

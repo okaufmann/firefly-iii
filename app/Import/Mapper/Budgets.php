@@ -1,7 +1,7 @@
 <?php
 /**
  * Budgets.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -27,6 +27,9 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 
 /**
  * Class Budgets.
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class Budgets implements MapperInterface
 {
@@ -44,11 +47,11 @@ class Budgets implements MapperInterface
 
         /** @var Budget $budget */
         foreach ($result as $budget) {
-            $budgetId        = (int)$budget->id;
+            $budgetId        = (int) $budget->id;
             $list[$budgetId] = $budget->name;
         }
         asort($list);
-        $list = [0 => (string)trans('import.map_do_not_map')] + $list;
+        $list = [0 => (string) trans('import.map_do_not_map')] + $list;
 
         return $list;
     }

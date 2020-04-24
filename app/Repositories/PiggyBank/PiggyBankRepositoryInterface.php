@@ -1,7 +1,7 @@
 <?php
 /**
  * PiggyBankRepositoryInterface.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -43,6 +43,13 @@ interface PiggyBankRepositoryInterface
      * @return PiggyBank
      */
     public function setCurrentAmount(PiggyBank $piggyBank, string $amount): PiggyBank;
+
+    /**
+     * @param PiggyBank $piggyBank
+     *
+     * @return Collection
+     */
+    public function getAttachments(PiggyBank $piggyBank): Collection;
 
     /**
      * @param PiggyBank $piggyBank

@@ -1,7 +1,7 @@
 <?php
 /**
  * ImportJobRepository.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -37,6 +37,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Class ImportJobRepository.
+ * @codeCoverageIgnore
+ * @deprecated
  *
  */
 class ImportJobRepository implements ImportJobRepositoryInterface
@@ -382,7 +384,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $attachment = new Attachment; // create Attachment object.
         $attachment->user()->associate($job->user);
         $attachment->attachable()->associate($job);
-        $attachment->md5      = md5($content);
+        $attachment->md5      = substr(hash('sha256', $content), 0, 32); // limit due to DB.
         $attachment->filename = $name;
         $attachment->mime     = 'plain/txt';
         $attachment->size     = strlen($content);

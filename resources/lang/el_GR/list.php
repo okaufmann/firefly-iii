@@ -2,7 +2,7 @@
 
 /**
  * list.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -57,7 +57,7 @@ return [
     'amount'                  => 'Ποσό',
     'internal_reference'      => 'Εσωτερική αναφορά',
     'date'                    => 'Ημερομηνία',
-    'interest_date'           => 'Ημερομηνία υπολογισμού',
+    'interest_date'           => 'Ημερομηνία τοκισμού',
     'book_date'               => 'Ημερομηνία εγγραφής',
     'process_date'            => 'Ημερομηνία επεξεργασίας',
     'due_date'                => 'Ημερομηνία προθεσμίας',
@@ -70,7 +70,7 @@ return [
     'to'                      => 'Προς',
     'budget'                  => 'Προϋπολογισμός',
     'category'                => 'Κατηγορία',
-    'bill'                    => 'Λογαριασμός',
+    'bill'                    => 'Πάγιο έξοδο',
     'withdrawal'              => 'Ανάληψη',
     'deposit'                 => 'Κατάθεση',
     'transfer'                => 'Μεταφορά',
@@ -89,7 +89,7 @@ return [
     'accounts_count'          => 'Αριθμός λογαριασμών',
     'journals_count'          => 'Πλήθος συναλλαγών',
     'attachments_count'       => 'Αριθμός επισυναπτόμενων',
-    'bills_count'             => 'Αριθμός λογαριασμών',
+    'bills_count'             => 'Αριθμός πάγιων εξόδων',
     'categories_count'        => 'Πλήθος κατηγοριών',
     'import_jobs_count'       => 'Αριθμός σημαντικών εργασιών',
     'budget_count'            => 'Αριθμός προϋπολογισμών',
@@ -106,7 +106,7 @@ return [
     'sum_deposits'            => 'Σύνολο καταθέσεων',
     'sum_transfers'           => 'Σύνολο μεταφορών',
     'sum_reconciliations'     => 'Σύνολο των αντιπαραβολών',
-    'reconcile'               => 'Συμβιβασμός',
+    'reconcile'               => 'Τακτοποίηση',
     'account_on_spectre'      => 'Λογαριασμός (Spectre)',
     'account_on_ynab'         => 'Λογαριασμός (YNAB)',
     'do_import'               => 'Εισαγωγή από αυτό το λογαριασμό',

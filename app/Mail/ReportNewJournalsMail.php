@@ -1,7 +1,7 @@
 <?php
 /**
  * ReportNewJournalsMail.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -42,12 +42,10 @@ class ReportNewJournalsMail extends Mailable
 
     /** @var string Email address of the user */
     public $email;
-    /** @var string IP address of user (if known) */
-    public $ipAddress;
-
     /** @var Collection A collection of groups */
     public $groups;
-
+    /** @var string IP address of user (if known) */
+    public $ipAddress;
     /** @var array All groups, transformed to array. */
     public $transformed;
 
@@ -72,10 +70,11 @@ class ReportNewJournalsMail extends Mailable
      */
     public function build(): self
     {
-        $subject           = 1 === $this->groups->count()
+        $subject = 1 === $this->groups->count()
             ? 'Firefly III has created a new transaction'
             : sprintf(
-                'Firefly III has created new %d transactions', $this->groups->count()
+                'Firefly III has created new %d transactions',
+                $this->groups->count()
             );
         $this->transform();
 

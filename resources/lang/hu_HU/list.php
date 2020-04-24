@@ -2,7 +2,7 @@
 
 /**
  * list.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -37,7 +37,7 @@ return [
     'linked_to_rules'         => 'Vonatkozó szabályok',
     'active'                  => 'Aktív?',
     'percentage'              => '%',
-    'next_due'                => 'Next due',
+    'next_due'                => 'Következő esedékesség',
     'transaction_type'        => 'Típus',
     'lastActivity'            => 'Utolsó aktivitás',
     'balanceDiff'             => 'Egyenleg különbség',
@@ -105,21 +105,21 @@ return [
     'sum_withdrawals'         => 'Költségek összege',
     'sum_deposits'            => 'Bevételek összege',
     'sum_transfers'           => 'Átvezetések összege',
-    'sum_reconciliations'     => 'Sum of reconciliations',
+    'sum_reconciliations'     => 'Egyeztetések összege',
     'reconcile'               => 'Egyeztetés',
     'account_on_spectre'      => 'Fiók (Spectre)',
     'account_on_ynab'         => 'Számla (YNAB)',
     'do_import'               => 'Importálás ebből a fiókból:',
-    'sepa_ct_id'              => 'SEPA End to End Identifier',
+    'sepa_ct_id'              => 'SEPA végpontok közti azonosító',
     'sepa_ct_op'              => 'SEPA ellenszámla azonosító',
     'sepa_db'                 => 'SEPA megbízás azonosító',
     'sepa_country'            => 'SEPA ország',
-    'sepa_cc'                 => 'SEPA Clearing Code',
-    'sepa_ep'                 => 'SEPA External Purpose',
+    'sepa_cc'                 => 'SEPA engedélykód',
+    'sepa_ep'                 => 'SEPA üzenetformátum',
     'sepa_ci'                 => 'SEPA hitelező azonosító',
-    'sepa_batch_id'           => 'SEPA Batch ID',
+    'sepa_batch_id'           => 'SEPA Batch azonosító',
     'external_id'             => 'Külső azonosító',
-    'account_at_bunq'         => 'Account with bunq',
+    'account_at_bunq'         => 'Bunq fiók',
     'file_name'               => 'Fájlnév',
     'file_size'               => 'Fájl méret',
     'file_type'               => 'Fájltípus',

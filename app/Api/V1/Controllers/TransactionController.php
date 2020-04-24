@@ -29,6 +29,7 @@ use FireflyIII\Api\V1\Requests\TransactionUpdateRequest;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Exceptions\DuplicateTransactionException;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
@@ -109,7 +110,6 @@ class TransactionController extends Controller
         $resource = new FractalCollection($attachments, $transformer, 'attachments');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
-
     }
 
     /**
@@ -152,7 +152,7 @@ class TransactionController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 
@@ -214,7 +214,6 @@ class TransactionController extends Controller
         $resource = new FractalCollection($events, $transformer, 'piggy_bank_events');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
-
     }
 
     /**
@@ -274,6 +273,7 @@ class TransactionController extends Controller
      */
     public function store(TransactionStoreRequest $request): JsonResponse
     {
+        Log::debug('Now in API TransactionController::store()');
         $data         = $request->getAll();
         $data['user'] = auth()->user()->id;
 
@@ -283,6 +283,7 @@ class TransactionController extends Controller
         try {
             $transactionGroup = $this->groupRepository->store($data);
         } catch (DuplicateTransactionException $e) {
+            Log::warning('Caught a duplicate. Return error message.');
             // return bad validation message.
             // TODO use Laravel's internal validation thing to do this.
             $response = [
@@ -293,9 +294,22 @@ class TransactionController extends Controller
             ];
 
             return response()->json($response, 422);
-        }
+        } catch (FireflyException $e) {
+            Log::warning('Caught an exception. Return error message.');
+            Log::error($e->getMessage());
+            // return bad validation message.
+            // TODO use Laravel's internal validation thing to do this.
+            $response = [
+                'message' => 'The given data was invalid.',
+                'errors'  => [
+                    'transactions.0.description' => [sprintf('Internal exception: %s', $e->getMessage())],
+                ],
+            ];
 
-        event(new StoredTransactionGroup($transactionGroup));
+            return response()->json($response, 422);
+        }
+        app('preferences')->mark();
+        event(new StoredTransactionGroup($transactionGroup, $data['apply_rules'] ?? true));
 
         $manager = $this->getManager();
         /** @var User $admin */
@@ -338,7 +352,8 @@ class TransactionController extends Controller
         $transactionGroup = $this->groupRepository->update($transactionGroup, $data);
         $manager          = $this->getManager();
 
-        event(new UpdatedTransactionGroup($transactionGroup));
+        app('preferences')->mark();
+        event(new UpdatedTransactionGroup($transactionGroup, $data['apply_rules'] ?? true));
 
         /** @var User $admin */
         $admin = auth()->user();
@@ -362,6 +377,5 @@ class TransactionController extends Controller
         $resource = new Item($selectedGroup, $transformer, 'transactions');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
-
     }
 }

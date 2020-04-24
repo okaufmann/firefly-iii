@@ -2,7 +2,7 @@
 
 /**
  * User.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -114,6 +114,34 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|User whereReset($value)
  * @method static Builder|User whereUpdatedAt($value)
  * @mixin Eloquent
+ * @property string|null $objectguid
+ * @property-read int|null $accounts_count
+ * @property-read int|null $attachments_count
+ * @property-read int|null $available_budgets_count
+ * @property-read int|null $bills_count
+ * @property-read int|null $budgets_count
+ * @property-read int|null $categories_count
+ * @property-read int|null $clients_count
+ * @property-read int|null $currency_exchange_rates_count
+ * @property-read int|null $import_jobs_count
+ * @property-read int|null $notifications_count
+ * @property-read int|null $piggy_banks_count
+ * @property-read int|null $preferences_count
+ * @property-read int|null $recurrences_count
+ * @property-read int|null $roles_count
+ * @property-read int|null $rule_groups_count
+ * @property-read int|null $rules_count
+ * @property-read int|null $tags_count
+ * @property-read int|null $tokens_count
+ * @property-read int|null $transaction_groups_count
+ * @property-read int|null $transaction_journals_count
+ * @property-read int|null $transactions_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User whereMfaSecret($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User whereObjectguid($value)
+ * @property string $password
+ * @property bool $blocked
+ * @property string|null $blocked_code
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Role[] $roles
  */
 class User extends Authenticatable
 {

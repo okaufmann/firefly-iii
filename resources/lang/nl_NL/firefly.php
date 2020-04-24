@@ -2,7 +2,7 @@
 
 /**
  * firefly.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -58,7 +58,8 @@ return [
     'no_rules_for_bill'                          => 'Dit contract heeft geen regels.',
     'go_to_asset_accounts'                       => 'Bekijk je betaalrekeningen',
     'go_to_budgets'                              => 'Ga naar je budgetten',
-    'clone_instructions'                         => 'Om een transactie te kopiëren, zet het vinkje bij "opslaan als nieuw" als je de transactie wijzigt',
+    'new_clone_instructions'                     => 'Deze knop zal de transactie automatisch klonen en de datum instellen op vandaag. Doen?',
+    'clones_journal_x'                           => 'Deze transactie is een kloon van ":description" (#:id)',
     'go_to_categories'                           => 'Ga naar je categorieën',
     'go_to_bills'                                => 'Ga naar je contracten',
     'go_to_expense_accounts'                     => 'Bekijk je crediteuren',
@@ -94,7 +95,7 @@ return [
     'two_factor_forgot'                          => 'Ik kan geen codes meer genereren.',
     'two_factor_lost_header'                     => 'Kan je geen codes meer genereren?',
     'two_factor_lost_intro'                      => 'Als je ook je backupcodes kwijt bent heb je pech gehad. Dit kan je niet via de web-interface fixen. Je kan kiezen.',
-    'two_factor_lost_fix_self'                   => 'Als je eigen installatie van Firefly III draait check je de logs in <code>storage/logs</code> voor instructies, of draai <code>docker logs &lt;container_id&gt;</code> voor instructies (ververs de pagina).',
+    'two_factor_lost_fix_self'                   => 'Als je je eigen installatie van Firefly III draait lees dan <a href="https://docs.firefly-iii.org/faq/other#i-lost-my-two-factor-authentication-codes-and-backup-codes">dit item in de FAQ</a> voor instructies.',
     'two_factor_lost_fix_owner'                  => 'Zo niet, stuur dan een e-mail naar <a href="mailto::site_owner">:site_owner</a> en vraag of ze je authenticatie in twee stappen willen resetten.',
     'mfa_backup_code'                            => 'Je hebt een backupcode gebruikt om in te loggen op Firefly III. Deze kan je niet meer gebruiken dus streep hem weg.',
     'pref_two_factor_new_backup_codes'           => 'Nieuwe backupcodes genereren',
@@ -103,7 +104,7 @@ return [
     'warning_much_data'                          => 'Het kan even duren voor :days dagen aan gegevens geladen zijn.',
     'registered'                                 => 'Je bent geregistreerd!',
     'Default asset account'                      => 'Standaard betaalrekening',
-    'no_budget_pointer'                          => 'Je hebt nog geen budgetten. Maak er een aantal op de <a href=":link">budgetten</a>-pagina. Met budgetten kan je je uitgaven beter bijhouden.',
+    'no_budget_pointer'                          => 'Je hebt nog geen budgetten. Maak er een aantal op de <a href="/budgets">budgetten</a>-pagina. Met budgetten kan je je uitgaven beter bijhouden.',
     'Savings account'                            => 'Spaarrekening',
     'Credit card'                                => 'Credit card',
     'source_accounts'                            => 'Bronrekening(en)',
@@ -204,6 +205,7 @@ return [
     'active_exp_bills_only'                      => 'alleen actieve en verwachte contracten',
     'average_per_bill'                           => 'gemiddeld per contract',
     'expected_total'                             => 'verwacht totaal',
+    'reconciliation_account_name'                => ':name afstemmingsrekening',
     // API access
     'authorization_request'                      => 'Firefly III v:version autorisatieverzoek',
     'authorization_request_intro'                => '<strong>:client</strong> vraagt ​​toestemming om toegang te krijgen tot je financiële administratie. Wil je <strong>:client</strong> autoriseren om toegang te krijgen tot je gegevens?',
@@ -214,11 +216,15 @@ return [
     'name_in_currency'                           => ':name in :currency',
     'paid_in_currency'                           => 'Betaald in :currency',
     'unpaid_in_currency'                         => 'Nog niet betaald in :currency',
+    'is_alpha_warning'                           => 'Je gebruikt een ALPHA versie. Let op bugs en fouten.',
+    'is_beta_warning'                            => 'Je gebruikt een BETA versie. Let op bugs en fouten.',
+    'all_destination_accounts'                   => 'Doelrekeningen',
+    'all_source_accounts'                        => 'Bronrekeningen',
 
     // check for updates:
     'update_check_title'                         => 'Op updates controleren',
     'admin_update_check_title'                   => 'Controleer automatisch op updates',
-    'admin_update_check_explain'                 => 'Firefly III kan automatisch op updates controleren. Wanneer je deze instelling inschakelt, neemt Firefly III contact op met Github om te kijken of er een nieuwe versie van Firefly III beschikbaar is. Wanneer dit het geval is, ontvang je een melding. Je kan deze melding testen met de knop aan de rechterkant. Geef hieronder aan of je Firefly III wilt laten controleren op updates.',
+    'admin_update_check_explain'                 => 'Firefly III kan automatisch op updates controleren. Wanneer je deze instelling inschakelt, neemt Firefly III contact op met de update-server om te kijken of er een nieuwe versie van Firefly III beschikbaar is. Wanneer dit het geval is, ontvang je een melding. Je kan deze melding testen met de knop aan de rechterkant. Geef hieronder aan of je Firefly III wilt laten controleren op updates.',
     'check_for_updates_permission'               => 'Firefly III kan controleren op updates, maar heeft hiervoor je toestemming nodig. Ga naar <a href=":link">de admin</a> om aan te geven of deze functie moet worden ingeschakeld.',
     'updates_ask_me_later'                       => 'Later vragen',
     'updates_do_not_check'                       => 'Niet controleren op nieuwe versies',
@@ -231,7 +237,9 @@ return [
     'update_version_alpha'                       => 'Dit is een ALPHA versie. Er kunnen bugs in zitten.',
     'update_current_version_alert'               => 'Je gebruikt :version, de nieuwste beschikbare versie.',
     'update_newer_version_alert'                 => 'Je gebruikt :your_version, wat nieuwer is dan de nieuwste versie, :new_version.',
-    'update_check_error'                         => 'Er is een fout opgetreden bij het controleren op updates. Bekijk de logbestanden.',
+    'update_check_error'                         => 'Er is een fout opgetreden bij het controleren op updates: :error',
+    'unknown_error'                              => 'Onbekende fout. Sorry.',
+    'just_new_release'                           => 'Er is een nieuwe versie beschikbaar! Versie :version werd uitgebracht :date. Deze is pas net uit. Wacht een paar dagen om er zeker van te zijn dat de versie stabiel is.',
     'admin_update_channel_title'                 => 'Updatekanaal',
     'admin_update_channel_explain'               => 'Firefly III heeft drie "kanalen" die bepalen of en hoever je voorloopt als het gaat om features, wijzigingen en bugs. Gebruik het "beta"-kanaal als je een avontuurlijke bui hebt en gebruik het "alpha" kanaal als je ook graag met krokodillen zwemt.',
     'update_channel_stable'                      => 'Stabiel. Zou allemaal goed moeten gaan.',
@@ -299,6 +307,9 @@ return [
     'created_new_rule_group'                     => 'Nieuwe regelgroep ":title" opgeslagen!',
     'updated_rule_group'                         => 'Regelgroep ":title" geüpdatet.',
     'edit_rule_group'                            => 'Wijzig regelgroep ":title"',
+    'duplicate_rule'                             => 'Dupliceer regel ":title"',
+    'rule_copy_of'                               => 'Kopie van ":title"',
+    'duplicated_rule'                            => 'Regel ":title" gekopieerd naar ":newTitle"',
     'delete_rule_group'                          => 'Verwijder regelgroep ":title"',
     'deleted_rule_group'                         => 'Regelgroep ":title" verwijderd',
     'update_rule_group'                          => 'Wijzig regelgroep',
@@ -309,6 +320,7 @@ return [
     'make_new_rule'                              => 'Maak een nieuwe regel in regelgroep ":title"',
     'make_new_rule_no_group'                     => 'Maak een nieuwe regel',
     'instructions_rule_from_bill'                => 'Om transacties te kunnen koppelen aan je nieuwe contract ":name" moet Firefly III een nieuwe regel maken die automatisch checkt of nieuwe transacties horen bij dit nieuwe contract. Check de details hieronder en sla de nieuwe regel op, zodat Firefly III dit klusje voor je kan klaren.',
+    'instructions_rule_from_journal'             => 'Maak een regel op basis van één van je transacties. Vul dit formulier aan.',
     'rule_is_strict'                             => 'strikte regel',
     'rule_is_not_strict'                         => 'niet-strikte regel',
     'rule_help_stop_processing'                  => 'Zet hier een vinkje om latere regels in deze groep te negeren.',
@@ -493,6 +505,9 @@ return [
     'new_rule_for_bill_title'         => 'Regel voor contract ":name"',
     'new_rule_for_bill_description'   => 'Deze regel markeert uitgaven voor contract ":name".',
 
+    'new_rule_for_journal_title'         => 'Regel gebaseerd op transactie ":description"',
+    'new_rule_for_journal_description'   => 'Deze regel is gebaseerd op transactie ":description". Hij matcht met transacties die precies hetzelfde zijn.',
+
     // tags
     'store_new_tag'                   => 'Sla tag op',
     'update_tag'                      => 'Sla wijzigingen op',
@@ -508,8 +523,10 @@ return [
     'delete_all_selected_tags'        => 'Alle geselecteerde tags verwijderen',
     'select_tags_to_delete'           => 'Vergeet niet om tags te selecteren.',
     'deleted_x_tags'                  => ':count tag(s) verwijderd.',
+    'create_rule_from_transaction'    => 'Regel aanmaken op basis van een transactie',
 
     // preferences
+    'equal_to_language'               => '(zelfde als taal)',
     'pref_home_screen_accounts'       => 'Voorpaginarekeningen',
     'pref_home_screen_accounts_help'  => 'Welke betaalrekeningen wil je op de voorpagina zien?',
     'pref_view_range'                 => 'Bereik',
@@ -521,7 +538,9 @@ return [
     'pref_6M'                         => 'Zes maanden',
     'pref_1Y'                         => 'Eén jaar',
     'pref_languages'                  => 'Talen',
+    'pref_locale'                     => 'Lokale instellingen',
     'pref_languages_help'             => 'Firefly III ondersteunt meerdere talen. Welke heeft jouw voorkeur?',
+    'pref_locale_help'                => 'Firefly III kan andere lokale instellingen gebruiken, die bepalen hoe valuta, nummers en datums worden weergegeven. De lijst hieronder is compleet maar niet alles wordt ondersteund door jouw systeem. Het kan zijn dat Firefly III bepaalde lokale instellingen niet lekker weergeeft; neem dan contact met me op.',
     'pref_custom_fiscal_year'         => 'Instellingen voor boekjaar',
     'pref_custom_fiscal_year_label'   => 'Ingeschakeld',
     'pref_custom_fiscal_year_help'    => 'Voor in landen die een boekjaar gebruiken anders dan 1 januari tot 31 december',
@@ -700,6 +719,7 @@ return [
     'update_currency'                           => 'Wijzig valuta',
     'new_default_currency'                      => ':name is nu de standaard valuta.',
     'cannot_delete_currency'                    => 'Kan ":name" niet verwijderen, want deze is in gebruik.',
+    'cannot_delete_fallback_currency'           => ':naam is de systeemvaluta en kan niet verwijderd worden.',
     'cannot_disable_currency_journals'          => 'Je kan :name niet uitschakelen, er zijn nog transacties die deze valuta gebruiken.',
     'cannot_disable_currency_last_left'         => 'Je kan :name niet uitschakelen, het is de laatste beschikbare valuta.',
     'cannot_disable_currency_account_meta'      => 'Je kan :name niet uitschakelen, er zijn nog betaalrekeningen die deze valuta gebruiken.',
@@ -771,6 +791,18 @@ return [
     'over_budget_warn'                          => '<i class="fa fa-money"></i> Normaalgesproken budgetteer je :amount per dag. Nu sta je op :over_amount per dag. Zeker weten?',
     'transferred_in'                            => 'Overgeboekt (inkomend)',
     'transferred_away'                          => 'Overgeboekt (uitgaand)',
+    'auto_budget_none'                          => 'Geen auto-budget',
+    'auto_budget_reset'                         => 'Vast bedrag elke periode',
+    'auto_budget_rollover'                      => 'Voeg elke periode een bedrag toe',
+    'auto_budget_period_daily'                  => 'Dagelijks',
+    'auto_budget_period_weekly'                 => 'Wekelijks',
+    'auto_budget_period_monthly'                => 'Maandelijks',
+    'auto_budget_period_quarterly'              => 'Elk kwartaal',
+    'auto_budget_period_half_year'              => 'Elk half jaar',
+    'auto_budget_period_yearly'                 => 'Jaarlijks',
+    'auto_budget_help'                          => 'Je kan meer lezen over deze functie in de hulppagina\'s. Klik op het (?) icoontje rechtsboven.',
+    'auto_budget_reset_icon'                    => 'Het budget wordt periodiek ingesteld',
+    'auto_budget_rollover_icon'                 => 'Het budget wordt periodiek aangevuld',
 
     // bills:
     'match_between_amounts'                     => 'Contract past bij transacties tussen :low en :high.',
@@ -800,6 +832,7 @@ return [
     'skips_over'                                => 'slaat over',
     'bill_store_error'                          => 'Er ging wat fout bij het opslaan van het contract. Kijk in de logbestanden',
     'list_inactive_rule'                        => 'inactieve regel',
+    'bill_edit_rules'                           => 'Firefly III gaat proberen de :count gerelateerde regel(s) ook aan te passen. Als je deze zelf al hebt gewijzigd echter, zal dit niet gebeuren.',
 
     // accounts:
     'inactive_account_link'                     => 'Je hebt :count inactieve (gearchiveerde) rekeningen, die je kan bekijken op deze aparte pagina.',
@@ -932,6 +965,7 @@ return [
     'deleted_withdrawal'                        => 'Uitgave ":description" verwijderd',
     'deleted_deposit'                           => 'Inkomsten ":description" verwijderd',
     'deleted_transfer'                          => 'Overschrijving ":description" verwijderd',
+    'deleted_reconciliation'                    => 'Afstemming ":description" verwijderd',
     'stored_journal'                            => 'Nieuw transactie ":description" opgeslagen',
     'stored_journal_no_descr'                   => 'Uw nieuwe transactie is succesvol aangemaakt',
     'updated_journal_no_descr'                  => 'De transactie is geüpdatet',
@@ -957,6 +991,7 @@ return [
     'no_budget'                                 => '(geen budget)',
     'account_per_budget'                        => 'Rekening per budget',
     'account_per_category'                      => 'Rekening per categorie',
+    'create_new_object'                         => 'Opslaan',
     'empty'                                     => '(leeg)',
     'all_other_budgets'                         => '(alle andere budgetten)',
     'all_other_accounts'                        => '(alle andere rekeningen)',
@@ -1091,7 +1126,8 @@ return [
     'errors'                                    => 'Fouten',
     'debt_start_date'                           => 'Begindatum van schuld',
     'debt_start_amount'                         => 'Beginbedrag van schuld',
-    'debt_start_amount_help'                    => 'Vul hier altijd de lening als een positief bedrag in. Check de helppagina\'s voor meer info.',
+    'debt_start_amount_help'                    => 'Het is handig om hier een negatief bedrag in te stellen. Lees de help-pagina\'s ((?)-icoontje rechtsboven) voor meer info.',
+    'interest_period_help'                      => 'Dit veld doet verder niks. Firefly III gaat dit niet voor je uitrekenen. Banken pakken dit toch altijd net anders aan.',
     'store_new_liabilities_account'             => 'Nieuwe passiva opslaan',
     'edit_liabilities_account'                  => 'Passiva ":name" wijzigen',
 
@@ -1294,7 +1330,7 @@ return [
     'store_configuration'              => 'Configuratie opslaan',
     'single_user_administration'       => 'Gebruikersadministratie voor :email',
     'edit_user'                        => 'Wijzig gebruiker :email',
-    'hidden_fields_preferences'        => 'Je kan meer transactieopties inschakelen in je <a href=":link">instellingen</a>.',
+    'hidden_fields_preferences'        => 'Je kan meer transactieopties inschakelen in je <a href="/preferences">instellingen</a>.',
     'user_data_information'            => 'Gebruikersgegevens',
     'user_information'                 => 'Gebruikersinformatie',
     'total_size'                       => 'totale grootte',
@@ -1318,14 +1354,15 @@ return [
     'send_test_email_text'             => 'Druk op deze knop om te zien of je installatie mail kan versturen. Je ziet hier geen foutmeldingen (als ze er zijn), deze <strong>vind je in de logboeken</strong>. Je kan deze knop zo vaak indrukken als je wilt. Er is geen optie die spam voorkomt. Het testbericht wordt verstuurd naar <code>:email</code> en zou vrij vlot aan moeten komen.',
     'send_message'                     => 'Verstuur bericht',
     'send_test_triggered'              => 'Testmail verstuurd. Check je inbox en de logboeken.',
+    'give_admin_careful'               => 'Gebruikers die je beheerdersrechten geeft kunnen die van jou afpakken. Wees voorzichtig.',
 
     'split_transaction_title'               => 'Beschrijving van de gesplitste transactie',
     'split_transaction_title_help'          => 'Als je een gesplitste transactie maakt, moet er een algemene beschrijving zijn voor alle splitsingen van de transactie.',
     'split_title_help'                      => 'Als je een gesplitste transactie maakt, moet er een algemene beschrijving zijn voor alle splitsingen van de transactie.',
     'transaction_information'               => 'Transactieinformatie',
-    'you_create_transfer'                   => 'Je maakt een <strong>overschrijving</strong>.',
-    'you_create_withdrawal'                 => 'Je maakt een <strong>uitgave</strong>.',
-    'you_create_deposit'                    => 'Je maakt een <strong>inkomsten</strong>.',
+    'you_create_transfer'                   => 'Je maakt een overschrijving.',
+    'you_create_withdrawal'                 => 'Je maakt een uitgave.',
+    'you_create_deposit'                    => 'Je maakt inkomsten.',
 
 
     // links
@@ -1382,6 +1419,13 @@ return [
     '(partially) refunds_outward'           => 'is een (gedeeltelijke) terugbetaling voor',
     '(partially) pays for_outward'          => 'betaalt (deels) voor',
     '(partially) reimburses_outward'        => 'vergoedt (deels)',
+    'is (partially) refunded by'            => 'wordt (deels) terugbetaald door',
+    'is (partially) paid for by'            => 'wordt (deels) betaald door',
+    'is (partially) reimbursed by'          => 'wordt (deels) vergoed door',
+    'relates to'                            => 'gerelateerd aan',
+    '(partially) refunds'                   => 'is een (gedeeltelijke) terugbetaling voor',
+    '(partially) pays for'                  => 'betaalt (deels) voor',
+    '(partially) reimburses'                => 'vergoedt (deels)',
 
     // split a transaction:
     'splits'                                => 'Splitten',
@@ -1406,7 +1450,13 @@ return [
     'import_index_title'                    => 'Transacties importeren in Firefly III',
     'import_data'                           => 'Importeer data',
     'import_transactions'                   => 'Importeer transacties',
-
+    'import_tools_title'                    => 'Importtools',
+    'tools_index_intro'                     => 'Er bestaan een paar tools om data te importeren in Firefly III. Zie hieronder voor de lijst. Check ook <a href="https://docs.firefly-iii.org/importing-data/introduction">deze pagina</a> voor meer info.',
+    'firefly_iii_csv_importer_name'         => 'Firefly III CSV importer',
+    'firefly_iii_bunq_importer_name'        => 'Firefly III bunq 🌈 importer',
+    'firefly_iii_ynab_importer_name'        => 'Firefly III YNAB importer',
+    'ludo_revolut_importer_name'            => 'Ludo444\'s Revolut-import tool',
+    //
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Deze functie werkt niet als je Firefly III gebruikt in combinatie met Sandstorm.IO.',
 
@@ -1541,4 +1591,27 @@ return [
     'box_net_worth_in_currency'          => 'Kapitaal (:currency)',
     'box_spend_per_day'                  => 'Te besteden per dag: :amount',
 
+    // telemetry
+    'telemetry_admin_index'              => 'Telemetrie',
+    'telemetry_intro'                    => 'Firefly III kan telemetrie verzamelen over je gebruik. Dat betekent dat Firefly III informatie probeert te verzamelen over hoe je Firefly III gebruikt, en deze zal verzenden naar de developer van Firefly III. Dit is altijd opt-in en staat standaard uit. Firefly III zal nooit financiele informatie verzamelen of verzenden. Firefly III zal ook nooit financiële meta-informatie verzamelen of verzenden (zoals sommen of totalen). De verstuurde informatie wordt nooit publiek beschikbaar gemaakt.',
+    'telemetry_what_collected'           => 'Wat Firefly III verzamelt en verstuurt is per versie anders. Je draait versie :version. Wat Firefly III verzamelt en verstuurt in versie :version lees je in de help-pagina\'s. Klik op het (?) icoontje rechtsboven <a href="https://docs.firefly-iii.org/support/telemetry">of kijk direct in de documentatie</a>.',
+    'telemetry_is_enabled_yes_no'        => 'Zal Firefly III telemetrie verzenden?',
+    'telemetry_disabled_no'              => 'Telemetrie staat UIT',
+    'telemetry_disabled_yes'             => 'Telemetrie staat aan',
+    'telemetry_enabled_now_what'         => 'Je kan telemetrie op dezelfde manier weer uitzetten als je het hebt aangezet: wijzig je .env bestand of verander je Docker-configuratie.',
+    'telemetry_disabled_now_what'        => 'Als je dat wilt, kan je telemetrie aanzetten in je .env bestand of in je Docker-configuratie.',
+    'telemetry_collected_info'           => 'Verzamelde informatie',
+    'no_telemetry_present'               => 'Firefly III heeft geen telemetrie verzameld.',
+    'records_telemetry_present'          => 'Firefly III heeft :count telemetrie-record(s) verzameld.',
+    'telemetry_button_view'              => 'Bekijk telemetrie',
+    'telemetry_button_delete'            => 'Verwijder alle telemetrie',
+    'telemetry_admin_overview'           => 'Telemetrie-overzicht',
+    'telemetry_back_to_index'            => 'Terug naar telemetrie-index',
+    'not_yet_submitted'                  => 'Nog niet verstuurd',
+    'telemetry_type_feature'             => 'Feature flag',
+    'telemetry_submit_all'               => 'Verstuur records',
+    'telemetry_delete_submitted_records' => 'Verwijder verstuurde records',
+    'telemetry_submission_executed'      => 'Records zijn verstuurd. Check je log files voor meer info.',
+    'telemetry_all_deleted'              => 'Alle telemetrierecords zijn verwijderd.',
+    'telemetry_submitted_deleted'        => 'Alle verstuurde telemetrierecords zijn verwijderd.'
 ];

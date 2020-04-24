@@ -2,7 +2,7 @@
 
 /**
  * form.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -43,6 +43,7 @@ return [
     'journal_currency_id'       => 'Para birimi',
     'currency_id'               => 'Para birimi',
     'transaction_currency_id'   => 'Para birimi',
+    'auto_budget_currency_id'   => 'Currency',
     'external_ip'               => 'Sunucunuzun dış IP adresi',
     'attachments'               => 'Ekler',
     'journal_amount'            => 'Tutar',
@@ -193,6 +194,7 @@ return [
     'blocked'               => 'Engellendi mi?',
     'blocked_code'          => 'Blok nedeni',
     'login_name'            => 'Login',
+    'is_owner'              => 'Is admin?',
 
     // import
     'apply_rules'           => 'Apply rules',
@@ -259,5 +261,15 @@ return [
     'deposit_source_id'         => 'Source account',
     'expected_on'               => 'Expected on',
     'paid'                      => 'Paid',
+
+    'auto_budget_type'            => 'Auto-budget',
+    'auto_budget_amount'            => 'Auto-budget amount',
+    'auto_budget_period'            => 'Auto-budget period',
+
+    'collected' => 'Collected',
+    'submitted' => 'Submitted',
+    'key' => 'Key',
+    'value' => 'Content of record'
+
 
 ];

@@ -1,7 +1,7 @@
 <?php
 /**
  * TransactionGroupRepository.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -45,6 +45,8 @@ use FireflyIII\Services\Internal\Update\GroupUpdateService;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class TransactionGroupRepository
@@ -72,6 +74,21 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         /** @var TransactionGroupDestroyService $service */
         $service = new TransactionGroupDestroyService;
         $service->destroy($group);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function expandGroup(TransactionGroup $group): array
+    {
+        $result                         = $group->toArray();
+        $result['transaction_journals'] = [];
+        /** @var TransactionJournal $journal */
+        foreach ($group->transactionJournals as $journal) {
+            $result['transaction_journals'][] = $this->expandJournal($journal);
+        }
+
+        return $result;
     }
 
     /**
@@ -316,14 +333,25 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
      *
      * @return TransactionGroup
      * @throws DuplicateTransactionException
+     * @throws FireflyException
      */
     public function store(array $data): TransactionGroup
     {
         /** @var TransactionGroupFactory $factory */
         $factory = app(TransactionGroupFactory::class);
         $factory->setUser($this->user);
+        try {
+            return $factory->create($data);
+        } catch (DuplicateTransactionException $e) {
+            Log::warning('Group repository caught group factory with a duplicate exception!');
+            throw new DuplicateTransactionException($e->getMessage());
+        } catch(FireflyException $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            throw new FireflyException($e->getMessage());
+        }
 
-        return $factory->create($data);
+
     }
 
     /**
@@ -340,6 +368,56 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         $service = app(GroupUpdateService::class);
 
         return $service->update($transactionGroup, $data);
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return array
+     */
+    private function expandJournal(TransactionJournal $journal): array
+    {
+        $array                      = $journal->toArray();
+        $array['transactions']      = [];
+        $array['meta']              = $journal->transactionJournalMeta->toArray();
+        $array['tags']              = $journal->tags->toArray();
+        $array['categories']        = $journal->categories->toArray();
+        $array['budgets']           = $journal->budgets->toArray();
+        $array['notes']             = $journal->notes->toArray();
+        $array['locations']         = []; // todo
+        $array['attachments']       = $journal->attachments->toArray();
+        $array['links']             = []; // todo
+        $array['piggy_bank_events'] = $journal->piggyBankEvents->toArray();
+
+        /** @var Transaction $transaction */
+        foreach ($journal->transactions as $transaction) {
+            $array['transactions'][] = $this->expandTransaction($transaction);
+        }
+
+        return $array;
+    }
+
+    /**
+     * @param Transaction $transaction
+     *
+     * @return array
+     */
+    private function expandTransaction(Transaction $transaction): array
+    {
+        $array = $transaction->toArray();
+        $array['account'] = $transaction->account->toArray();
+        $array['budgets'] = [];
+        $array['categories'] = [];
+
+        foreach ($transaction->categories as $category) {
+            $array['categories'][] = $category->toArray();
+        }
+
+        foreach ($transaction->budgets as $budget) {
+            $array['budgets'][] = $budget->toArray();
+        }
+
+        return $array;
     }
 
     /**
@@ -390,5 +468,16 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         }
 
         return $return;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTagObjects(int $journalId): Collection
+    {
+        /** @var TransactionJournal $journal */
+        $journal = $this->user->transactionJournals()->find($journalId);
+
+        return $journal->tags()->get();
     }
 }

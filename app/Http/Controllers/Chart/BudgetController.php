@@ -1,7 +1,7 @@
 <?php
 /**
  * BudgetController.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -27,9 +27,9 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -104,11 +104,11 @@ class BudgetController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
-        $step       = $this->calculateStep($start, $end); // depending on diff, do something with range of chart.
-        $collection = new Collection([$budget]);
-        $chartData  = [];
-        $loopStart  = clone $start;
-        $loopStart  = app('navigation')->startOfPeriod($loopStart, $step);
+        $step           = $this->calculateStep($start, $end); // depending on diff, do something with range of chart.
+        $collection     = new Collection([$budget]);
+        $chartData      = [];
+        $loopStart      = clone $start;
+        $loopStart      = app('navigation')->startOfPeriod($loopStart, $step);
         $currencies     = [];
         $defaultEntries = [];
         //        echo '<hr>';
@@ -135,10 +135,10 @@ class BudgetController extends Controller
         // loop all currencies:
         foreach ($currencies as $currencyId => $currency) {
             $chartData[$currencyId] = [
-                'label'         => count($currencies) > 1 ? sprintf('%s (%s)', $budget->name, $currency['currency_name']) : $budget->name,
-                'type'          => 'bar',
+                'label'           => count($currencies) > 1 ? sprintf('%s (%s)', $budget->name, $currency['currency_name']) : $budget->name,
+                'type'            => 'bar',
                 'currency_symbol' => $currency['currency_symbol'],
-                'entries'       => $defaultEntries,
+                'entries'         => $defaultEntries,
             ];
             foreach ($currency['spent'] as $label => $spent) {
                 $chartData[$currencyId]['entries'][$label] = round(bcmul($spent, '-1'), $currency['currency_decimal_places']);
@@ -179,14 +179,14 @@ class BudgetController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
-
+        $locale = app('steam')->getLocale();
         $entries          = [];
         $amount           = $budgetLimit->amount;
         $budgetCollection = new Collection([$budget]);
         while ($start <= $end) {
             $spent            = $this->opsRepository->spentInPeriod($budgetCollection, new Collection, $start, $start);
             $amount           = bcadd($amount, $spent);
-            $format           = $start->formatLocalized((string)trans('config.month_and_day'));
+            $format           = $start->formatLocalized((string)trans('config.month_and_day', [], $locale));
             $entries[$format] = $amount;
 
             $start->addDay();
@@ -211,7 +211,7 @@ class BudgetController extends Controller
     public function expenseAsset(Budget $budget, ?BudgetLimit $budgetLimit = null): JsonResponse
     {
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector     = app(GroupCollectorInterface::class);
         $budgetLimitId = null === $budgetLimit ? 0 : $budgetLimit->id;
         $cache         = new CacheProperties;
         $cache->addProperty($budget->id);
@@ -277,7 +277,7 @@ class BudgetController extends Controller
     public function expenseCategory(Budget $budget, ?BudgetLimit $budgetLimit = null): JsonResponse
     {
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector     = app(GroupCollectorInterface::class);
         $budgetLimitId = null === $budgetLimit ? 0 : $budgetLimit->id;
         $cache         = new CacheProperties;
         $cache->addProperty($budget->id);
@@ -340,7 +340,7 @@ class BudgetController extends Controller
     public function expenseExpense(Budget $budget, ?BudgetLimit $budgetLimit = null): JsonResponse
     {
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector     = app(GroupCollectorInterface::class);
         $budgetLimitId = null === $budgetLimit ? 0 : $budgetLimit->id;
         $cache         = new CacheProperties;
         $cache->addProperty($budget->id);
@@ -398,7 +398,8 @@ class BudgetController extends Controller
     /**
      * Shows a budget list with spent/left/overspent.
      *
-     * TODO this chart is not multi-currency aware.
+     * TODO there are cases when this chart hides expenses: when budget has limits
+     * and limits are found and used, but the expense is in another currency.
      *
      * @return JsonResponse
      *
@@ -413,7 +414,7 @@ class BudgetController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.budget.frontpage');
         if ($cache->has()) {
-            //return response()->json($cache->get()); // @codeCoverageIgnore
+            // return response()->json($cache->get()); // @codeCoverageIgnore
         }
         $budgets   = $this->repository->getActiveBudgets();
         $chartData = [
@@ -439,29 +440,34 @@ class BudgetController extends Controller
                 /** @var BudgetLimit $limit */
                 foreach ($limits as $limit) {
                     $spent = $this->opsRepository->sumExpenses(
-                        $limit->start_date, $limit->end_date, null, new Collection([$budget]), $limit->transactionCurrency
+                        $limit->start_date,
+                        $limit->end_date,
+                        null,
+                        new Collection([$budget]),
+                        $limit->transactionCurrency
                     );
                     /** @var array $entry */
                     foreach ($spent as $entry) {
                         $title = sprintf('%s (%s)', $budget->name, $entry['currency_name']);
                         if ($limit->start_date->startOfDay()->ne($start->startOfDay()) || $limit->end_date->startOfDay()->ne($end->startOfDay())) {
                             $title = sprintf(
-                                '%s (%s) (%s - %s)', $budget->name, $entry['currency_name'],
+                                '%s (%s) (%s - %s)',
+                                $budget->name,
+                                $entry['currency_name'],
                                 $limit->start_date->formatLocalized($this->monthAndDayFormat),
                                 $limit->end_date->formatLocalized($this->monthAndDayFormat)
                             );
                         }
-
-                        $chartData[0]['entries'][$title] = bcmul($entry['sum'], '-1'); // spent
-                        $chartData[1]['entries'][$title] = 1 === bccomp($limit->amount, bcmul($entry['sum'], '-1')) ? bcadd($entry['sum'], $limit->amount)
+                        $sumSpent                        = bcmul($entry['sum'], '-1'); // spent
+                        $chartData[0]['entries'][$title] = 1 === bccomp($sumSpent, $limit->amount) ? $limit->amount : $sumSpent;
+                        $chartData[1]['entries'][$title] = 1 === bccomp($limit->amount, $sumSpent) ? bcadd($entry['sum'], $limit->amount)
                             : '0';
-                        $chartData[2]['entries'][$title] = 1 === bccomp($limit->amount, bcmul($entry['sum'], '-1')) ?
+                        $chartData[2]['entries'][$title] = 1 === bccomp($limit->amount, $sumSpent) ?
                             '0' : bcmul(bcadd($entry['sum'], $limit->amount), '-1');
                     }
                 }
             }
         }
-
         $data = $this->generator->multiSet($chartData);
         $cache->store($data);
 
@@ -491,7 +497,7 @@ class BudgetController extends Controller
         $cache->addProperty($currency->id);
         $cache->addProperty('chart.budget.period');
         if ($cache->has()) {
-            // return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
         $titleFormat    = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
         $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
@@ -512,9 +518,9 @@ class BudgetController extends Controller
 
         $currentStart = clone $start;
         while ($currentStart <= $end) {
-            $currentStart= app('navigation')->startOfPeriod($currentStart, $preferredRange);
-            $title      = $currentStart->formatLocalized($titleFormat);
-            $currentEnd = app('navigation')->endOfPeriod($currentStart, $preferredRange);
+            $currentStart = app('navigation')->startOfPeriod($currentStart, $preferredRange);
+            $title        = $currentStart->formatLocalized($titleFormat);
+            $currentEnd   = app('navigation')->endOfPeriod($currentStart, $preferredRange);
 
             // default limit is no limit:
             $chartData[0]['entries'][$title] = 0;
@@ -586,6 +592,4 @@ class BudgetController extends Controller
 
         return response()->json($data);
     }
-
-
 }

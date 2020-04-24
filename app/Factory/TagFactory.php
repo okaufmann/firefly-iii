@@ -1,7 +1,7 @@
 <?php
 /**
  * TagFactory.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -42,6 +42,7 @@ class TagFactory
 
     /**
      * Constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -58,9 +59,9 @@ class TagFactory
      */
     public function create(array $data): ?Tag
     {
-        $zoomLevel = 0 === (int)$data['zoom_level'] ? null : (int)$data['zoom_level'];
-        $latitude  = 0.0 === (float)$data['latitude'] ? null : (float)$data['latitude'];
-        $longitude = 0.0 === (float)$data['longitude'] ? null : (float)$data['longitude'];
+        $zoomLevel = 0 === (int) $data['zoom_level'] ? null : (int) $data['zoom_level'];
+        $latitude  = 0.0 === (float) $data['latitude'] ? null : (float) $data['latitude'];
+        $longitude = 0.0 === (float) $data['longitude'] ? null : (float) $data['longitude'];
         $array     = [
             'user_id'     => $this->user->id,
             'tag'         => trim($data['tag']),

@@ -1,7 +1,7 @@
 <?php
 /**
  * CategoryRepository.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -179,7 +179,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function getCategories(): Collection
     {
         /** @var Collection $set */
-        $set = $this->user->categories()->orderBy('name', 'ASC')->get();
+        $set = $this->user->categories()->with(['attachments'])->orderBy('name', 'ASC')->get();
 
         return $set;
     }
@@ -267,6 +267,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         /** @var CategoryUpdateService $service */
         $service = app(CategoryUpdateService::class);
+        $service->setUser($this->user);
 
         return $service->update($category, $data);
     }
@@ -372,5 +373,13 @@ class CategoryRepository implements CategoryRepositoryInterface
             RuleAction::where('action_type', 'set_category')->where('action_value', $category->name)->delete();
             $category->delete();
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAttachments(Category $category): Collection
+    {
+        return $category->attachments()->get();
     }
 }

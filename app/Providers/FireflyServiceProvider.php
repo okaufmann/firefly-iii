@@ -1,7 +1,7 @@
 <?php
 /**
  * FireflyServiceProvider.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -37,6 +37,8 @@ use FireflyIII\Helpers\Report\PopupReport;
 use FireflyIII\Helpers\Report\PopupReportInterface;
 use FireflyIII\Helpers\Report\ReportHelper;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
+use FireflyIII\Repositories\Telemetry\TelemetryRepository;
+use FireflyIII\Repositories\Telemetry\TelemetryRepositoryInterface;
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepository;
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepository;
@@ -46,7 +48,7 @@ use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequest;
 use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequestInterface;
 use FireflyIII\Services\IP\IpifyOrg;
 use FireflyIII\Services\IP\IPRetrievalInterface;
-use FireflyIII\Services\Password\PwndVerifierV3;
+use FireflyIII\Services\Password\PwndVerifierV2;
 use FireflyIII\Services\Password\Verifier;
 use FireflyIII\Support\Amount;
 use FireflyIII\Support\ExpandedForm;
@@ -58,6 +60,7 @@ use FireflyIII\Support\Form\RuleForm;
 use FireflyIII\Support\Navigation;
 use FireflyIII\Support\Preferences;
 use FireflyIII\Support\Steam;
+use FireflyIII\Support\Telemetry;
 use FireflyIII\Validation\FireflyValidator;
 use Illuminate\Support\ServiceProvider;
 use Validator;
@@ -91,33 +94,33 @@ class FireflyServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             'preferences',
-            function () {
+            static function () {
                 return new Preferences;
             }
         );
 
         $this->app->bind(
             'fireflyconfig',
-            function () {
+            static function () {
                 return new FireflyConfig;
             }
         );
         $this->app->bind(
             'navigation',
-            function () {
+            static function () {
                 return new Navigation;
             }
         );
         $this->app->bind(
             'amount',
-            function () {
+            static function () {
                 return new Amount;
             }
         );
 
         $this->app->bind(
             'steam',
-            function () {
+            static function () {
                 return new Steam;
             }
         );
@@ -155,6 +158,13 @@ class FireflyServiceProvider extends ServiceProvider
             }
         );
 
+        $this->app->bind(
+            'telemetry',
+            static function () {
+                return new Telemetry;
+            }
+        );
+
         // chart generator:
         $this->app->bind(GeneratorInterface::class, ChartJsGenerator::class);
 
@@ -170,6 +180,7 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(ReportHelperInterface::class, ReportHelper::class);
         $this->app->bind(FiscalHelperInterface::class, FiscalHelper::class);
         $this->app->bind(UpdateRequestInterface::class, UpdateRequest::class);
+        $this->app->bind(TelemetryRepositoryInterface::class, TelemetryRepository::class);
 
         $class = (string)config(sprintf('firefly.cer_providers.%s', (string)config('firefly.cer_provider')));
         if ('' === $class) {
@@ -178,7 +189,7 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(ExchangeRateInterface::class, $class);
 
         // password verifier thing
-        $this->app->bind(Verifier::class, PwndVerifierV3::class);
+        $this->app->bind(Verifier::class, PwndVerifierV2::class);
 
         // IP thing:
         $this->app->bind(IPRetrievalInterface::class, IpifyOrg::class);

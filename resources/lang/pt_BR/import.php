@@ -2,7 +2,7 @@
 
 /**
  * import.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -38,6 +38,7 @@ return [
 
     // notices about the CSV importer:
     'deprecate_csv_import' => 'As outlined in <a href="https://www.patreon.com/posts/future-updates-30012174">this Patreon post</a>, the way Firefly III manages importing data is going to change. That means that the CSV importer will be moved to a new, separate tool. You can already beta-test this tool if you visit <a href="https://github.com/firefly-iii/csv-importer">this GitHub repository</a>. I would appreciate it if you would test the new importer and let me know what you think.',
+    'final_csv_import'     => 'Como descrito neste <a href="https://www.patreon.com/posts/future-updates-30012174">post no Patreon</a>, a forma como o Firefly III gerencia a importação de dados vai mudar. Isto significa que esta é a última versão do Firefly III que incluirá um importador CSV. Uma ferramenta separada está disponível e você deveria testar: <a href="https://github.com/firefly-iii/csv-importer">o importador CSV Firefly III.</a>. Agradeço se você puder testar o novo importador e me dizer o que acha.',
 
     // import provider strings (index):
     'button_fake'                         => 'Fingir uma importação',
@@ -231,7 +232,7 @@ return [
     'job_config_map_text'             => 'In the following tables, the left value shows you information found in your uploaded file. It is your task to map this value, if possible, to a value already present in your database. Firefly will stick to this mapping. If there is no value to map to, or you do not wish to map the specific value, select nothing.',
     'job_config_map_nothing'          => 'There is no data present in your file that you can map to existing values. Please press "Start the import" to continue.',
     'job_config_field_value'          => 'Valor do campo',
-    'job_config_field_mapped'         => 'Mapped to',
+    'job_config_field_mapped'         => 'Mapeado para',
     'map_do_not_map'                  => '(não mapear)',
     'job_config_map_submit'           => 'Iniciar a importação',
 

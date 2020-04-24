@@ -1,7 +1,7 @@
 <?php
 /**
  * JournalRepositoryInterface.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Journal;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
@@ -114,7 +115,9 @@ interface JournalRepositoryInterface
      * Returns the source account of the journal.
      *
      * @param TransactionJournal $journal
+     *
      * @return Account
+     * @throws FireflyException
      */
     public function getSourceAccount(TransactionJournal $journal): Account;
 
@@ -123,6 +126,7 @@ interface JournalRepositoryInterface
      *
      * @param TransactionJournal $journal
      * @return Account
+     * @throws FireflyException
      */
     public function getDestinationAccount(TransactionJournal $journal): Account;
 

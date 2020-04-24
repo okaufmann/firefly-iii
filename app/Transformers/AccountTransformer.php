@@ -1,7 +1,7 @@
 <?php
 /**
  * AccountTransformer.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -180,10 +180,11 @@ class AccountTransformer extends AbstractTransformer
     private function getCurrency(Account $account): array
     {
         $currency       = $this->repository->getAccountCurrency($account);
-        $currencyId     = null;
-        $currencyCode   = null;
-        $decimalPlaces  = 2;
-        $currencySymbol = null;
+        $default        = app('amount')->getDefaultCurrencyByUser($account->user);
+        $currencyId     = $default->id;
+        $currencyCode   = $default->code;
+        $decimalPlaces  = $default->decimal_places;
+        $currencySymbol = $default->symbol;
         if (null !== $currency) {
             $currencyId     = $currency->id;
             $currencyCode   = $currency->code;

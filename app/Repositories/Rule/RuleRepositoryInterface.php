@@ -1,7 +1,7 @@
 <?php
 /**
  * RuleRepositoryInterface.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -45,6 +45,13 @@ interface RuleRepositoryInterface
      * @return bool
      */
     public function destroy(Rule $rule): bool;
+
+    /**
+     * @param Rule $rule
+     *
+     * @return Rule
+     */
+    public function duplicate(Rule $rule): Rule;
 
     /**
      * @param int $ruleId

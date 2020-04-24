@@ -2,7 +2,7 @@
 
 /**
  * list.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -105,7 +105,7 @@ return [
     'sum_withdrawals'         => 'Suma de retiros',
     'sum_deposits'            => 'Suma de depositos',
     'sum_transfers'           => 'Suma de transferencias',
-    'sum_reconciliations'     => 'Sum of reconciliations',
+    'sum_reconciliations'     => 'Suma de reconciliaciones',
     'reconcile'               => 'Reconciliar',
     'account_on_spectre'      => 'Cuenta (espectro)',
     'account_on_ynab'         => 'Cuenta (YNAB)',

@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 
 /**
  * SetLatestVersion.php
@@ -25,6 +25,9 @@ namespace FireflyIII\Console\Commands;
 
 use Illuminate\Console\Command;
 
+/**
+ * Class SetLatestVersion
+ */
 class SetLatestVersion extends Command
 {
     /**
@@ -32,7 +35,7 @@ class SetLatestVersion extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Set latest version in DB.';
     /**
      * The name and signature of the console command.
      *
@@ -41,30 +44,22 @@ class SetLatestVersion extends Command
     protected $signature = 'firefly-iii:set-latest-version {--james-is-cool}';
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return int
      */
-    public function handle()
+    public function handle(): int
     {
         if (!$this->option('james-is-cool')) {
             $this->error('Am too!');
 
-            return;
+            return 0;
         }
         app('fireflyconfig')->set('db_version', config('firefly.db_version'));
         app('fireflyconfig')->set('ff3_version', config('firefly.version'));
         $this->line('Updated version.');
+
+        // app('telemetry')->feature('executed-command', $this->signature);
 
         return 0;
     }

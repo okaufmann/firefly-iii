@@ -1,7 +1,7 @@
 <?php
 /**
  * VersionCheckEventHandler.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -26,7 +26,6 @@ namespace FireflyIII\Handlers\Events;
 
 
 use FireflyIII\Events\RequestedVersionCheckStatus;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Update\UpdateTrait;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
@@ -52,7 +51,7 @@ class VersionCheckEventHandler
 
         // should not check for updates:
         $permission = app('fireflyconfig')->get('permission_update_check', -1);
-        $value      = (int)$permission->data;
+        $value      = (int) $permission->data;
         if (1 !== $value) {
             Log::info('Update check is not enabled.');
 
@@ -81,21 +80,9 @@ class VersionCheckEventHandler
         }
         // last check time was more than a week ago.
         Log::debug('Have not checked for a new version in a week!');
-        try {
-            $latestRelease = $this->getLatestRelease();
-        } catch (FireflyException $e) {
-            Log::error($e);
-            session()->flash('error', (string)trans('firefly.update_check_error'));
+        $release = $this->getLatestRelease();
 
-            // softfail.
-            return;
-        }
-        $versionCheck  = $this->versionCheck($latestRelease);
-        $resultString  = $this->parseResult($versionCheck, $latestRelease);
-        if (0 !== $versionCheck && '' !== $resultString) {
-            // flash info
-            session()->flash('info', $resultString);
-        }
+        session()->flash($release['level'], $release['message']);
         app('fireflyconfig')->set('last_update_check', time());
     }
 }

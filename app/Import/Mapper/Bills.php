@@ -1,7 +1,7 @@
 <?php
 /**
  * Bills.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -27,6 +27,9 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 
 /**
  * Class Bills.
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class Bills implements MapperInterface
 {
@@ -44,11 +47,11 @@ class Bills implements MapperInterface
 
         /** @var Bill $bill */
         foreach ($result as $bill) {
-            $billId        = (int)$bill->id;
+            $billId        = (int) $bill->id;
             $list[$billId] = $bill->name;
         }
         asort($list);
-        $list = [0 => (string)trans('import.map_do_not_map')] + $list;
+        $list = [0 => (string) trans('import.map_do_not_map')] + $list;
 
         return $list;
     }

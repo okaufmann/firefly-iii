@@ -1,7 +1,7 @@
 <?php
 /**
  * ImportableCreator.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -30,6 +30,7 @@ use FireflyIII\Support\Import\Placeholder\ImportTransaction;
  * Takes an array of arrays of ColumnValue objects and returns one (1) ImportTransaction
  * for each line.
  *
+ * @deprecated
  * @codeCoverageIgnore
  *
  * Class ImportableCreator

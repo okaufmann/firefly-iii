@@ -25,6 +25,9 @@ namespace FireflyIII\Import\Specifics;
 /**
  * Class IngDescription.
  *
+ * @deprecated
+ * @codeCoverageIgnore
+ *
  * Parses the description from CSV files for Ing bank accounts.
  *
  * With Mutation 'InternetBankieren', 'Overschrijving', 'Verzamelbetaling' and
@@ -70,18 +73,22 @@ class IngDescription implements SpecificInterface
     public function run(array $row): array
     {
         $this->row = array_values($row);
+        array_push($this->row); // New column for "Valutadatum"
         if (count($this->row) >= 8) {                    // check if the array is correct
             switch ($this->row[4]) {                     // Get value for the mutation type
                 case 'GT':                               // InternetBankieren
                 case 'OV':                               // Overschrijving
                 case 'VZ':                               // Verzamelbetaling
                 case 'IC':                               // Incasso
-                    $this->removeIBANIngDescription();
-                    $this->removeNameIngDescription();
-                    // if "tegenrekening" empty, copy the description. Primitive, but it works.
-                    $this->copyDescriptionToOpposite();
+                case 'DV':                               // Divers
+                    $this->removeIBANIngDescription();   // Remove "IBAN:", because it is already at "Tegenrekening"
+                    $this->removeNameIngDescription();   // Remove "Naam:", because it is already at "Naam/ Omschrijving"
+                    $this->removeIngDescription();       // Remove "Omschrijving", but not the value from description
+                    $this->moveValutadatumDescription(); // Move "Valutadatum" from description to new column
+                    $this->MoveSavingsAccount();         // Move savings account number and name
                     break;
                 case 'BA':                              // Betaalautomaat
+                    $this->moveValutadatumDescription(); // Move "Valutadatum" from description to new column
                     $this->addNameIngDescription();
                     break;
             }
@@ -100,32 +107,67 @@ class IngDescription implements SpecificInterface
     }
 
     /**
+     * Move "Valutadatum" from the description to new column.
+     */
+    protected function moveValutadatumDescription(): void
+    {
+        $matches = [];
+        if (preg_match('/Valutadatum: ([0-9-]+)/', $this->row[8], $matches)) {
+            $this->row[9] = date("Ymd", strtotime($matches[1]));
+            $this->row[8] = preg_replace('/Valutadatum: [0-9-]+/', '', $this->row[8]);
+        }
+    }
+
+    /**
      * Remove IBAN number out of the  description
      * Default description of Description is: Naam: <OPPOS NAME> Omschrijving: <DESCRIPTION> IBAN: <OPPOS IBAN NR>.
      */
     protected function removeIBANIngDescription(): void
     {
-        // Try replace the iban number with nothing. The IBAN nr is found in the third row
+        // Try replace the iban number with nothing. The IBAN nr is found in the third column
         $this->row[8] = preg_replace('/\sIBAN:\s' . $this->row[3] . '/', '', $this->row[8]);
     }
 
     /**
-     * Remove name from the description (Remove everything before the description incl the word 'Omschrijving' ).
+     * Remove "Omschrijving" (and NOT its value) from the description.
      */
-    protected function removeNameIngDescription(): void
+    protected function removeIngDescription(): void
     {
-        // Try remove everything before the 'Omschrijving'
-        $this->row[8] = preg_replace('/.+Omschrijving: /', '', $this->row[8]);
+        $this->row[8] = preg_replace('/Omschrijving: /', '', $this->row[8]);
     }
 
     /**
-     * Copy description to name of opposite account.
+     * Remove "Naam" (and its value) from the description.
      */
-    private function copyDescriptionToOpposite(): void
+    protected function removeNameIngDescription(): void
     {
-        $search = ['Naar Oranje Spaarrekening ', 'Afschrijvingen'];
-        if ('' === (string)$this->row[3]) {
-            $this->row[3] = trim(str_ireplace($search, '', $this->row[8]));
+        $this->row[8] = preg_replace('/Naam:.*?([a-zA-Z\/]+:)/', '$1', $this->row[8]);
+    }
+
+    /**
+     * Move savings account number to column 1 and name to column 3.
+     */
+    private function MoveSavingsAccount(): void
+    {
+        $matches = [];
+
+        if (preg_match('/(Naar|Van) (.*rekening) ([A-Za-z0-9]+)/', $this->row[8], $matches)) { // Search for saving acount at 'Mededelingen' column
+            $this->row[1] = $this->row[1] . ' ' . $matches[2] . ' ' . $matches[3]; // Current name + Saving acount name + Acount number
+            if ('' === (string) $this->row[3]) { // if Saving account number does not yet exists
+                $this->row[3] = $matches[3]; // Copy savings account number
+            }
+            $this->row[8] = preg_replace('/(Naar|Van) (.*rekening) ([A-Za-z0-9]+)/', '', $this->row[8]); // Remove the savings account content from description
+        } elseif (preg_match('/(Naar|Van) (.*rekening) ([A-Za-z0-9]+)/', $this->row[1], $matches)) { // Search for saving acount at 'Naam / Omschrijving' column
+            $this->row[1] = $matches[2] . ' ' . $matches[3];  // Saving acount name + Acount number
+            if ('' === (string) $this->row[3]) { // if Saving account number does not yet exists
+                $this->row[3] = $matches[3]; // Copy savings account number
+            }
+        }
+
+        if ('' !== (string)$this->row[3]) { // if Saving account number exists
+            if (! preg_match('/[A-Za-z]/', $this->row[3])) { // if Saving account number has no characters 
+                $this->row[3] = sprintf("%010d", $this->row[3]); // Make the number 10 digits
+            }
         }
     }
 }

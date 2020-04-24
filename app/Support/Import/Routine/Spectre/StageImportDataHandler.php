@@ -1,7 +1,7 @@
 <?php
 /**
  * StageImportDataHandler.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -38,6 +38,8 @@ use Log;
 
 /**
  * Class StageImportDataHandler
+ * @deprecated
+ * @codeCoverageIgnore
  *
  */
 class StageImportDataHandler
@@ -169,6 +171,9 @@ class StageImportDataHandler
                         $foreignCurrencyCode = $value;
                         Log::debug(sprintf('Foreign currency code is now %s', $value));
                         break;
+                    case 'time':
+                        // ignore time because it breaks the duplicate detector.
+                        break;
                     default:
                         $notes .= $key . ': ' . $value . '  ' . "\n"; // for newline in Markdown.
                 }
@@ -178,30 +183,30 @@ class StageImportDataHandler
                 // transaction data:
                 'transactions'    => [
                     [
-                        'date'            => $transaction->getMadeOn()->format('Y-m-d'),
-                        'tags'            => $tags,
-                        'user'            => $this->importJob->user_id,
-                        'notes'           => $notes,
+                        'date'                  => $transaction->getMadeOn()->format('Y-m-d'),
+                        'tags'                  => $tags,
+                        'user'                  => $this->importJob->user_id,
+                        'notes'                 => trim($notes),
 
                         // all custom fields:
-                        'external_id'     => (string)$transaction->getId(),
+                        'external_id'           => (string)$transaction->getId(),
 
                         // journal data:
-                        'description'     => $transaction->getDescription(),
-                        'piggy_bank_id'   => null,
-                        'piggy_bank_name' => null,
-                        'bill_id'         => null,
-                        'bill_name'       => null,
-                        'original-source' => sprintf('spectre-v%s', config('firefly.version')),
-                        'type'            => $type,
-                        'currency_id'     => null,
-                        'currency_code'   => $currencyCode,
-                        'amount'          => $amount,
-                        'budget_id'       => null,
-                        'budget_name'     => null,
-                        'category_id'     => null,
-                        'category_name'   => $transaction->getCategory(),
-                        'source_id'       => $source->id,
+                        'description'           => $transaction->getDescription(),
+                        'piggy_bank_id'         => null,
+                        'piggy_bank_name'       => null,
+                        'bill_id'               => null,
+                        'bill_name'             => null,
+                        'original-source'       => sprintf('spectre-v%s', config('firefly.version')),
+                        'type'                  => $type,
+                        'currency_id'           => null,
+                        'currency_code'         => $currencyCode,
+                        'amount'                => $amount,
+                        'budget_id'             => null,
+                        'budget_name'           => null,
+                        'category_id'           => null,
+                        'category_name'         => $transaction->getCategory(),
+                        'source_id'             => $source->id,
                         'source_name'           => null,
                         'destination_id'        => $destination->id,
                         'destination_name'      => null,

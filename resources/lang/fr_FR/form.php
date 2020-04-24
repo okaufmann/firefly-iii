@@ -2,7 +2,7 @@
 
 /**
  * form.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -43,6 +43,7 @@ return [
     'journal_currency_id'       => 'Devise',
     'currency_id'               => 'Devise',
     'transaction_currency_id'   => 'Devise',
+    'auto_budget_currency_id'   => 'Devise',
     'external_ip'               => 'L\'adresse IP externe de votre serveur',
     'attachments'               => 'Documents joints',
     'journal_amount'            => 'Montant',
@@ -51,12 +52,12 @@ return [
     'journal_source_id'         => 'Compte d’actif (source)',
     'BIC'                       => 'Code BIC',
     'verify_password'           => 'Vérifiez la sécurité du mot de passe',
-    'source_account'            => 'Compte d\'origine',
+    'source_account'            => 'Compte source',
     'destination_account'       => 'Compte destinataire',
     'journal_destination_id'    => 'Compte d’actif (destination)',
     'asset_destination_account' => 'Compte destinataire',
     'include_net_worth'         => 'Inclure dans l\'avoir net',
-    'asset_source_account'      => 'Compte d\'origine',
+    'asset_source_account'      => 'Compte source',
     'journal_description'       => 'Description',
     'note'                      => 'Notes',
     'store_new_transaction'       => 'Créer une nouvelle opération',
@@ -77,7 +78,7 @@ return [
     'piggy_bank_id'               => 'Tirelire',
     'returnHere'                  => 'Retourner ici',
     'returnHereExplanation'       => 'Après enregistrement, revenir ici pour en créer un nouveau.',
-    'returnHereUpdateExplanation' => 'Après mise à jour, revenir ici.',
+    'returnHereUpdateExplanation' => 'Après la mise à jour, revenir ici.',
     'description'                 => 'Description',
     'expense_account'             => 'Compte de dépenses',
     'revenue_account'             => 'Compte de recettes',
@@ -107,7 +108,7 @@ return [
     'foreign_amount'              => 'Montant en devise étrangère',
     'existing_attachments'        => 'Pièces jointes existantes',
     'date'                        => 'Date',
-    'interest_date'               => 'Date de l’intérêt',
+    'interest_date'               => 'Date de valeur (intérêts)',
     'book_date'                   => 'Date de réservation',
     'process_date'                => 'Date de traitement',
     'category'                    => 'Catégorie',
@@ -177,7 +178,7 @@ return [
     'delete_all_permanently'      => 'Supprimer la sélection définitivement',
     'update_all_journals'         => 'Mettre à jour ces opérations',
     'also_delete_transactions'    => 'La seule opération liée à ce compte sera aussi supprimée.|Les :count opérations liées à ce compte seront aussi supprimées.',
-    'also_delete_connections'     => 'La seule transaction liée à ce type de lien perdra cette connexion. | Toutes les transactions :count liées à ce type de lien perdront leur connexion.',
+    'also_delete_connections'     => 'La seule opération liée à ce type de lien perdra cette connexion. | Toutes les opérations :count liées à ce type de lien perdront leur connexion.',
     'also_delete_rules'           => 'La seule règle liée à ce groupe de règles sera aussi supprimée.|Les :count règles liées à ce groupe de règles seront aussi supprimées.',
     'also_delete_piggyBanks'      => 'La seule tirelire liée à ce compte sera aussi supprimée.|Les :count tirelires liées à ce compte seront aussi supprimées.',
     'bill_keep_transactions'      => 'La seule opération liée à cette facture ne sera pas supprimée.|Les :count opérations liées à cette facture ne seront pas supprimées.',
@@ -193,6 +194,7 @@ return [
     'blocked'               => 'Est bloqué ?',
     'blocked_code'          => 'Raison du blocage',
     'login_name'            => 'Identifiant',
+    'is_owner'              => 'Est administrateur ?',
 
     // import
     'apply_rules'           => 'Appliquer les règles',
@@ -218,7 +220,7 @@ return [
     'csv_config'            => 'Configuration d\'importation CSV',
     'client_id'             => 'Identifiant',
     'service_secret'        => 'Secret de service',
-    'app_secret'            => 'Secret d\'application',
+    'app_secret'            => 'App secret',
     'app_id'                => 'ID App',
     'secret'                => 'Secret',
     'public_key'            => 'Clé publique',
@@ -239,12 +241,12 @@ return [
     'payment_date'            => 'Date de paiement',
     'invoice_date'            => 'Date de facturation',
     'internal_reference'      => 'Référence interne',
-    'inward'                  => 'Description vers l’intérieur',
-    'outward'                 => 'Impact de l\'autre transaction',
+    'inward'                  => 'Description vers l\'opération',
+    'outward'                 => 'Description depuis l\'opération',
     'rule_group_id'           => 'Groupe de règles',
-    'transaction_description' => 'Description de la transaction',
+    'transaction_description' => 'Description de l\'opération',
     'first_date'              => 'Date de début',
-    'transaction_type'        => 'Type de transaction',
+    'transaction_type'        => 'Type d\'opération',
     'repeat_until'            => 'Répéter jusqu\'à',
     'recurring_description'   => 'Description de l\'opération périodique',
     'repetition_type'         => 'Type de répétition',
@@ -259,5 +261,15 @@ return [
     'deposit_source_id'         => 'Compte source',
     'expected_on'               => 'Prévu le',
     'paid'                      => 'Payé',
+
+    'auto_budget_type'            => 'Budget automatique',
+    'auto_budget_amount'            => 'Montant du budget automatique',
+    'auto_budget_period'            => 'Période du budget automatique',
+
+    'collected' => 'Collecté',
+    'submitted' => 'Envoyé',
+    'key' => 'Clé',
+    'value' => 'Contenu de l\'enregistrement'
+
 
 ];

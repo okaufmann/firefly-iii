@@ -54,6 +54,20 @@
     "source": "https://github.com/firefly-iii/firefly-iii",
     "docs": "https://docs.firefly-iii.org/"
   },
+    "funding": [
+      {
+        "type": "patreon",
+        "url": "https://www.patreon.com/JC5"
+      },
+      {
+        "type": "github",
+        "url": "https://github.com/sponsors/JC5"
+      },
+      {
+        "type": "paypal",
+        "url": "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA"
+      }
+    ],
   "require": {
     "php": ">=7.3.0",
     "ext-bcmath": "*",
@@ -88,6 +102,7 @@
     "pragmarx/google2fa": "^7.0",
     "pragmarx/recovery": "^0.1.0",
     "predis/predis": "^1.1",
+    "ramsey/uuid": "^3.9",
     "rcrowe/twigbridge": "^0.11.2"
   },
   "require-dev": {
@@ -97,7 +112,9 @@
     "johnkary/phpunit-speedtrap": "^3.1",
     "mockery/mockery": "1.*",
     "phpunit/phpunit": "8.*",
-    "roave/security-advisories": "dev-master"
+    "psalm/plugin-laravel": "^1.1",
+    "roave/security-advisories": "dev-master",
+    "vimeo/psalm": "^3.10"
   },
   "suggest": {
   },

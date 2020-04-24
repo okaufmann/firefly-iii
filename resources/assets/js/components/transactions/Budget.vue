@@ -1,7 +1,7 @@
 
 <!--
   - Budget.vue
-  - Copyright (c) 2019 thegrumpydictator@gmail.com
+  - Copyright (c) 2019 james@firefly-iii.org
   -
   - This file is part of Firefly III (https://github.com/firefly-iii).
   -
@@ -27,10 +27,21 @@
             {{ $t('firefly.budget') }}
         </div>
         <div class="col-sm-12">
-            <select name="budget[]" ref="budget" v-model="value" @input="handleInput" class="form-control"
-                    v-if="this.budgets.length > 0">
-                <option v-for="cBudget in this.budgets" :label="cBudget.name" :value="cBudget.id">{{cBudget.name}}</option>
+            <select 
+            name="budget[]" 
+            ref="budget" 
+            v-model="selected" 
+            @input="handleInput"
+            v-on:change="signalChange" 
+            :title="$t('firefly.budget')"
+            class="form-control"
+             v-if="this.budgets.length > 0">
+                <option v-for="cBudget in this.budgets" 
+                    :label="cBudget.name" 
+                    :value="cBudget.id">{{cBudget.name}}
+                </option>
             </select>
+            <p class="help-block" v-if="this.budgets.length === 1" v-html="$t('firefly.no_budget_pointer')"></p>
             <ul class="list-unstyled" v-for="error in this.error">
                 <li class="text-danger">{{ error }}</li>
             </ul>
@@ -41,17 +52,29 @@
 <script>
     export default {
         name: "Budget",
-        props: ['transactionType', 'value', 'error','no_budget'],
+        props: {
+            transactionType: String, 
+            value: {
+                type: [String, Number], 
+                default: 0
+            },
+            error: Array,
+            no_budget: String,
+        },
         mounted() {
             this.loadBudgets();
-            //this.value = null === this.value ? 0 : this.value;
         },
         data() {
             return {
+                selected: this.value,
                 budgets: [],
             }
         },
         methods: {
+            // Fixes edit change budget not updating on every broswer
+            signalChange: function(e) {
+                this.$emit('input', this.$refs.budget.value);
+            },
             handleInput(e) {
                 this.$emit('input', this.$refs.budget.value);
             },
@@ -61,16 +84,12 @@
             loadBudgets: function () {
                 let URI = document.getElementsByTagName('base')[0].href + "json/budgets";
                 axios.get(URI, {}).then((res) => {
-                    this.budgets = [
-                        {
-                            name: this.no_budget,
-                            id: 0,
-                        },
-                        {
-                            name: this.no_budget,
-                            id: null,
-                        }
-                    ];
+                        this.budgets = [
+                            {
+                                name: this.no_budget,
+                                id: 0,
+                            }
+                        ];
                     for (const key in res.data) {
                         if (res.data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
                             this.budgets.push(res.data[key]);

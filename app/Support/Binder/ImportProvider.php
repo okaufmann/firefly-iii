@@ -1,7 +1,7 @@
 <?php
 /**
  * ImportProvider.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -31,6 +31,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class ImportProvider.
+ *
+ * @deprecated
  */
 class ImportProvider implements BinderInterface
 {
@@ -94,7 +96,8 @@ class ImportProvider implements BinderInterface
      * @param string $value
      * @param Route  $route
      *
-     * @return Carbon
+     * @return string
+     *
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public static function routeBinder(string $value, Route $route): string

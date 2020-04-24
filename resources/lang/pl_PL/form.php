@@ -2,7 +2,7 @@
 
 /**
  * form.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -38,11 +38,12 @@ return [
     'match'                     => 'Dopasowanie',
     'strict'                    => 'Tryb ścisły',
     'repeat_freq'               => 'Powtarza się',
-    'location'                  => 'Location',
+    'location'                  => 'Lokalizacja',
     'update_channel'            => 'Kanał aktualizacji',
     'journal_currency_id'       => 'Waluta',
     'currency_id'               => 'Waluta',
     'transaction_currency_id'   => 'Waluta',
+    'auto_budget_currency_id'   => 'Waluta',
     'external_ip'               => 'Zewnętrzny adres IP Twojego serwera',
     'attachments'               => 'Załączniki',
     'journal_amount'            => 'Kwota',
@@ -193,6 +194,7 @@ return [
     'blocked'               => 'Jest zablokowany?',
     'blocked_code'          => 'Powód blokady',
     'login_name'            => 'Login',
+    'is_owner'              => 'Czy admin?',
 
     // import
     'apply_rules'           => 'Zastosuj reguły',
@@ -259,5 +261,15 @@ return [
     'deposit_source_id'         => 'Konto źródłowe',
     'expected_on'               => 'Oczekiwany',
     'paid'                      => 'Zapłacone',
+
+    'auto_budget_type'            => 'Auto-budżet',
+    'auto_budget_amount'            => 'Kwota automatycznego budżetu',
+    'auto_budget_period'            => 'Okres automatycznego budżetu',
+
+    'collected' => 'Zebrane',
+    'submitted' => 'Przesłane',
+    'key' => 'Klucz',
+    'value' => 'Zawartość rekordu'
+
 
 ];

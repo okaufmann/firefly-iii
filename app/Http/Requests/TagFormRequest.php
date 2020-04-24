@@ -1,7 +1,7 @@
 <?php
 /**
  * TagFormRequest.php
- * Copyright (c) 2019 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -53,6 +53,7 @@ class TagFormRequest extends Request
             'date'        => $this->date('date'),
             'description' => $this->string('description'),
         ];
+
         return $this->appendLocationData($data, 'location');
 
     }
@@ -74,12 +75,13 @@ class TagFormRequest extends Request
             $tagRule = 'required|min:1|uniqueObjectForUser:tags,tag,' . $tag->id;
         }
 
-        $rules= [
+        $rules = [
             'tag'         => $tagRule,
             'id'          => $idRule,
             'description' => 'min:1|nullable',
             'date'        => 'date|nullable',
         ];
+
         return Location::requestRules($rules);
     }
 }
