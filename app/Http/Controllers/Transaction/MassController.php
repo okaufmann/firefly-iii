@@ -62,7 +62,7 @@ class MassController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('title', (string) trans('firefly.transactions'));
-                app('view')->share('mainTitleIcon', 'fa-repeat');
+                app('view')->share('mainTitleIcon', 'fa-exchange');
                 $this->repository = app(JournalRepositoryInterface::class);
 
                 return $next($request);
@@ -114,7 +114,7 @@ class MassController extends Controller
 
 
         app('preferences')->mark();
-        session()->flash('success', (string) trans('firefly.mass_deleted_transactions_success', ['amount' => $count]));
+        session()->flash('success', (string) trans_choice('firefly.mass_deleted_transactions_success', $count));
 
         // redirect to previous URL:
         return redirect($this->getPreviousUri('transactions.mass-delete.uri'));
@@ -188,7 +188,7 @@ class MassController extends Controller
         }
 
         app('preferences')->mark();
-        session()->flash('success', (string) trans('firefly.mass_edited_transactions_success', ['amount' => $count]));
+        session()->flash('success', (string) trans_choice('firefly.mass_edited_transactions_success', $count ));
 
         // redirect to previous URL:
         return redirect($this->getPreviousUri('transactions.mass-edit.uri'));

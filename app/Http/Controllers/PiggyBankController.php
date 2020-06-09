@@ -71,7 +71,7 @@ class PiggyBankController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('title', (string) trans('firefly.piggyBanks'));
-                app('view')->share('mainTitleIcon', 'fa-sort-amount-asc');
+                app('view')->share('mainTitleIcon', 'fa-bullseye');
 
                 $this->attachments = app(AttachmentHelperInterface::class);
                 $this->piggyRepos    = app(PiggyBankRepositoryInterface::class);
@@ -92,9 +92,7 @@ class PiggyBankController extends Controller
      */
     public function add(PiggyBank $piggyBank)
     {
-        /** @var Carbon $date */
-        $date          = session('end', Carbon::now()->endOfMonth());
-        $leftOnAccount = $this->piggyRepos->leftOnAccount($piggyBank, $date);
+        $leftOnAccount = $this->piggyRepos->leftOnAccount($piggyBank, new Carbon);
         $savedSoFar    = $this->piggyRepos->getCurrentAmount($piggyBank);
         $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
         $maxAmount     = min($leftOnAccount, $leftToSave);
@@ -113,7 +111,7 @@ class PiggyBankController extends Controller
     public function addMobile(PiggyBank $piggyBank)
     {
         /** @var Carbon $date */
-        $date          = session('end', Carbon::now()->endOfMonth());
+        $date          = session('end', new Carbon);
         $leftOnAccount = $this->piggyRepos->leftOnAccount($piggyBank, $date);
         $savedSoFar    = $this->piggyRepos->getCurrentAmount($piggyBank);
         $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
@@ -456,7 +454,12 @@ class PiggyBankController extends Controller
         // store attachment(s):
         /** @var array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
-        $this->attachments->saveAttachmentsForModel($piggyBank, $files);
+        if (null !== $files && !auth()->user()->hasRole('demo')) {
+            $this->attachments->saveAttachmentsForModel($piggyBank, $files);
+        }
+        if (null !== $files && auth()->user()->hasRole('demo')) {
+            session()->flash('info',(string)trans('firefly.no_att_demo_user'));
+        }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
@@ -495,7 +498,12 @@ class PiggyBankController extends Controller
         // store new attachment(s):
         /** @var array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
-        $this->attachments->saveAttachmentsForModel($piggyBank, $files);
+        if (null !== $files && !auth()->user()->hasRole('demo')) {
+            $this->attachments->saveAttachmentsForModel($piggyBank, $files);
+        }
+        if (null !== $files && auth()->user()->hasRole('demo')) {
+            session()->flash('info',(string)trans('firefly.no_att_demo_user'));
+        }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore

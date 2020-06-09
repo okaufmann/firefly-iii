@@ -121,12 +121,11 @@ class DebugController extends Controller
         $search  = ['~', '#'];
         $replace = ['\~', '# '];
 
+        $now            = Carbon::now()->format('Y-m-d H:i:s e');
         $installationId = app('fireflyconfig')->get('installation_id', '')->data;
         $phpVersion     = str_replace($search, $replace, PHP_VERSION);
         $phpOs          = str_replace($search, $replace, PHP_OS);
         $interface      = PHP_SAPI;
-        $now            = Carbon::now()->format('Y-m-d H:i:s e');
-        $extensions     = implode(', ', get_loaded_extensions());
         $drivers        = implode(', ', DB::availableDrivers());
         $currentDriver  = DB::getDriverName();
         $userAgent      = $request->header('user-agent');
@@ -138,14 +137,23 @@ class DebugController extends Controller
         $logChannel     = config('logging.default');
         $appLogLevel    = config('logging.level');
         $cacheDriver    = config('cache.default');
-        $loginProvider  = config('auth.driver');
+        $loginProvider  = config('auth.providers.users.driver');
+
+        // some new vars.
+        $telemetry       = true === config('firefly.send_telemetry') && true === config('firefly.feature_flags.telemetry');
+        $defaultLanguage = (string) config('firefly.default_language');
+        $defaultLocale   = (string) config('firefly.default_locale');
+        $userLanguage    = app('steam')->getLanguage();
+        $userLocale      = app('steam')->getLocale();
+        $isDocker        = env('IS_DOCKER', false);
 
         // set languages, see what happens:
         $original       = setlocale(LC_ALL, 0);
         $localeAttempts = [];
-        $parts          = explode(',', (string) trans('config.locale'));
+        $parts          = app('steam')->getLocaleArray(app('steam')->getLocale());
         foreach ($parts as $code) {
-            $code                  = trim($code);
+            $code = trim($code);
+            Log::debug(sprintf('Trying to set %s', $code));
             $localeAttempts[$code] = var_export(setlocale(LC_ALL, $code), true);
         }
         setlocale(LC_ALL, $original);
@@ -178,7 +186,6 @@ class DebugController extends Controller
             'debug',
             compact(
                 'phpVersion',
-                'extensions',
                 'localeAttempts',
                 'appEnv',
                 'appDebug',
@@ -196,7 +203,14 @@ class DebugController extends Controller
                 'interface',
                 'logContent',
                 'cacheDriver',
-                'trustedProxies'
+                'trustedProxies',
+                'telemetry',
+                'userLanguage',
+                'userLocale',
+                'defaultLanguage',
+                'defaultLocale',
+                'isDocker'
+
             )
         );
     }

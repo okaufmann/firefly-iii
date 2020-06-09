@@ -66,6 +66,7 @@ use FireflyIII\TransactionRules\Actions\ClearNotes;
 use FireflyIII\TransactionRules\Actions\ConvertToDeposit;
 use FireflyIII\TransactionRules\Actions\ConvertToTransfer;
 use FireflyIII\TransactionRules\Actions\ConvertToWithdrawal;
+use FireflyIII\TransactionRules\Actions\DeleteTransaction;
 use FireflyIII\TransactionRules\Actions\LinkToBill;
 use FireflyIII\TransactionRules\Actions\PrependDescription;
 use FireflyIII\TransactionRules\Actions\PrependNotes;
@@ -77,12 +78,17 @@ use FireflyIII\TransactionRules\Actions\SetDescription;
 use FireflyIII\TransactionRules\Actions\SetDestinationAccount;
 use FireflyIII\TransactionRules\Actions\SetNotes;
 use FireflyIII\TransactionRules\Actions\SetSourceAccount;
+use FireflyIII\TransactionRules\Actions\UpdatePiggybank;
 use FireflyIII\TransactionRules\Triggers\AmountExactly;
 use FireflyIII\TransactionRules\Triggers\AmountLess;
 use FireflyIII\TransactionRules\Triggers\AmountMore;
 use FireflyIII\TransactionRules\Triggers\BudgetIs;
 use FireflyIII\TransactionRules\Triggers\CategoryIs;
 use FireflyIII\TransactionRules\Triggers\CurrencyIs;
+use FireflyIII\TransactionRules\Triggers\ForeignCurrencyIs;
+use FireflyIII\TransactionRules\Triggers\DateIs;
+use FireflyIII\TransactionRules\Triggers\DateBefore;
+use FireflyIII\TransactionRules\Triggers\DateAfter;
 use FireflyIII\TransactionRules\Triggers\DescriptionContains;
 use FireflyIII\TransactionRules\Triggers\DescriptionEnds;
 use FireflyIII\TransactionRules\Triggers\DescriptionIs;
@@ -134,11 +140,11 @@ return [
     ],
     'feature_flags' => [
         'export'    => true,
-        'telemetry' => false,
+        'telemetry' => true,
     ],
 
     'encryption'                   => null === env('USE_ENCRYPTION') || true === env('USE_ENCRYPTION'),
-    'version'                      => '5.2.3',
+    'version'                      => '5.2.8',
     'api_version'                  => '1.1.0',
     'db_version'                   => 13,
     'maxUploadSize'                => 15242880,
@@ -383,7 +389,7 @@ return [
         'Opening balance' => 'opening-balance',
         'Reconciliation'  => 'reconciliation',
     ],
-    'transactionIconsByWhat'       => [
+    'transactionIconsByType'       => [
         'expenses'   => 'fa-long-arrow-left',
         'withdrawal' => 'fa-long-arrow-left',
         'revenue'    => 'fa-long-arrow-right',
@@ -466,11 +472,15 @@ return [
         'description_ends'         => DescriptionEnds::class,
         'description_contains'     => DescriptionContains::class,
         'description_is'           => DescriptionIs::class,
+        'date_is'                  => DateIs::class,
+        'date_before'              => DateBefore::class,
+        'date_after'               => DateAfter::class,
         'transaction_type'         => TransactionType::class,
         'category_is'              => CategoryIs::class,
         'budget_is'                => BudgetIs::class,
         'tag_is'                   => TagIs::class,
         'currency_is'              => CurrencyIs::class,
+        'foreign_currency_is'      => ForeignCurrencyIs::class,
         'has_attachments'          => HasAttachment::class,
         'has_no_category'          => HasNoCategory::class,
         'has_any_category'         => HasAnyCategory::class,
@@ -506,6 +516,8 @@ return [
         'convert_withdrawal'      => ConvertToWithdrawal::class,
         'convert_deposit'         => ConvertToDeposit::class,
         'convert_transfer'        => ConvertToTransfer::class,
+        'update_piggy'            => UpdatePiggybank::class,
+        'delete_transaction'      => DeleteTransaction::class,
     ],
     'context-rule-actions'         => [
         'set_category',
@@ -550,6 +562,9 @@ return [
         'notes_start',
         'notes_end',
         'notes_are',
+        'date_is',
+        'date_before',
+        'date_after',
     ],
 
     'test-triggers'    => [

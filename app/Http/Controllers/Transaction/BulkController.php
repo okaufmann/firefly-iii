@@ -56,7 +56,7 @@ class BulkController extends Controller
             function ($request, $next) {
                 $this->repository = app(JournalRepositoryInterface::class);
                 app('view')->share('title', (string) trans('firefly.transactions'));
-                app('view')->share('mainTitleIcon', 'fa-repeat');
+                app('view')->share('mainTitleIcon', 'fa-exchange');
 
                 return $next($request);
             }
@@ -118,7 +118,7 @@ class BulkController extends Controller
             }
         }
         app('preferences')->mark();
-        $request->session()->flash('success', (string) trans('firefly.mass_edited_transactions_success', ['amount' => $count]));
+        $request->session()->flash('success', (string) trans_choice('firefly.mass_edited_transactions_success', $count));
 
         // redirect to previous URL:
         return redirect($this->getPreviousUri('transactions.bulk-edit.uri'));

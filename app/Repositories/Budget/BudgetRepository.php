@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use DB;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Attachment;
 use FireflyIII\Models\AutoBudget;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
@@ -38,6 +39,7 @@ use FireflyIII\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Log;
+use Storage;
 
 /**
  * Class BudgetRepository.
@@ -79,6 +81,8 @@ class BudgetRepository implements BudgetRepositoryInterface
             $budget->order = $index + 1;
             $budget->save();
         }
+        // other budgets, set to 0.
+        $this->user->budgets()->where('active', 0)->update(['order' => 0]);
 
         return true;
     }
@@ -187,12 +191,12 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function getActiveBudgets(): Collection
     {
+        //throw new \RuntimeException;
         /** @var Collection $set */
         $set = $this->user->budgets()->where('active', 1)
-                          ->orderBy('order', 'DESC')
+                          ->orderBy('order', 'ASC')
                           ->orderBy('name', 'ASC')
                           ->get();
-
         return $set;
     }
 
@@ -202,7 +206,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function getBudgets(): Collection
     {
         /** @var Collection $set */
-        $set = $this->user->budgets()->orderBy('order', 'DESC')
+        $set = $this->user->budgets()->orderBy('order', 'ASC')
                           ->orderBy('name', 'ASC')->get();
 
         return $set;
@@ -227,7 +231,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     {
         /** @var Collection $set */
         $set = $this->user->budgets()
-                          ->orderBy('order', 'DESC')
+                          ->orderBy('order', 'ASC')
                           ->orderBy('name', 'ASC')->where('active', 0)->get();
 
         return $set;
@@ -277,11 +281,13 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function store(array $data): Budget
     {
+        $order = $this->getMaxOrder();
         try {
             $newBudget = Budget::create(
                 [
                     'user_id' => $this->user->id,
                     'name'    => $data['name'],
+                    'order'   => $order + 1,
                 ]
             );
         } catch (QueryException $e) {
@@ -324,7 +330,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         // create initial budget limit.
         $today = new Carbon;
         $start = app('navigation')->startOfPeriod($today, $autoBudget->period);
-        $end   = app('navigation')->startOfPeriod($start, $autoBudget->period);
+        $end   = app('navigation')->endOfPeriod($start, $autoBudget->period);
 
         $limitRepos = app(BudgetLimitRepositoryInterface::class);
         $limitRepos->setUser($this->user);
@@ -485,6 +491,26 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function getAttachments(Budget $budget): Collection
     {
-        return $budget->attachments()->get();
+        $set = $budget->attachments()->get();
+
+        /** @var Storage $disk */
+        $disk = Storage::disk('upload');
+
+        $set = $set->each(
+            static function (Attachment $attachment) use ($disk) {
+                $notes                   = $attachment->notes()->first();
+                $attachment->file_exists = $disk->exists($attachment->fileName());
+                $attachment->notes       = $notes ? $notes->text : '';
+
+                return $attachment;
+            }
+        );
+
+        return $set;
+    }
+
+    public function getMaxOrder(): int
+    {
+        return (int)$this->user->budgets()->max('order');
     }
 }

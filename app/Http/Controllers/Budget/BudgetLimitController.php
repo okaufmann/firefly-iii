@@ -70,7 +70,7 @@ class BudgetLimitController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('title', (string) trans('firefly.budgets'));
-                app('view')->share('mainTitleIcon', 'fa-tasks');
+                app('view')->share('mainTitleIcon', 'fa-pie-chart');
                 $this->repository    = app(BudgetRepositoryInterface::class);
                 $this->opsRepository = app(OperationsRepositoryInterface::class);
                 $this->blRepository  = app(BudgetLimitRepositoryInterface::class);
@@ -132,6 +132,7 @@ class BudgetLimitController extends Controller
      */
     public function store(Request $request)
     {
+        Log::debug('Going to store new budget-limit.', $request->all());
         // first search for existing one and update it if necessary.
         $currency = $this->currencyRepos->find((int) $request->get('transaction_currency_id'));
         $budget   = $this->repository->findNull((int) $request->get('budget_id'));
@@ -142,7 +143,6 @@ class BudgetLimitController extends Controller
         $end   = Carbon::createFromFormat('Y-m-d', $request->get('end'));
         $start->startOfDay();
         $end->endOfDay();
-
 
         Log::debug(sprintf('Start: %s, end: %s', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
 
