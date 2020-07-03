@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -35,6 +36,7 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
@@ -343,6 +345,34 @@ class AutoCompleteController extends Controller
     }
 
     /**
+     * An auto-complete specifically for expense accounts, used when mass updating mostly.
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function objectGroups(Request $request): JsonResponse
+    {
+        $search = $request->get('search');
+
+        /** @var ObjectGroupRepositoryInterface $repository */
+        $repository = app(ObjectGroupRepositoryInterface::class);
+
+        $return = [];
+        $result = $repository->search((string) $search);
+
+        /** @var ObjectGroup $account */
+        foreach ($result as $objectGroup) {
+            $return[] = [
+                'id'    => $objectGroup->id,
+                'title' => $objectGroup->title,
+            ];
+        }
+
+        return response()->json($return);
+    }
+
+    /**
      * @return JsonResponse
      * @codeCoverageIgnore
      */
@@ -361,6 +391,7 @@ class AutoCompleteController extends Controller
         foreach ($piggies as $piggy) {
             $currency                = $accountRepos->getAccountCurrency($piggy->account) ?? $defaultCurrency;
             $currentAmount           = $repository->getRepetition($piggy)->currentamount ?? '0';
+            $piggy->objectGroup      = $piggy->objectGroups->first();
             $piggy->name_with_amount = sprintf(
                 '%s (%s / %s)',
                 $piggy->name,

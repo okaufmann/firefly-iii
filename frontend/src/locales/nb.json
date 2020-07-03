@@ -1,0 +1,21 @@
+{
+    "firefly": {
+        "balance": "Saldo",
+        "bills_to_pay": "Regninger \u00e5 betale",
+        "left_to_spend": "Igjen \u00e5 bruke",
+        "net_worth": "Formue",
+        "paid": "Betalt",
+        "yourAccounts": "Dine kontoer",
+        "go_to_asset_accounts": "Se aktivakontoene dine",
+        "transaction_table_description": "A table containing your transactions",
+        "account": "Konto",
+        "description": "Beskrivelse",
+        "amount": "Bel\u00f8p",
+        "budget": "Busjett",
+        "category": "Kategori",
+        "opposing_account": "Opposing account"
+    },
+    "config": {
+        "html_language": "nb"
+    }
+}

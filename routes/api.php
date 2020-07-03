@@ -1,9 +1,8 @@
 <?php
-declare(strict_types=1);
 
 /**
  * api.php
- * Copyright (c) 2019 james@firefly-iii.org.
+ * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,6 +19,9 @@ declare(strict_types=1);
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
+
 
 use FireflyIII\Http\Middleware\IsAdmin;
 
@@ -51,6 +53,21 @@ Route::group(
         Route::get('{account}/piggy_banks', ['uses' => 'AccountController@piggyBanks', 'as' => 'piggy_banks']);
         Route::get('{account}/transactions', ['uses' => 'AccountController@transactions', 'as' => 'transactions']);
         Route::get('{account}/attachments', ['uses' => 'AccountController@attachments', 'as' => 'attachments']);
+    }
+);
+
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'groups',
+     'as'        => 'api.v1.object-groups.',],
+    static function () {
+
+        // Accounts API routes:
+        Route::get('', ['uses' => 'ObjectGroupController@index', 'as' => 'index']);
+        Route::get('{objectGroup}', ['uses' => 'ObjectGroupController@show', 'as' => 'show']);
+        Route::put('{objectGroup}', ['uses' => 'ObjectGroupController@update', 'as' => 'update']);
+        Route::delete('{objectGroup}', ['uses' => 'ObjectGroupController@delete', 'as' => 'delete']);
+
+        Route::get('{objectGroup}/piggy_banks', ['uses' => 'ObjectGroupController@piggyBanks', 'as' => 'piggy_banks']);
     }
 );
 
@@ -212,17 +229,6 @@ Route::group(
     }
 );
 
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'import',
-     'as'        => 'api.v1.import.',],
-    static function () {
-
-        // Transaction Links API routes:
-        Route::get('list', ['uses' => 'ImportController@listAll', 'as' => 'list']);
-        Route::get('{importJob}', ['uses' => 'ImportController@show', 'as' => 'show']);
-        Route::get('{importJob}/transactions', ['uses' => 'ImportController@transactions', 'as' => 'transactions']);
-    }
-);
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'link_types',
      'as'        => 'api.v1.link_types.',],

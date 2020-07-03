@@ -1,8 +1,8 @@
 <?php
-declare(strict_types=1);
+
 /**
  * FrontpageChartGenerator.php
- * Copyright (c) 2020 thegrumpydictator@gmail.com
+ * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 namespace FireflyIII\Support\Chart\Category;
 
@@ -87,12 +89,12 @@ class FrontpageChartGenerator
         foreach ($categories as $category) {
             // get expenses
             $collection[] = $this->collectExpenses($category, $accounts);
-            $collection[] = $this->collectIncome($category, $accounts);
+            //$collection[] = $this->collectIncome($category, $accounts);
         }
 
         // collect for no-category:
         $collection[] = $this->collectNoCatExpenses($accounts);
-        $collection[] = $this->collectNoCatIncome($accounts);
+        //$collection[] = $this->collectNoCatIncome($accounts);
 
         $tempData = array_merge(...$collection);
 
@@ -229,14 +231,14 @@ class FrontpageChartGenerator
                 'currency_symbol' => $currency['currency_symbol'],
                 'entries'         => $names,
             ];
-            $key          = sprintf('earned-%d', $currencyId);
-            $return[$key] = [
-                'label'           => sprintf('%s (%s)', (string) trans('firefly.earned'), $currency['currency_name']),
-                'type'            => 'bar',
-                'currency_symbol' => $currency['currency_symbol'],
-                'data_type'       => 'earned',
-                'entries'         => $names,
-            ];
+            //            $key          = sprintf('earned-%d', $currencyId);
+            //            $return[$key] = [
+            //                'label'           => sprintf('%s (%s)', (string) trans('firefly.earned'), $currency['currency_name']),
+            //                'type'            => 'bar',
+            //                'currency_symbol' => $currency['currency_symbol'],
+            //                'data_type'       => 'earned',
+            //                'entries'         => $names,
+            //            ];
         }
 
         return $return;

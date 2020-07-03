@@ -265,7 +265,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function getPiggyBanks(): Collection
     {
-        return $this->user->piggyBanks()->with(['account'])->orderBy('order', 'ASC')->get();
+        return $this->user->piggyBanks()->with(['account', 'objectGroups'])->orderBy('order', 'ASC')->get();
     }
 
 
@@ -281,6 +281,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         $currency = app('amount')->getDefaultCurrency();
 
         $set = $this->getPiggyBanks();
+
         /** @var PiggyBank $piggy */
         foreach ($set as $piggy) {
             $currentAmount = $this->getRepetition($piggy)->currentamount ?? '0';
@@ -393,4 +394,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
         return $set;
     }
+
+
 }

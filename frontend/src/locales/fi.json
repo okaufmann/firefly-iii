@@ -1,0 +1,21 @@
+{
+    "firefly": {
+        "balance": "Saldo",
+        "bills_to_pay": "Laskuja maksettavana",
+        "left_to_spend": "K\u00e4ytett\u00e4viss\u00e4",
+        "net_worth": "Varallisuus",
+        "paid": "Maksettu",
+        "yourAccounts": "Omat tilisi",
+        "go_to_asset_accounts": "Tarkastele omaisuustilej\u00e4si",
+        "transaction_table_description": "A table containing your transactions",
+        "account": "Tili",
+        "description": "Kuvaus",
+        "amount": "Summa",
+        "budget": "Budjetti",
+        "category": "Kategoria",
+        "opposing_account": "Vastatili"
+    },
+    "config": {
+        "html_language": "fi"
+    }
+}

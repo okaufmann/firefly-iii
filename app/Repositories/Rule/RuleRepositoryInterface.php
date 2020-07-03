@@ -40,6 +40,15 @@ interface RuleRepositoryInterface
     public function count(): int;
 
     /**
+     * @param Rule      $rule
+     * @param RuleGroup $ruleGroup
+     * @param int       $order
+     *
+     * @return Rule
+     */
+    public function moveRule(Rule $rule, RuleGroup $ruleGroup, int $order): Rule;
+
+    /**
      * @param Rule $rule
      *
      * @return bool
@@ -71,13 +80,6 @@ interface RuleRepositoryInterface
      * @return RuleGroup
      */
     public function getFirstRuleGroup(): RuleGroup;
-
-    /**
-     * Get the rules for a user tailored to the import process.
-     *
-     * @return Collection
-     */
-    public function getForImport(): Collection;
 
     /**
      * @param RuleGroup $ruleGroup

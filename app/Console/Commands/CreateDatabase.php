@@ -1,6 +1,4 @@
 <?php
-declare(strict_types=1);
-
 
 /**
  * CreateDatabase.php
@@ -21,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands;
 
@@ -50,9 +50,9 @@ class CreateDatabase extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return int
      */
-    public function handle()
+    public function handle(): int
     {
         if ('mysql' !== env('DB_CONNECTION')) {
             $this->info(sprintf('CreateDB does not apply to "%s", skipped.', env('DB_CONNECTION')));

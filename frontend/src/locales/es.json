@@ -1,0 +1,21 @@
+{
+    "firefly": {
+        "balance": "Balance",
+        "bills_to_pay": "Facturas por pagar",
+        "left_to_spend": "Disponible para gastar",
+        "net_worth": "Valor Neto",
+        "paid": "Pagado",
+        "yourAccounts": "Tus cuentas",
+        "go_to_asset_accounts": "Ver tus cuentas de activos",
+        "transaction_table_description": "A table containing your transactions",
+        "account": "Cuenta",
+        "description": "Descripci\u00f3n",
+        "amount": "Cantidad",
+        "budget": "Presupuesto",
+        "category": "Categoria",
+        "opposing_account": "Opposing account"
+    },
+    "config": {
+        "html_language": "es"
+    }
+}
