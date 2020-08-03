@@ -2,6 +2,39 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.3.3 (API 1.3.0)] - 2020-07-17
+
+### Fixed
+- [Issue 3565](https://github.com/firefly-iii/firefly-iii/issues/3565) Spelling error in API array.
+- [Issue 3566](https://github.com/firefly-iii/firefly-iii/issues/3566) Fix issue in bills chart.
+- [Issue 3568](https://github.com/firefly-iii/firefly-iii/issues/3568) Fix issue with floating number.
+- [Issue 3573](https://github.com/firefly-iii/firefly-iii/issues/3573) Fix link in readme.
+- [Issue 3574](https://github.com/firefly-iii/firefly-iii/issues/3574) Fix issue with floating number.
+
+## [5.3.2 (API 1.3.0)] - 2020-07-13
+
+### Fixed
+- Issue when installing Firefly III using composer.
+- Issue when installing Firefly III using the latest Docker image.
+
+## [5.3.1 (API 1.3.0)] - 2020-07-12
+
+### Added
+- Extra logging in case of database errors at first launch.
+
+### Changed
+- Completely rewrote the [security policy](https://github.com/firefly-iii/firefly-iii/security/policy).
+
+### Fixed
+- [Issue 3532](https://github.com/firefly-iii/firefly-iii/issues/3532) Fix empty validation messages.
+- Profile methods to change email / password were broken.
+- Heroku will build again.
+- Some integers were not properly cast to strings.
+- Fixed several timezone issues when generated the dashboard account chart.
+
+### API
+- [Issue 3546](https://github.com/firefly-iii/firefly-iii/issues/3546) New endpoints to selectively delete data.
+- [Issue 3554](https://github.com/firefly-iii/firefly-iii/issues/3554) Consistent parsing for amounts. 
 
 ## [5.3.0 (API 1.2.0)] - 2020-07-03
 
@@ -36,6 +69,7 @@ Several alpha and beta releases preceded this release.
 - The example environment file has several fixes to make it more clear what features are for.
 - Sandstorm support is now entirely decrepated.
 - The max upload size is now larger. Although mostly enforced by your server, Firefly III used to have a very low upper limit.
+- The `MAIL_DRIVER` variable is now called `MAIL_MAILER`.
 
 ### Removed
 - [Issue 3517](https://github.com/firefly-iii/firefly-iii/issues/3517) The category no longer shows income because it skewed the chart and made it useless.
