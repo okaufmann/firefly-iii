@@ -38,12 +38,10 @@ use League\Fractal\Resource\Item;
 
 /**
  * Class AvailableBudgetController.
- *
  */
 class AvailableBudgetController extends Controller
 {
-    /** @var AvailableBudgetRepositoryInterface */
-    private $abRepository;
+    private AvailableBudgetRepositoryInterface $abRepository;
 
     /**
      * AvailableBudgetController constructor.
@@ -147,6 +145,9 @@ class AvailableBudgetController extends Controller
     public function store(AvailableBudgetRequest $request): JsonResponse
     {
         $data = $request->getAll();
+        $data['start']->startOfDay();
+        $data['end']->endOfDay();
+
         /** @var TransactionCurrencyFactory $factory */
         $factory  = app(TransactionCurrencyFactory::class);
         $currency = $factory->find($data['currency_id'], $data['currency_code']);

@@ -2,6 +2,95 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.4.0 (API 1.4.0)] - 2020-09-21
+
+Some warnings before you install this version:
+
+- ⚠️ Some changes in this release may be backwards incompatible (see below).
+- ⚠️ Invalid triggers in a non-strict rule will cause Firefly III to select ALL transactions.
+- ⚠️ The `export` volume is no longer used (Docker).
+- ⚠️ The `upload` volume is now located at `/var/www/public/storage/upload` (Docker).
+
+Several alpha and beta releases preceded this release.
+
+- 5.4.0-alpha.1 on 2020-08-14
+- 5.4.0-alpha.2 on 2020-08-21
+- 5.4.0-alpha.3 on 2020-08-21
+- 5.4.0-beta.1 on 2020-09-13
+
+### Known issues
+
+Yep, unfortunately.
+
+- [Issue 3808](https://github.com/firefly-iii/firefly-iii/issues/3808) When using the remote authentication features of Firefly III, autocomplete endpoints will fail.
+
+### Added
+- [Issue 3187](https://github.com/firefly-iii/firefly-iii/issues/3187) A new field for transaction URL's.
+- [Issue 3200](https://github.com/firefly-iii/firefly-iii/issues/3200) The ability to sort your accounts as you see fit.
+- [Issue 3213](https://github.com/firefly-iii/firefly-iii/issues/3213) Add totals to the budget page.
+- [Issue 3238](https://github.com/firefly-iii/firefly-iii/issues/3238) You can select an expense when creating a transaction.
+- [Issue 3240](https://github.com/firefly-iii/firefly-iii/issues/3240) Meta data and UI changes to count recurring transactions.
+- [Issue 3246](https://github.com/firefly-iii/firefly-iii/issues/3246) Ability to add tags in the mass editor, not just replace them.
+- [Issue 3265](https://github.com/firefly-iii/firefly-iii/issues/3265) A warning when split transactions may be changed by Firefly III.
+- [Issue 3382](https://github.com/firefly-iii/firefly-iii/issues/3382) Fixed transfers not showing the right +/- sign, by @sephrat
+- [Issue 3435](https://github.com/firefly-iii/firefly-iii/issues/3435) Create a recurring transaction from a single transaction.
+- [Issue 3451](https://github.com/firefly-iii/firefly-iii/issues/3451) Add a message on the bottom of the transaction screen so you see any errors.
+- [Issue 3475](https://github.com/firefly-iii/firefly-iii/issues/3475) A summary for the box with bills.
+- [Issue 3583](https://github.com/firefly-iii/firefly-iii/issues/3583) You can set your own custom guard header for third party authentication.
+- [Issue 3604](https://github.com/firefly-iii/firefly-iii/issues/3604) Add CI support by @hoshsadiq
+- [Issue 3638](https://github.com/firefly-iii/firefly-iii/issues/3638) Added better UTF8 support on Windows, by @sephrat
+- [Issue 3642](https://github.com/firefly-iii/firefly-iii/issues/3642) Redis now supports Unix sockets.
+- [Issue 3648](https://github.com/firefly-iii/firefly-iii/issues/3648) Add a basic copy/paste feature.
+- [Issue 3651](https://github.com/firefly-iii/firefly-iii/issues/3651) Now supports public clients.
+- [Issue 3755](https://github.com/firefly-iii/firefly-iii/issues/3755) You can now click option groups in the report pages.
+- [Issue 3765](https://github.com/firefly-iii/firefly-iii/issues/3765) Tag page sum list is now currency aware.
+- A new integrity check that makes sure all transaction types are correct.
+- Support for Bulgarian! 🇧🇬
+
+### Changed
+- ⚠️ All auto-complete code now uses the API; let me know if errors occur.
+- ⚠️ New rule processing engine, which is much faster than the old one, especially on large datasets. Expect several magnitudes of time improvements.
+- ⚠️ Many new search operators, which are documented [in the documentation](https://docs.firefly-iii.org/concepts/search).
+- [Issue 3578](https://github.com/firefly-iii/firefly-iii/issues/3578) Use php-intl to do currency formatting, made by @hoshsadiq
+- [Issue 3586](https://github.com/firefly-iii/firefly-iii/issues/3586) Removed features that aren't necessary when using third party auth providers.
+- [Issue 3659](https://github.com/firefly-iii/firefly-iii/issues/3659) Update the readme to include third party apps.
+- Fixed audit logs.
+
+### Fixed
+- [Issue 3519](https://github.com/firefly-iii/firefly-iii/issues/3519) Locales should work better on Windows 10.
+- [Issue 3577](https://github.com/firefly-iii/firefly-iii/issues/3577) Add liability accounts when transforming transactions.
+- [Issue 3585](https://github.com/firefly-iii/firefly-iii/issues/3585) Fix issue with category lists in reports.
+- [Issue 3598](https://github.com/firefly-iii/firefly-iii/issues/3598) [issue 3597](https://github.com/firefly-iii/firefly-iii/issues/3597) Bad code in create recurring page, fixed by @maroux
+- [Issue 3630](https://github.com/firefly-iii/firefly-iii/issues/3630) Fix the cron job used for auto budgeting.
+- [Issue 3635](https://github.com/firefly-iii/firefly-iii/issues/3635) Fix a copy/paste error in translations, by @sephrat
+- [Issue 3638](https://github.com/firefly-iii/firefly-iii/issues/3638) Remove unused warning, by @sephrat
+- [Issue 3639](https://github.com/firefly-iii/firefly-iii/issues/3639) Remove unused translations, by @sephrat
+- [Issue 3640](https://github.com/firefly-iii/firefly-iii/issues/3640) Hide empty budget lists, by @sephrat
+- [Issue 3641](https://github.com/firefly-iii/firefly-iii/issues/3641) Elegant solution to fix piggy bank groups, by @sephrat
+- [Issue 3673](https://github.com/firefly-iii/firefly-iii/issues/3673) Search limit was ignored.
+- [Issue 3675](https://github.com/firefly-iii/firefly-iii/issues/3675) Was unable to update transaction currency.
+- [Issue 3678](https://github.com/firefly-iii/firefly-iii/issues/3678) Search did not distinguish between source and destination.
+- [Issue 3679](https://github.com/firefly-iii/firefly-iii/issues/3679) Polish and Russian translations were broken on the `/rules` page, fixed by @sephrat
+- [Issue 3681](https://github.com/firefly-iii/firefly-iii/issues/3681) Fix Czech translations missing file on `/profile` page.
+- [Issue 3693](https://github.com/firefly-iii/firefly-iii/issues/3693) Creating users through the API was impossible.
+- [Issue 3696](https://github.com/firefly-iii/firefly-iii/issues/3696) Fix missing translations, by @sephrat
+- [Issue 3710](https://github.com/firefly-iii/firefly-iii/issues/3710) When you create a split transaction, the title isn't correctly reset.
+- [Issue 3745](https://github.com/firefly-iii/firefly-iii/issues/3745) In some cases, piggy bank events were not created.
+- [Issue 3746](https://github.com/firefly-iii/firefly-iii/issues/3746) Bad anchor link in readme, thanks @GrayStrider
+- [Issue 3748](https://github.com/firefly-iii/firefly-iii/issues/3748) Typo's in autocomplete URL, thanks @psychowood
+- [Issue 3759](https://github.com/firefly-iii/firefly-iii/issues/3759) Bad budget calculations when using out-of-sync budgets.
+- [Issue 3761](https://github.com/firefly-iii/firefly-iii/issues/3761) Could not create a transfer and refer to a piggy bank by name. 
+- [Issue 3768](https://github.com/firefly-iii/firefly-iii/issues/3768) Attachments were uploaded out of order in split transactions.
+- [Issue 3770](https://github.com/firefly-iii/firefly-iii/issues/3770) Null pointer exception when creating transaction.
+- [Issue 3772](https://github.com/firefly-iii/firefly-iii/issues/3772) Some strings were translated badly.
+- [Issue 3789](https://github.com/firefly-iii/firefly-iii/issues/3789) Heroku installation failed because of bad DB code.
+- [Issue 3791](https://github.com/firefly-iii/firefly-iii/issues/3791) Several issues on the budgets page fixed.
+- Reconciliation transactions now show the amount correctly.
+
+### API
+- [Issue 3150](https://github.com/firefly-iii/firefly-iii/issues/3150) New routes for easy auto complete in 3rd party applications.
+- New endpoint for the transaction links of a specific transaction.
+
 ## [5.3.3 (API 1.3.0)] - 2020-07-17
 
 ### Fixed

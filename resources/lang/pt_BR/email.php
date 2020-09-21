@@ -33,6 +33,14 @@ return [
     'admin_test_subject'               => 'Uma mensagem de teste de sua instalação do Firefly III',
     'admin_test_body'                  => 'Essa é uma mensagem de teste de sua instância do Firefly III. Foi enviada para :email.',
 
+    // new IP
+    'login_from_new_ip'                => 'Novo login no Firefly III',
+    'new_ip_body'                      => 'O Firefly III detectou um novo login em sua conta de um endereço IP desconhecido. Caso você nunca tenha logado do endereço IP abaixo, ou o fez há mais de seis meses, o Firefly III irá avisá-lo.',
+    'new_ip_warning'                   => 'Caso você reconheça este endereço IP ou o login, você pode ignorar esta mensagem. Ou se você não fez login, se não tem ideia do que se trata, verifique a segurança da sua senha, altere-a e desconecte-se de todas as outras sessões. Para fazer isso, vá para sua página de perfil. Claro que você já habilitou 2FA, né? Mantenha-se seguro!',
+    'ip_address'                       => 'Endereço IP',
+    'host_name'                        => 'Servidor',
+    'date_time'                        => 'Data + hora',
+
     // access token created
     'access_token_created_subject'     => 'Um novo token de acesso foi criado',
     'access_token_created_body'        => 'Alguém (esperamos que você) acabou de criar um novo token de acesso a API do Firefly III, para sua conta.',

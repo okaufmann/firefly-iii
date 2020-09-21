@@ -32,6 +32,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\View\View;
+use Exception;
 
 /**
  *
@@ -116,39 +117,36 @@ class IndexController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|Factory|View
-     */
-    public function emptyIndex(?string $objectType = null)
-    {
-        return view('accounts.empty-index', compact('objectType'));
-    }
-
-    /**
      * Show list of accounts.
      *
      * @param Request $request
      * @param string  $objectType
      *
+     * @throws Exception
      * @return Factory|View
      */
     public function index(Request $request, string $objectType)
     {
-        // temp catch for layout.
-        if ('v2' === config('firefly.layout')) {
-            return $this->emptyIndex($objectType);
+        // reset account order:
+
+        $objectType   = $objectType ?? 'asset';
+        $subTitle     = (string) trans(sprintf('firefly.%s_accounts', $objectType));
+        $subTitleIcon = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
+        $types        = config(sprintf('firefly.accountTypesByIdentifier.%s', $objectType));
+
+        if (1 === random_int(0, 20)) {
+            $this->repository->resetAccountOrder($types);
         }
 
-        $objectType    = $objectType ?? 'asset';
-        $subTitle      = (string) trans(sprintf('firefly.%s_accounts', $objectType));
-        $subTitleIcon  = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
-        $types         = config(sprintf('firefly.accountTypesByIdentifier.%s', $objectType));
         $collection    = $this->repository->getActiveAccountsByType($types);
+
+
+
         $total         = $collection->count();
         $page          = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
         $pageSize      = (int) app('preferences')->get('listPageSize', 50)->data;
         $accounts      = $collection->slice(($page - 1) * $pageSize, $pageSize);
         $inactiveCount = $this->repository->getInactiveAccountsByType($types)->count();
-
 
         unset($collection);
         /** @var Carbon $start */
@@ -164,6 +162,7 @@ class IndexController extends Controller
 
         $accounts->each(
             function (Account $account) use ($activities, $startBalances, $endBalances) {
+                // TODO lots of queries executed in this block.
                 $account->lastActivityDate  = $this->isInArray($activities, $account->id);
                 $account->startBalance      = $this->isInArray($startBalances, $account->id);
                 $account->endBalance        = $this->isInArray($endBalances, $account->id);
@@ -174,7 +173,6 @@ class IndexController extends Controller
                 $account->location          = $this->repository->getLocation($account);
             }
         );
-
         // make paginator:
         $accounts = new LengthAwarePaginator($accounts, $total, $pageSize, $page);
         $accounts->setPath(route('accounts.index', [$objectType]));

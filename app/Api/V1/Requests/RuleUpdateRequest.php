@@ -24,16 +24,19 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Support\Request\ConvertsDataTypes;
+use FireflyIII\Support\Request\GetRuleConfiguration;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 use function is_array;
 
 
 /**
  * Class RuleUpdateRequest
- *
  */
-class RuleUpdateRequest extends Request
+class RuleUpdateRequest extends FormRequest
 {
+    use ConvertsDataTypes, GetRuleConfiguration;
     /**
      * Authorize logged in users.
      *
@@ -86,12 +89,12 @@ class RuleUpdateRequest extends Request
      */
     public function rules(): array
     {
-        $validTriggers = array_keys(config('firefly.rule-triggers'));
+        $validTriggers = $this->getTriggers();
         $validActions  = array_keys(config('firefly.rule-actions'));
         $rule          = $this->route()->parameter('rule');
 
         // some triggers and actions require text:
-        $contextTriggers = implode(',', config('firefly.context-rule-triggers'));
+        $contextTriggers = implode(',', $this->getTriggersWithContext());
         $contextActions  = implode(',', config('firefly.context-rule-actions'));
 
         return [

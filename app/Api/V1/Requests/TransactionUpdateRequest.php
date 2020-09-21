@@ -28,30 +28,27 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsDateOrTime;
+use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\GroupValidation;
 use FireflyIII\Validation\TransactionValidation;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 use Log;
 
 /**
  * Class TransactionUpdateRequest
  */
-class TransactionUpdateRequest extends Request
+class TransactionUpdateRequest extends FormRequest
 {
-    use TransactionValidation, GroupValidation;
+    use TransactionValidation, GroupValidation, ConvertsDataTypes;
 
-    /** @var array Array values. */
-    private $arrayFields;
-    /** @var array Boolean values. */
-    private $booleanFields;
-    /** @var array Fields that contain date values. */
-    private $dateFields;
-    /** @var array Fields that contain integer values. */
-    private $integerFields;
-    /** @var array Fields that contain string values. */
-    private $stringFields;
-    /** @var array Fields that contain text (with newlines) */
-    private $textareaFields;
+    private array $arrayFields;
+    private array $booleanFields;
+    private array $dateFields;
+    private array $integerFields;
+    private array $stringFields;
+    private array $textareaFields;
+
 
     /**
      * Authorize logged in users.
@@ -127,6 +124,7 @@ class TransactionUpdateRequest extends Request
             'sepa_ep',
             'sepa_ci',
             'sepa_batch_id',
+            'external_uri',
         ];
         $this->booleanFields = [
             'reconciled',
@@ -168,12 +166,12 @@ class TransactionUpdateRequest extends Request
             // currency info
             'transactions.*.currency_id'           => 'numeric|exists:transaction_currencies,id',
             'transactions.*.currency_code'         => 'min:3|max:3|exists:transaction_currencies,code',
-            'transactions.*.foreign_currency_id'   => 'numeric|exists:transaction_currencies,id',
-            'transactions.*.foreign_currency_code' => 'min:3|max:3|exists:transaction_currencies,code',
+            'transactions.*.foreign_currency_id'   => 'nullable|numeric|exists:transaction_currencies,id',
+            'transactions.*.foreign_currency_code' => 'nullable|min:3|max:3|exists:transaction_currencies,code',
 
             // amount
             'transactions.*.amount'                => 'numeric|gt:0|max:100000000000',
-            'transactions.*.foreign_amount'        => 'numeric|gte:0',
+            'transactions.*.foreign_amount'        => 'nullable|numeric|gte:0',
 
             // description
             'transactions.*.description'           => 'nullable|between:1,1000',
@@ -204,6 +202,7 @@ class TransactionUpdateRequest extends Request
             'transactions.*.external_id'           => 'min:1,max:255|nullable',
             'transactions.*.recurrence_id'         => 'min:1,max:255|nullable',
             'transactions.*.bunq_payment_id'       => 'min:1,max:255|nullable',
+            'transactions.*.external_uri'          => 'min:1,max:255|nullable|url',
 
             // SEPA fields:
             'transactions.*.sepa_cc'               => 'min:1,max:255|nullable',
@@ -319,8 +318,8 @@ class TransactionUpdateRequest extends Request
         foreach ($this->dateFields as $fieldName) {
             Log::debug(sprintf('Now at date field %s', $fieldName));
             if (array_key_exists($fieldName, $transaction)) {
-                $current[$fieldName] = $this->dateFromValue((string) $transaction[$fieldName]);
                 Log::debug(sprintf('New value: "%s"', (string) $transaction[$fieldName]));
+                $current[$fieldName] = $this->dateFromValue((string) $transaction[$fieldName]);
             }
         }
 

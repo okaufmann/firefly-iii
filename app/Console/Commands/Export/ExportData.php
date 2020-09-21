@@ -81,6 +81,7 @@ class ExportData extends Command
     /** @var User */
     private $user;
 
+
     /**
      * Execute the console command.
      *
@@ -229,7 +230,7 @@ class ExportData extends Command
             return $date;
         }
         if ('end' === $field) {
-            $date = new Carbon;
+            $date = today(config('app.timezone'));
             $date->endOfDay();
 
             return $date;

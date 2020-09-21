@@ -34,9 +34,6 @@ use Tests\TestCase;
 /**
  *
  * Class AttachmentFactoryTest
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AttachmentFactoryTest extends TestCase
 {
@@ -76,18 +73,19 @@ class AttachmentFactoryTest extends TestCase
         $this->assertEquals($data['title'], $result->title);
         $this->assertEquals(1, $result->notes()->count());
 
+        $result->forceDelete();
 
     }
 
     /**
      * @covers \FireflyIII\Factory\AttachmentFactory
      */
-    public function testCreateTransaction(): void
+    public function testCreateWithTransaction(): void
     {
 
-        $journal     = $this->getRandomWithdrawal();
+        $journal = $this->getRandomWithdrawal();
         $transaction = $journal->transactions()->first();
-        $data        = [
+        $data    = [
             'model_id' => $transaction->id,
             'model'    => Transaction::class,
             'filename' => 'testfile.pdf',
@@ -104,40 +102,10 @@ class AttachmentFactoryTest extends TestCase
             $this->assertTrue(false, $e->getMessage());
         }
         $this->assertEquals($data['title'], $result->title);
-        $this->assertEquals($result->attachable_id, $journal->id);
         $this->assertEquals(1, $result->notes()->count());
+        $this->assertEquals($journal->id, $result->attachable_id);
 
-
-    }
-
-
-    /**
-     * @covers \FireflyIII\Factory\AttachmentFactory
-     */
-    public function testCreateTransactionAppendModel(): void
-    {
-
-        $journal     = $this->getRandomWithdrawal();
-        $transaction = $journal->transactions()->first();
-        $data        = [
-            'model_id' => $transaction->id,
-            'model'    => 'Transaction',
-            'filename' => 'testfile.pdf',
-            'title'    => 'File name',
-            'notes'    => 'Some notes',
-        ];
-
-        /** @var AttachmentFactory $factory */
-        $factory = app(AttachmentFactory::class);
-        $factory->setUser($this->user());
-        try {
-            $result = $factory->create($data);
-        } catch (FireflyException $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-        $this->assertEquals($data['title'], $result->title);
-        $this->assertEquals($result->attachable_id, $journal->id);
-        $this->assertEquals(1, $result->notes()->count());
+        $result->forceDelete();
 
 
     }

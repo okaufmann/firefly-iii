@@ -47,18 +47,7 @@ use Log;
  */
 class CurrencyRepository implements CurrencyRepositoryInterface
 {
-    /** @var User */
-    private $user;
-
-    /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
-    }
+    private User $user;
 
     /**
      * @param TransactionCurrency $currency
@@ -476,17 +465,18 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
     /**
      * @param string $search
+     * @param int $limit
      *
      * @return Collection
      */
-    public function searchCurrency(string $search): Collection
+    public function searchCurrency(string $search, int $limit): Collection
     {
         $query = TransactionCurrency::where('enabled', 1);
         if ('' !== $search) {
             $query->where('name', 'LIKE', sprintf('%%%s%%', $search));
         }
 
-        return $query->get();
+        return $query->take($limit)->get();
     }
 
     /**

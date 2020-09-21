@@ -29,13 +29,14 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Collection;
 use Log;
 
 /**
  * Class CategoryFormRequest.
  */
-class ReportFormRequest extends Request
+class ReportFormRequest extends FormRequest
 {
     /**
      * Verify the request.
@@ -150,7 +151,7 @@ class ReportFormRequest extends Request
      */
     public function getEndDate(): Carbon
     {
-        $date  = new Carbon;
+        $date  = today(config('app.timezone'));
         $range = $this->get('daterange');
         $parts = explode(' - ', (string) $range);
         if (2 === count($parts)) {
@@ -178,7 +179,7 @@ class ReportFormRequest extends Request
      */
     public function getStartDate(): Carbon
     {
-        $date  = new Carbon;
+        $date  = today(config('app.timezone'));
         $range = $this->get('daterange');
         $parts = explode(' - ', (string) $range);
         if (2 === count($parts)) {

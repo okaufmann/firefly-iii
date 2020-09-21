@@ -23,17 +23,12 @@ declare(strict_types=1);
 namespace Tests\Unit\TransactionRules\Actions;
 
 use FireflyIII\Models\RuleAction;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Actions\ClearCategory;
 use Log;
 use Tests\TestCase;
 
 /**
  * Class ClearCategoryTest
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ClearCategoryTest extends TestCase
 {
@@ -52,24 +47,25 @@ class ClearCategoryTest extends TestCase
     public function testAct(): void
     {
         // associate budget with journal:
-        $journal  = $this->getRandomWithdrawal();
-        $category = $this->getRandomCategory();;
+        $journal  = $this->user()->transactionJournals()->where('description', 'Rule action test transaction.')->first();
+        $category = $this->user()->categories()->inRandomOrder()->first();
+
+        // link a budget.
         $journal->categories()->save($category);
         $this->assertGreaterThan(0, $journal->categories()->count());
+
+        $array = [
+            'transaction_journal_id' => $journal->id,
+        ];
 
         // fire the action:
         $ruleAction               = new RuleAction;
         $ruleAction->action_value = null;
         $action                   = new ClearCategory($ruleAction);
-        $result                   = $action->act($journal);
+        $result                   = $action->actOnArray($array);
         $this->assertTrue($result);
 
         // assert result
         $this->assertEquals(0, $journal->categories()->count());
-
-        /** @var Transaction $transaction */
-        foreach ($journal->transactions as $transaction) {
-            $this->assertEquals(0, $transaction->categories()->count());
-        }
     }
 }

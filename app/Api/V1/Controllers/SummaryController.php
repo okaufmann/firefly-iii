@@ -49,17 +49,22 @@ class SummaryController extends Controller
 {
     /** @var AvailableBudgetRepositoryInterface */
     private $abRepository;
+
     /** @var AccountRepositoryInterface */
     private $accountRepository;
+
     /** @var BillRepositoryInterface */
     private $billRepository;
+
     /** @var BudgetRepositoryInterface */
     private $budgetRepository;
+
     /** @var CurrencyRepositoryInterface */
     private $currencyRepos;
 
     /** @var OperationsRepositoryInterface */
     private $opsRepository;
+
 
     /**
      * SummaryController constructor.
@@ -323,7 +328,7 @@ class SummaryController extends Controller
     private function getLeftToSpendInfo(Carbon $start, Carbon $end): array
     {
         $return    = [];
-        $today     = new Carbon;
+        $today     = today(config('app.timezone'));
         $available = $this->abRepository->getAvailableBudgetWithCurrency($start, $end);
         $budgets   = $this->budgetRepository->getActiveBudgets();
         $spent     = $this->opsRepository->sumExpenses($start, $end, null, $budgets);

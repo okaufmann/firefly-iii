@@ -24,6 +24,7 @@ namespace FireflyIII\Http\Controllers\Auth;
 
 use Adldap;
 use DB;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Providers\RouteServiceProvider;
 use Illuminate\Contracts\View\Factory;
@@ -73,9 +74,9 @@ class LoginController extends Controller
      *
      * @param Request $request
      *
-     * @throws ValidationException
      * @return RedirectResponse|\Illuminate\Http\Response|JsonResponse
      *
+     * @throws ValidationException
      */
     public function login(Request $request)
     {
@@ -104,6 +105,8 @@ class LoginController extends Controller
             Log::channel('audit')->info(sprintf('User "%s" has been logged in.', $request->get('email')));
             Log::debug(sprintf('Redirect after login is %s.', $this->redirectPath()));
 
+            // if you just logged in, it can't be that you have a valid 2FA cookie.
+
             return $this->sendLoginResponse($request);
         }
 
@@ -112,7 +115,7 @@ class LoginController extends Controller
         // to login and redirect the user back to the login form. Of course, when this
         // user surpasses their maximum number of attempts they will get locked out.
         $this->incrementLoginAttempts($request);
-        Log::channel('audit')->info(sprintf('Login attempt for user "%s" failed.', $request->get('email')));
+        Log::channel('audit')->info(sprintf('Login failed. Attempt for user "%s" failed.', $request->get('email')));
 
         return $this->sendFailedLoginResponse($request);
     }
@@ -124,13 +127,22 @@ class LoginController extends Controller
      */
     public function showLoginForm(Request $request)
     {
+        $loginProvider = config('firefly.login_provider');
+        $authGuard     = config('firefly.authentication_guard');
+        $route         = request()->route()->getName();
+        if (('eloquent' !== $loginProvider || 'web' !== $authGuard) && 'logout' !== $route) {
+            throw new FireflyException('Using external identity provider. Cannot continue.');
+        }
+
+
+        Log::channel('audit')->info('Show login form (1.1).');
+
         $count         = DB::table('users')->count();
         $loginProvider = config('firefly.login_provider');
         $title         = (string) trans('firefly.login_page_title');
         if (0 === $count && 'eloquent' === $loginProvider) {
             return redirect(route('register')); // @codeCoverageIgnore
         }
-
 
         // is allowed to?
         $singleUserMode    = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
@@ -149,7 +161,11 @@ class LoginController extends Controller
         $email    = $request->old('email');
         $remember = $request->old('remember');
 
-        // todo must forget 2FA if user ends up here.
+        $storeInCookie = config('google2fa.store_in_cookie', false);
+        if (false !== $storeInCookie) {
+            $cookieName = config('google2fa.cookie_name', 'google2fa_token');
+            request()->cookies->set($cookieName, 'invalid');
+        }
 
 
         return view('auth.login', compact('allowRegistration', 'email', 'remember', 'allowReset', 'title'));
@@ -160,9 +176,9 @@ class LoginController extends Controller
      *
      * @param Request $request
      *
-     * @throws ValidationException
      * @return Response
      *
+     * @throws ValidationException
      */
     protected function sendFailedLoginResponse(Request $request)
     {
