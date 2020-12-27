@@ -44,7 +44,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     private Collection $accounts;
     private Collection $budgets;
     private Carbon     $end;
-    private array      $expenses;
+    private Collection $expenses;
     private Carbon     $start;
 
     /**
