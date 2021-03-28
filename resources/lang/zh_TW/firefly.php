@@ -33,10 +33,13 @@ return [
     'clone'                                               => '複製',
     'last_seven_days'                                     => '最近7天',
     'last_thirty_days'                                    => '最近30天',
+    'last_180_days'                                       => 'Last 180 days',
+    'YTD'                                                 => 'YTD',
     'welcome_back'                                        => 'What\'s playing?',
     'everything'                                          => '所有',
     'today'                                               => '今天',
     'customRange'                                         => '自訂範圍',
+    'date_range'                                          => 'Date range',
     'apply'                                               => '套用',
     'select_date'                                         => '選擇日期..',
     'cancel'                                              => '取消',
@@ -53,12 +56,13 @@ return [
     'Opening balance'                                     => '初始餘額',
     'create_new_stuff'                                    => '建立新內容',
     'new_withdrawal'                                      => '新提款',
-    'create_new_transaction'                              => '建立新交易',
+    'create_new_transaction'                              => 'Create a new transaction',
     'sidebar_frontpage_create'                            => 'Create',
     'new_transaction'                                     => '新交易',
     'no_rules_for_bill'                                   => '此帳單未設定相關的規則。',
     'go_to_asset_accounts'                                => '檢視您的資產帳戶',
     'go_to_budgets'                                       => '前往您的預算',
+    'go_to_withdrawals'                                   => 'Go to your withdrawals',
     'clones_journal_x'                                    => 'This transaction is a clone of ":description" (#:id)',
     'go_to_categories'                                    => '前往您的分類',
     'go_to_bills'                                         => '前往您的帳單',
@@ -217,6 +221,12 @@ return [
     'expected_total'                                      => '預期總數',
     'reconciliation_account_name'                         => ':name reconciliation (:currency)',
     'saved'                                               => 'Saved',
+    'advanced_options'                                    => 'Advanced options',
+    'advanced_options_explain'                            => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',
+    'here_be_dragons'                                     => 'Hic sunt dracones',
+
+    // Webhooks
+    'webhooks'                                            => 'Webhooks',
 
     // API access
     'authorization_request'                               => 'Firefly III :version 版授權請求',
@@ -234,6 +244,8 @@ return [
     'all_source_accounts'                                 => 'Source accounts',
     'back_to_index'                                       => 'Back to the index',
     'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
+    'external_url'                                        => 'External URL',
+    'internal_reference'                                  => 'Internal reference',
 
     // check for updates:
     'update_check_title'                                  => '檢查更新',
@@ -263,12 +275,12 @@ return [
 
     // search
     'search'                                              => '搜尋',
-    'long_query_warning'                                  => 'Your search query is very long, and may not work as expected.',
     'search_query'                                        => '查詢',
     'search_found_transactions'                           => 'Firefly III found :count transaction in :time seconds.|Firefly III found :count transactions in :time seconds.',
     'search_found_more_transactions'                      => 'Firefly III found more than :count transactions in :time seconds.',
     'search_for_query'                                    => 'Firefly III 正搜尋包含所有這些字詞的交易：<span class="text-info">:query</span>',
     'search_modifier_date_is'                             => 'Transaction date is ":value"',
+    'search_modifier_id'                                  => 'Transaction ID is ":value"',
     'search_modifier_date_before'                         => 'Transaction date is before or on ":value"',
     'search_modifier_date_after'                          => 'Transaction date is after or on ":value"',
     'search_modifier_created_on'                          => 'Transaction was created on ":value"',
@@ -411,7 +423,7 @@ return [
     'apply_rule_selection'                                => '將規則 ":title" 套用至您所選的交易',
     'apply_rule_selection_intro'                          => '規則如 ":title" 一般僅套用至新的或更新後的交易，但您可要求 Firefly III 針對既有的單筆或多筆交易執行規則。在您更新一則規則後，且必須套用該規則至其他交易時，即可使用此功能。',
     'include_transactions_from_accounts'                  => '包含來自這些帳戶的交易',
-    'applied_rule_selection'                              => '規則 ":title" 已套用至您選擇的交易。',
+    'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
     'execute'                                             => '執行',
     'apply_rule_group_selection'                          => '將規則群組 ":title" 套用至您所選的交易',
     'apply_rule_group_selection_intro'                    => '規則群組如 ":title" 一般僅套用至新的或更新後的交易，但您可要求 Firefly III 針對既有的單筆或多筆交易執行規則群組內的規則。在您更新一則規則群組後，且必須套用該群組至其他交易時，即可使用此功能。',
@@ -666,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => '交易的選填欄位',
     'pref_optional_fields_transaction_help'     => '建立新交易時，預設不會啟用全部欄位 (以免版面空間不敷應用)。您可在下方啟用您覺得有用的欄位。當然，若欄位本身停用卻已填入資料，則不論設定如何均會顯示。',
     'optional_tj_date_fields'                   => '日期欄位',
-    'optional_tj_business_fields'               => '商務欄位',
+    'optional_tj_other_fields'                  => 'Other fields',
     'optional_tj_attachment_fields'             => '附加檔案欄位',
     'pref_optional_tj_interest_date'            => '利率日期',
     'pref_optional_tj_book_date'                => '登記日期',
@@ -677,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => '內部參照',
     'pref_optional_tj_notes'                    => '備註',
     'pref_optional_tj_attachments'              => '附加檔案',
-    'pref_optional_tj_external_uri'             => 'External URI',
+    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_location'                 => 'Location',
+    'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => '日期',
     'optional_field_meta_business'              => '商務',
     'optional_field_attachments'                => '附加檔案',
     'optional_field_meta_data'                  => '可選中繼資料',
-    'external_uri'                              => 'External URI',
+    'external_uri'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Delete data',
@@ -872,6 +886,7 @@ return [
     'create_new_deposit'                        => '建立新存款',
     'create_new_transfer'                       => '建立新轉帳',
     'create_new_asset'                          => '建立新資產帳戶',
+    'create_new_liabilities'                    => 'Create new liability',
     'create_new_expense'                        => '建立新支出帳戶',
     'create_new_revenue'                        => '建立新收入帳戶',
     'create_new_piggy_bank'                     => '建立新小豬撲滿',
@@ -915,6 +930,13 @@ return [
     'options'                                   => '選項',
 
     // budgets:
+    'daily_budgets'                             => 'Daily budgets',
+    'weekly_budgets'                            => 'Weekly budgets',
+    'monthly_budgets'                           => 'Monthly budgets',
+    'quarterly_budgets'                         => 'Quarterly budgets',
+    'half_year_budgets'                         => 'Half-yearly budgets',
+    'yearly_budgets'                            => 'Yearly budgets',
+    'other_budgets'                             => 'Custom timed budgets',
     'budget_limit_not_in_range'                 => 'This amount applies from :start to :end:',
     'total_available_budget'                    => 'Total available budget (between :start and :end)',
     'total_available_budget_in_currency'        => 'Total available budget in :currency',
@@ -954,7 +976,6 @@ return [
     'available_amount_indication'               => '使用這些金額以獲得您總預算可能為何的指標',
     'suggested'                                 => '建議',
     'average_between'                           => '自 :start 至 :end 的平均',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i> 您通常每日預算 :amount。這回卻是每日 :over_amount。您確定嗎？',
     'transferred_in'                            => '轉帳 (轉入)',
     'transferred_away'                          => '轉帳 (轉出)',
     'auto_budget_none'                          => 'No auto-budget',
@@ -1003,6 +1024,7 @@ return [
     'list_inactive_rule'                        => '未啟用的規則',
     'bill_edit_rules'                           => 'Firefly III will attempt to edit the rule related to this bill as well. If you\'ve edited this rule yourself however, Firefly III won\'t change anything.|Firefly III will attempt to edit the :count rules related to this bill as well. If you\'ve edited these rules yourself however, Firefly III won\'t change anything.',
     'bill_expected_date'                        => 'Expected :date',
+    'bill_paid_on'                              => 'Paid on {date}',
 
     // accounts:
     'inactive_account_link'                     => 'You have :count inactive (archived) account, which you can view on this separate page.|You have :count inactive (archived) accounts, which you can view on this separate page.',
@@ -1109,6 +1131,7 @@ return [
     'interest_calc_monthly'                     => '每月',
     'interest_calc_yearly'                      => '每年',
     'initial_balance_account'                   => ':account 初始餘額帳戶',
+    'list_options'                              => 'List options',
 
     // categories:
     'new_category'                              => '新分類',
@@ -1134,6 +1157,9 @@ return [
     'updated_withdrawal'                        => '已更新提款 “:description“',
     'updated_deposit'                           => '已更新存款 ”:description“',
     'updated_transfer'                          => '已更新轉帳 “:description”',
+    'no_changes_withdrawal'                     => 'Withdrawal ":description" was not changed.',
+    'no_changes_deposit'                        => 'Deposit ":description" was not changed.',
+    'no_changes_transfer'                       => 'Transfer ":description" was not changed.',
     'delete_withdrawal'                         => '刪除提款 “:description”',
     'delete_deposit'                            => '刪除存款 “:description”',
     'delete_transfer'                           => '刪除轉帳 “:description”',
@@ -1214,7 +1240,12 @@ return [
     'journal_link_bill'                         => '此交易已與帳單 <a href=":route">:name</a> 鏈結。如要移除鏈結，取消核選方塊，使用規則將它與其他帳單鏈結。',
     'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID} ("{title}")</a> has been stored.',
     'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
-    'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
+    'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> ("{title}") has been updated.',
+    'transaction_updated_no_changes'            => '<a href="transactions/show/{ID}">Transaction #{ID}</a> ("{title}") did not receive any changes.',
+    'first_split_decides'                       => 'The first split determines the value of this field',
+    'first_split_overrules_source'              => 'The first split may overrule the source account',
+    'first_split_overrules_destination'         => 'The first split may overrule the destination account',
+    'spent_x_of_y'                              => 'Spent {amount} of {total}',
 
     // new user:
     'welcome'                                   => '歡迎使用 Firefly III！',
@@ -1253,6 +1284,9 @@ return [
     'per_day'                                   => '每日',
     'left_to_spend_per_day'                     => '每日剩餘花費',
     'bills_paid'                                => '已繳帳單',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => '貨幣',
@@ -1321,6 +1355,7 @@ return [
     'automation'                                => 'Automation',
     'others'                                    => 'Others',
     'classification'                            => 'Classification',
+    'store_transaction'                         => 'Store transaction',
 
     // reports:
     'report_default'                            => '自 :start 至 :end 的預設財務報表',
@@ -1441,6 +1476,8 @@ return [
     'journal-amount'                            => '目前帳單條目',
     'name'                                      => '名稱',
     'date'                                      => '日期',
+    'date_and_time'                             => 'Date and time',
+    'time'                                      => 'Time',
     'paid'                                      => '已付款',
     'unpaid'                                    => '未付款',
     'day'                                       => '日',
@@ -1504,6 +1541,8 @@ return [
     'transaction_journal_information'  => '交易資訊',
     'transaction_journal_meta'         => '後設資訊',
     'transaction_journal_more'         => '更多資訊',
+    'basic_journal_information'        => 'Basic transaction information',
+    'transaction_journal_extra'        => 'Extra information',
     'att_part_of_journal'              => '儲存在 ":journal"',
     'total_amount'                     => '總金額',
     'number_of_decimals'               => '小數位數：',

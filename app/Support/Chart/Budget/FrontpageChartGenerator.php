@@ -30,20 +30,18 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
-
-
 /**
  * Class FrontpageChartGenerator
  */
 class FrontpageChartGenerator
 {
-    private User                            $user;
-    private Carbon                          $start;
-    private Carbon                          $end;
-    private BudgetRepositoryInterface       $budgetRepository;
-    private BudgetLimitRepositoryInterface  $blRepository;
     protected OperationsRepositoryInterface $opsRepository;
+    private BudgetLimitRepositoryInterface  $blRepository;
+    private BudgetRepositoryInterface       $budgetRepository;
+    private Carbon                          $end;
     private string                          $monthAndDayFormat;
+    private Carbon                          $start;
+    private User                            $user;
 
     /**
      * FrontpageChartGenerator constructor.
@@ -77,38 +75,6 @@ class FrontpageChartGenerator
         }
 
         return $data;
-    }
-
-    /**
-     * A basic setter for the user. Also updates the repositories with the right user.
-     *
-     * @param User $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-        $this->budgetRepository->setUser($user);
-        $this->blRepository->setUser($user);
-        $this->opsRepository->setUser($user);
-
-        $locale                  = app('steam')->getLocale();
-        $this->monthAndDayFormat = (string)trans('config.month_and_day', [], $locale);
-    }
-
-    /**
-     * @param Carbon $start
-     */
-    public function setStart(Carbon $start): void
-    {
-        $this->start = $start;
-    }
-
-    /**
-     * @param Carbon $end
-     */
-    public function setEnd(Carbon $end): void
-    {
-        $this->end = $end;
     }
 
     /**
@@ -238,5 +204,35 @@ class FrontpageChartGenerator
         return $data;
     }
 
+    /**
+     * @param Carbon $end
+     */
+    public function setEnd(Carbon $end): void
+    {
+        $this->end = $end;
+    }
 
+    /**
+     * @param Carbon $start
+     */
+    public function setStart(Carbon $start): void
+    {
+        $this->start = $start;
+    }
+
+    /**
+     * A basic setter for the user. Also updates the repositories with the right user.
+     *
+     * @param User $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+        $this->budgetRepository->setUser($user);
+        $this->blRepository->setUser($user);
+        $this->opsRepository->setUser($user);
+
+        $locale                  = app('steam')->getLocale();
+        $this->monthAndDayFormat = (string)trans('config.month_and_day', [], $locale);
+    }
 }

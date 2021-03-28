@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Auth;
 
 use Adldap;
+use Cookie;
 use DB;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Providers\RouteServiceProvider;
@@ -66,7 +67,6 @@ class LoginController extends Controller
         parent::__construct();
         $this->middleware('guest')->except('logout');
     }
-
 
     /**
      * Handle a login request to the application.
@@ -120,6 +120,64 @@ class LoginController extends Controller
     }
 
     /**
+     * Log the user out of the application.
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function logout(Request $request)
+    {
+        $authGuard = config('firefly.authentication_guard');
+        $logoutUri = config('firefly.custom_logout_uri');
+        if ('remote_user_guard' === $authGuard && '' !== $logoutUri) {
+            return redirect($logoutUri);
+        }
+        if ('remote_user_guard' === $authGuard && '' === $logoutUri) {
+            session()->flash('error', trans('firefly.cant_logout_guard'));
+        }
+
+        // also logout current 2FA tokens.
+        $cookieName = config('google2fa.cookie_name', 'google2fa_token');
+        Cookie::forget($cookieName);
+
+        $this->guard()->logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        if ($response = $this->loggedOut($request)) {
+            return $response;
+        }
+
+        return $request->wantsJson()
+            ? new \Illuminate\Http\Response('', 204)
+            : redirect('/');
+    }
+
+    /**
+     * Get the failed login response instance.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     *
+     * @throws ValidationException
+     */
+    protected function sendFailedLoginResponse(Request $request)
+    {
+        $exception             = ValidationException::withMessages(
+            [
+                $this->username() => [trans('auth.failed')],
+            ]
+        );
+        $exception->redirectTo = route('login');
+
+        throw $exception;
+    }
+
+    /**
      * Show the application's login form.
      *
      * @return Factory|\Illuminate\Http\Response|View
@@ -130,7 +188,7 @@ class LoginController extends Controller
 
         $count         = DB::table('users')->count();
         $loginProvider = config('firefly.login_provider');
-        $title         = (string) trans('firefly.login_page_title');
+        $title         = (string)trans('firefly.login_page_title');
         if (0 === $count && 'eloquent' === $loginProvider) {
             return redirect(route('register')); // @codeCoverageIgnore
         }
@@ -158,63 +216,7 @@ class LoginController extends Controller
             request()->cookies->set($cookieName, 'invalid');
         }
 
-
-        return view('auth.login', compact('allowRegistration', 'email', 'remember', 'allowReset', 'title'));
-    }
-
-    /**
-     * Get the failed login response instance.
-     *
-     * @param Request $request
-     *
-     * @return Response
-     *
-     * @throws ValidationException
-     */
-    protected function sendFailedLoginResponse(Request $request)
-    {
-        $exception             = ValidationException::withMessages(
-            [
-                $this->username() => [trans('auth.failed')],
-            ]
-        );
-        $exception->redirectTo = route('login');
-
-        throw $exception;
-    }
-
-
-    /**
-     * Log the user out of the application.
-     *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function logout(Request $request)
-    {
-        $authGuard = config('firefly.authentication_guard');
-        $logoutUri = config('firefly.custom_logout_uri');
-        if ('remote_user_guard' === $authGuard && '' !== $logoutUri) {
-            return redirect($logoutUri);
-        }
-        if ('remote_user_guard' === $authGuard && '' === $logoutUri) {
-            session()->flash('error',trans('firefly.cant_logout_guard'));
-        }
-
-        $this->guard()->logout();
-
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
-
-        if ($response = $this->loggedOut($request)) {
-            return $response;
-        }
-
-        return $request->wantsJson()
-            ? new \Illuminate\Http\Response('', 204)
-            : redirect('/');
+        return prefixView('auth.login', compact('allowRegistration', 'email', 'remember', 'allowReset', 'title'));
     }
 
 }

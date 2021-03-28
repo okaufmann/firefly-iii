@@ -39,10 +39,6 @@ class FiscalHelper implements FiscalHelperInterface
     public function __construct()
     {
         $this->useCustomFiscalYear = app('preferences')->get('customFiscalYear', false)->data;
-
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
     }
 
     /**
@@ -79,7 +75,7 @@ class FiscalHelper implements FiscalHelperInterface
         if (true === $this->useCustomFiscalYear) {
             $prefStartStr = app('preferences')->get('fiscalYearStart', '01-01')->data;
             [$mth, $day] = explode('-', $prefStartStr);
-            $startDate->day((int) $day)->month((int) $mth);
+            $startDate->day((int)$day)->month((int)$mth);
 
             // if start date is after passed date, sub 1 year.
             if ($startDate > $date) {

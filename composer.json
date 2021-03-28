@@ -82,14 +82,14 @@
     "ext-simplexml": "*",
     "ext-tokenizer": "*",
     "ext-xml": "*",
-    "adldap2/adldap2-laravel": "6.*",
     "bacon/bacon-qr-code": "2.*",
     "diglactic/laravel-breadcrumbs": "^6.0",
-    "doctrine/dbal": "2.*",
+    "doctrine/dbal": "3.*",
     "fideloper/proxy": "4.*",
     "gdbots/query-parser": "^2.0",
     "guzzlehttp/guzzle": "^7.2",
     "jc5/google2fa-laravel": "2.0.5",
+    "jc5/recovery": "^2",
     "laravel/framework": "^8.0",
     "laravel/passport": "10.*",
     "laravel/ui": "^3.0",
@@ -98,10 +98,10 @@
     "league/csv": "^9.6",
     "league/fractal": "0.*",
     "pragmarx/google2fa": "^8.0",
-    "pragmarx/recovery": "^0.1.0",
     "predis/predis": "^1.1",
     "ramsey/uuid": "^4.1",
-    "rcrowe/twigbridge": "^0.12.1"
+    "rcrowe/twigbridge": "^0.12.1",
+    "spatie/data-transfer-object": "^2.8"
   },
   "require-dev": {
     "barryvdh/laravel-debugbar": "^3.3",
@@ -109,9 +109,8 @@
     "ergebnis/phpstan-rules": "^0.15.0",
     "filp/whoops": "2.*",
     "fakerphp/faker": "1.*",
-    "johnkary/phpunit-speedtrap": "^3.1",
     "mockery/mockery": "1.*",
-    "nunomaduro/larastan": "^0.6.2",
+    "nunomaduro/larastan": "^0.7.0",
     "phpstan/phpstan": "^0.12.34",
     "phpstan/phpstan-deprecation-rules": "^0.12.5",
     "phpunit/phpunit": "^9.2",
@@ -119,9 +118,14 @@
     "thecodingmachine/phpstan-strict-rules": "^0.12.0",
     "vimeo/psalm": "^4.1"
   },
+  "suggest": {
+    "adldap2/adldap2-laravel": "If you want to login using LDAP.",
+    "ext-ldap": "Needed to support LDAP."
+  },
   "autoload": {
     "psr-4": {
       "FireflyIII\\": "app/",
+      "Domain\\": "domain/",
       "Database\\Factories\\": "database/factories/",
       "Database\\Seeders\\": "database/seeders/"
     }
@@ -167,6 +171,7 @@
       "@php artisan firefly-iii:rename-account-meta",
       "@php artisan firefly-iii:migrate-recurrence-meta",
       "@php artisan firefly-iii:migrate-tag-locations",
+      "@php artisan firefly-iii:migrate-recurrence-type",
 
       "@php artisan firefly-iii:fix-piggies",
       "@php artisan firefly-iii:create-link-types",

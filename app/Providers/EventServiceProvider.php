@@ -24,15 +24,16 @@ namespace FireflyIII\Providers;
 
 use Exception;
 use FireflyIII\Events\AdminRequestedTestMessage;
+use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\DetectedNewIPAddress;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\RequestedReportOnJournals;
+use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Events\UserChangedEmail;
-use FireflyIII\Handlers\Events\SendEmailVerificationNotification;
 use FireflyIII\Mail\OAuthTokenCreatedMail;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
@@ -48,6 +49,7 @@ use Session;
 
 /**
  * Class EventServiceProvider.
+ *
  * @codeCoverageIgnore
  */
 class EventServiceProvider extends ServiceProvider
@@ -60,51 +62,61 @@ class EventServiceProvider extends ServiceProvider
     protected $listen
         = [
             // is a User related event.
-            RegisteredUser::class              => [
+            RegisteredUser::class               => [
                 'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationMail',
                 'FireflyIII\Handlers\Events\UserEventHandler@attachUserRole',
             ],
             // is a User related event.
-            Login::class                       => [
+            Login::class                        => [
                 'FireflyIII\Handlers\Events\UserEventHandler@checkSingleUserIsAdmin',
                 'FireflyIII\Handlers\Events\UserEventHandler@demoUserBackToEnglish',
                 'FireflyIII\Handlers\Events\UserEventHandler@storeUserIPAddress',
             ],
-            DetectedNewIPAddress::class => [
+            DetectedNewIPAddress::class         => [
                 'FireflyIII\Handlers\Events\UserEventHandler@notifyNewIPAddress',
             ],
-            RequestedVersionCheckStatus::class => [
+            RequestedVersionCheckStatus::class  => [
                 'FireflyIII\Handlers\Events\VersionCheckEventHandler@checkForUpdates',
             ],
-            RequestedReportOnJournals::class   => [
+            RequestedReportOnJournals::class    => [
                 'FireflyIII\Handlers\Events\AutomationHandler@reportJournals',
             ],
 
             // is a User related event.
-            RequestedNewPassword::class        => [
+            RequestedNewPassword::class         => [
                 'FireflyIII\Handlers\Events\UserEventHandler@sendNewPassword',
             ],
             // is a User related event.
-            UserChangedEmail::class            => [
+            UserChangedEmail::class             => [
                 'FireflyIII\Handlers\Events\UserEventHandler@sendEmailChangeConfirmMail',
                 'FireflyIII\Handlers\Events\UserEventHandler@sendEmailChangeUndoMail',
             ],
             // admin related
-            AdminRequestedTestMessage::class   => [
+            AdminRequestedTestMessage::class    => [
                 'FireflyIII\Handlers\Events\AdminEventHandler@sendTestMessage',
             ],
             // is a Transaction Journal related event.
-            StoredTransactionGroup::class    => [
+            StoredTransactionGroup::class       => [
                 'FireflyIII\Handlers\Events\StoredGroupEventHandler@processRules',
+                'FireflyIII\Handlers\Events\StoredGroupEventHandler@triggerWebhooks',
             ],
             // is a Transaction Journal related event.
-            UpdatedTransactionGroup::class   => [
+            UpdatedTransactionGroup::class      => [
                 'FireflyIII\Handlers\Events\UpdatedGroupEventHandler@unifyAccounts',
                 'FireflyIII\Handlers\Events\UpdatedGroupEventHandler@processRules',
+                'FireflyIII\Handlers\Events\UpdatedGroupEventHandler@triggerWebhooks',
+            ],
+            DestroyedTransactionGroup::class    => [
+                'FireflyIII\Handlers\Events\DestroyedGroupEventHandler@triggerWebhooks',
             ],
             // API related events:
-            AccessTokenCreated::class          => [
+            AccessTokenCreated::class           => [
                 'FireflyIII\Handlers\Events\APIEventHandler@accessTokenCreated',
+            ],
+
+            // Webhook related event:
+            RequestedSendWebhookMessages::class => [
+                'FireflyIII\Handlers\Events\WebhookEventHandler@sendWebhookMessages',
             ],
         ];
 
@@ -165,8 +177,6 @@ class EventServiceProvider extends ServiceProvider
                     Session::flash('error', 'Possible email error: ' . $e->getMessage());
                 }
                 Log::debug('If no error above this line, message was sent.');
-
-
             }
         );
     }

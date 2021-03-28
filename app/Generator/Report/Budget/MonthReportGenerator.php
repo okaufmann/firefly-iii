@@ -52,7 +52,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      */
     public function __construct()
     {
-        $this->expenses = new Collection;
+        $this->expenses = [];
     }
 
     /**
@@ -65,7 +65,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $accountIds = implode(',', $this->accounts->pluck('id')->toArray());
         $budgetIds  = implode(',', $this->budgets->pluck('id')->toArray());
         try {
-            $result = view(
+            $result = prefixView(
                 'reports.budget.month',
                 compact('accountIds', 'budgetIds')
             )

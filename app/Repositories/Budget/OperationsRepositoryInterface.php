@@ -43,19 +43,6 @@ interface OperationsRepositoryInterface
      * @return string
      */
     public function budgetedPerDay(Budget $budget): string;
-
-    /**
-     * This method collects various info on budgets, used on the budget page and on the index.
-     *
-     * @param Collection $budgets
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     * @deprecated
-     */
-    public function collectBudgetInformation(Collection $budgets, Carbon $start, Carbon $end): array;
-
     /**
      * @param Collection $budgets
      * @param Collection $accounts
@@ -66,48 +53,6 @@ interface OperationsRepositoryInterface
      * @deprecated
      */
     public function getBudgetPeriodReport(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array;
-
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user): void;
-
-    /**
-     * @param Collection $budgets
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return string
-     * @deprecated
-     */
-    public function spentInPeriod(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): string;
-
-    /**
-     * Return multi-currency spent information.
-     *
-     * @param Collection $budgets
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     * @deprecated
-     */
-    public function spentInPeriodMc(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array;
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
-    /**
-     * @param Carbon                   $start
-     * @param Carbon                   $end
-     * @param Collection|null          $accounts
-     * @param Collection|null          $budgets
-     * @param TransactionCurrency|null $currency
-     *
-     * @return array
-     */
-    public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null, ?TransactionCurrency $currency = null
-    ): array;
 
     /**
      * This method returns a list of all the withdrawal transaction journals (as arrays) set in that period
@@ -122,5 +67,37 @@ interface OperationsRepositoryInterface
      * @return array
      */
     public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null): array;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void;
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
+
+    /**
+     * Return multi-currency spent information.
+     *
+     * @param Collection $budgets
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     * @deprecated
+     */
+    public function spentInPeriodMc(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array;
+
+    /**
+     * @param Carbon                   $start
+     * @param Carbon                   $end
+     * @param Collection|null          $accounts
+     * @param Collection|null          $budgets
+     * @param TransactionCurrency|null $currency
+     *
+     * @return array
+     */
+    public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null, ?TransactionCurrency $currency = null
+    ): array;
 
 }

@@ -59,7 +59,6 @@ class AccountCurrencies extends Command
     /** @var UserRepositoryInterface */
     private $userRepos;
 
-
     /**
      * Each (asset) account must have a reference to a preferred currency. If the account does not have one, it's forced upon the account.
      *
@@ -88,29 +87,7 @@ class AccountCurrencies extends Command
         $this->info(sprintf('Verified and fixed account currencies in %s seconds.', $end));
         $this->markAsExecuted();
 
-
         return 0;
-    }
-
-    /**
-     * @return bool
-     */
-    private function isExecuted(): bool
-    {
-        $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
-        if (null !== $configVar) {
-            return (bool) $configVar->data;
-        }
-
-        return false; // @codeCoverageIgnore
-    }
-
-    /**
-     *
-     */
-    private function markAsExecuted(): void
-    {
-        app('fireflyconfig')->set(self::CONFIG_NAME, true);
     }
 
     /**
@@ -128,65 +105,16 @@ class AccountCurrencies extends Command
     }
 
     /**
-     * @param Account             $account
-     * @param TransactionCurrency $currency
+     * @return bool
      */
-    private function updateAccount(Account $account, TransactionCurrency $currency): void
+    private function isExecuted(): bool
     {
-        Log::debug(sprintf('Now in updateAccount(%d, %s)', $account->id, $currency->code));
-        $this->accountRepos->setUser($account->user);
-
-        $accountCurrency = (int) $this->accountRepos->getMetaValue($account, 'currency_id');
-        Log::debug(sprintf('Account currency is #%d', $accountCurrency));
-
-        $openingBalance = $this->accountRepos->getOpeningBalance($account);
-        $obCurrency     = 0;
-        if (null !== $openingBalance) {
-            $obCurrency = (int) $openingBalance->transaction_currency_id;
-            Log::debug('Account has opening balance.');
-        }
-        Log::debug(sprintf('Account OB currency is #%d.', $obCurrency));
-
-        // both 0? set to default currency:
-        if (0 === $accountCurrency && 0 === $obCurrency) {
-            Log::debug(sprintf('Both currencies are 0, so reset to #%d (%s)', $currency->id, $currency->code));
-            AccountMeta::where('account_id', $account->id)->where('name', 'currency_id')->forceDelete();
-            AccountMeta::create(['account_id' => $account->id, 'name' => 'currency_id', 'data' => $currency->id]);
-            $this->line(sprintf('Account #%d ("%s") now has a currency setting (%s).', $account->id, $account->name, $currency->code));
-            $this->count++;
-
-            return;
+        $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
+        if (null !== $configVar) {
+            return (bool)$configVar->data;
         }
 
-        // account is set to 0, opening balance is not?
-        if (0 === $accountCurrency && $obCurrency > 0) {
-            Log::debug(sprintf('Account is #0, OB is #%d, so set account to OB as well', $obCurrency));
-            AccountMeta::create(['account_id' => $account->id, 'name' => 'currency_id', 'data' => $obCurrency]);
-            $this->line(sprintf('Account #%d ("%s") now has a currency setting (#%d).', $account->id, $account->name, $obCurrency));
-            $this->count++;
-
-            return;
-        }
-
-
-        // do not match and opening balance id is not null.
-        if ($accountCurrency !== $obCurrency && null !== $openingBalance) {
-            Log::debug(sprintf('Account (#%d) and OB currency (#%d) are different. Overrule OB, set to account currency.', $accountCurrency, $obCurrency));
-            // update opening balance:
-            $openingBalance->transaction_currency_id = $accountCurrency;
-            $openingBalance->save();
-            $openingBalance->transactions->each(
-                static function (Transaction $transaction) use ($accountCurrency) {
-                    $transaction->transaction_currency_id = $accountCurrency;
-                    $transaction->save();
-                }
-            );
-            $this->line(sprintf('Account #%d ("%s") now has a correct currency for opening balance.', $account->id, $account->name));
-            $this->count++;
-
-            return;
-        }
-        Log::debug('No changes necessary for this account.');
+        return false; // @codeCoverageIgnore
     }
 
     /**
@@ -196,7 +124,7 @@ class AccountCurrencies extends Command
     {
         Log::debug('Now in updateAccountCurrencies()');
         $users               = $this->userRepos->all();
-        $defaultCurrencyCode = (string) config('firefly.default_currency', 'EUR');
+        $defaultCurrencyCode = (string)config('firefly.default_currency', 'EUR');
         Log::debug(sprintf('Default currency is %s', $defaultCurrencyCode));
         foreach ($users as $user) {
             $this->updateCurrenciesForUser($user, $defaultCurrencyCode);
@@ -234,5 +162,73 @@ class AccountCurrencies extends Command
         foreach ($accounts as $account) {
             $this->updateAccount($account, $defaultCurrency);
         }
+    }
+
+    /**
+     * @param Account             $account
+     * @param TransactionCurrency $currency
+     */
+    private function updateAccount(Account $account, TransactionCurrency $currency): void
+    {
+        Log::debug(sprintf('Now in updateAccount(%d, %s)', $account->id, $currency->code));
+        $this->accountRepos->setUser($account->user);
+
+        $accountCurrency = (int)$this->accountRepos->getMetaValue($account, 'currency_id');
+        Log::debug(sprintf('Account currency is #%d', $accountCurrency));
+
+        $openingBalance = $this->accountRepos->getOpeningBalance($account);
+        $obCurrency     = 0;
+        if (null !== $openingBalance) {
+            $obCurrency = (int)$openingBalance->transaction_currency_id;
+            Log::debug('Account has opening balance.');
+        }
+        Log::debug(sprintf('Account OB currency is #%d.', $obCurrency));
+
+        // both 0? set to default currency:
+        if (0 === $accountCurrency && 0 === $obCurrency) {
+            Log::debug(sprintf('Both currencies are 0, so reset to #%d (%s)', $currency->id, $currency->code));
+            AccountMeta::where('account_id', $account->id)->where('name', 'currency_id')->forceDelete();
+            AccountMeta::create(['account_id' => $account->id, 'name' => 'currency_id', 'data' => $currency->id]);
+            $this->line(sprintf('Account #%d ("%s") now has a currency setting (%s).', $account->id, $account->name, $currency->code));
+            $this->count++;
+
+            return;
+        }
+
+        // account is set to 0, opening balance is not?
+        if (0 === $accountCurrency && $obCurrency > 0) {
+            Log::debug(sprintf('Account is #0, OB is #%d, so set account to OB as well', $obCurrency));
+            AccountMeta::create(['account_id' => $account->id, 'name' => 'currency_id', 'data' => $obCurrency]);
+            $this->line(sprintf('Account #%d ("%s") now has a currency setting (#%d).', $account->id, $account->name, $obCurrency));
+            $this->count++;
+
+            return;
+        }
+        // do not match and opening balance id is not null.
+        if ($accountCurrency !== $obCurrency && null !== $openingBalance) {
+            Log::debug(sprintf('Account (#%d) and OB currency (#%d) are different. Overrule OB, set to account currency.', $accountCurrency, $obCurrency));
+            // update opening balance:
+            $openingBalance->transaction_currency_id = $accountCurrency;
+            $openingBalance->save();
+            $openingBalance->transactions->each(
+                static function (Transaction $transaction) use ($accountCurrency) {
+                    $transaction->transaction_currency_id = $accountCurrency;
+                    $transaction->save();
+                }
+            );
+            $this->line(sprintf('Account #%d ("%s") now has a correct currency for opening balance.', $account->id, $account->name));
+            $this->count++;
+
+            return;
+        }
+        Log::debug('No changes necessary for this account.');
+    }
+
+    /**
+     *
+     */
+    private function markAsExecuted(): void
+    {
+        app('fireflyconfig')->set(self::CONFIG_NAME, true);
     }
 }

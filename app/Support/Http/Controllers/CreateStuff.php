@@ -30,8 +30,8 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
 use Laravel\Passport\Passport;
 use Log;
-use phpseclib\Crypt\RSA;
-
+use phpseclib\Crypt\RSA as LegacyRSA;
+use phpseclib3\Crypt\RSA;
 /**
  * Trait CreateStuff
  *
@@ -42,7 +42,7 @@ trait CreateStuff
     /**
      * Creates an asset account.
      *
-     * @param NewUserFormRequest $request
+     * @param NewUserFormRequest  $request
      * @param TransactionCurrency $currency
      *
      * @return bool
@@ -58,7 +58,7 @@ trait CreateStuff
             'virtual_balance'      => 0,
             'account_type_id'      => null,
             'active'               => true,
-            'account_role'          => 'defaultAsset',
+            'account_role'         => 'defaultAsset',
             'opening_balance'      => $request->input('bank_balance'),
             'opening_balance_date' => new Carbon,
             'currency_id'          => $currency->id,
@@ -73,7 +73,7 @@ trait CreateStuff
      * Creates a cash wallet.
      *
      * @param TransactionCurrency $currency
-     * @param string $language
+     * @param string              $language
      *
      * @return bool
      */
@@ -88,7 +88,7 @@ trait CreateStuff
             'virtual_balance'      => 0,
             'account_type_id'      => null,
             'active'               => true,
-            'account_role'          => 'cashWalletAsset',
+            'account_role'         => 'cashWalletAsset',
             'opening_balance'      => null,
             'opening_balance_date' => null,
             'currency_id'          => $currency->id,
@@ -104,9 +104,6 @@ trait CreateStuff
      */
     protected function createOAuthKeys(): void // create stuff
     {
-        $rsa  = new RSA();
-        $keys = $rsa->createKey(4096);
-
         [$publicKey, $privateKey] = [
             Passport::keyPath('oauth-public.key'),
             Passport::keyPath('oauth-private.key'),
@@ -115,6 +112,22 @@ trait CreateStuff
         if (file_exists($publicKey) || file_exists($privateKey)) {
             return;
         }
+
+        // switch on class existence.
+
+        Log::info(sprintf('PHP version is %s', phpversion()));
+        if (class_exists(LegacyRSA::class)) {
+            // PHP 7
+            Log::info('Will run PHP7 code.');
+            $keys = (new LegacyRSA)->createKey(4096);
+        }
+
+        if (!class_exists(LegacyRSA::class)) {
+            // PHP 8
+            Log::info('Will run PHP8 code.');
+            $keys = RSA::createKey(4096);
+        }
+
         // @codeCoverageIgnoreStart
         Log::alert('NO OAuth keys were found. They have been created.');
 
@@ -125,9 +138,9 @@ trait CreateStuff
     /**
      * Create a savings account.
      *
-     * @param NewUserFormRequest $request
+     * @param NewUserFormRequest  $request
      * @param TransactionCurrency $currency
-     * @param string $language
+     * @param string              $language
      *
      * @return bool
      */
@@ -157,7 +170,7 @@ trait CreateStuff
      *
      * @param array $data
      *
-     * @return \FireflyIII\User
+     * @return User
      */
     protected function createUser(array $data): User // create object
     {

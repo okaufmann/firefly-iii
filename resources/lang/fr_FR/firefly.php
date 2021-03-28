@@ -33,10 +33,13 @@ return [
     'clone'                                               => 'Cloner',
     'last_seven_days'                                     => '7 Derniers Jours',
     'last_thirty_days'                                    => 'Trente derniers jours',
+    'last_180_days'                                       => '180 derniers jours',
+    'YTD'                                                 => 'Année en cours',
     'welcome_back'                                        => 'Quoi de neuf ?',
     'everything'                                          => 'Tout',
     'today'                                               => 'aujourd\'hui',
     'customRange'                                         => 'Intervalle personnalisé',
+    'date_range'                                          => 'Intervalle de dates',
     'apply'                                               => 'Appliquer',
     'select_date'                                         => 'Sélectionner une date...',
     'cancel'                                              => 'Annuler',
@@ -59,6 +62,7 @@ return [
     'no_rules_for_bill'                                   => 'Cette facture n\'a aucune règle associée.',
     'go_to_asset_accounts'                                => 'Afficher vos comptes d\'actifs',
     'go_to_budgets'                                       => 'Gérer vos budgets',
+    'go_to_withdrawals'                                   => 'Accéder à vos retraits',
     'clones_journal_x'                                    => 'Cette opération est un clone de ":description" (#:id)',
     'go_to_categories'                                    => 'Gérer vos catégories',
     'go_to_bills'                                         => 'Gérer vos factures',
@@ -217,6 +221,12 @@ return [
     'expected_total'                                      => 'total prévu',
     'reconciliation_account_name'                         => 'Régularisation de :name (:currency)',
     'saved'                                               => 'Sauvegardé',
+    'advanced_options'                                    => 'Options avancées',
+    'advanced_options_explain'                            => 'Certaines pages de Firefly III ont des options avancées cachées derrière ce bouton. Cette page n\'a rien de bien utile ici, mais regardez les autres !',
+    'here_be_dragons'                                     => 'Hic sunt dracones',
+
+    // Webhooks
+    'webhooks'                                            => 'Webhooks',
 
     // API access
     'authorization_request'                               => 'Firefly III v:version demande d\'autorisation',
@@ -233,7 +243,9 @@ return [
     'all_destination_accounts'                            => 'Comptes de destination',
     'all_source_accounts'                                 => 'Comptes source',
     'back_to_index'                                       => 'Retour à l\'accueil',
-    'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
+    'cant_logout_guard'                                   => 'Firefly III ne peut pas vous déconnecter.',
+    'external_url'                                        => 'URL externe',
+    'internal_reference'                                  => 'Référence interne',
 
     // check for updates:
     'update_check_title'                                  => 'Vérifier les mises à jour',
@@ -263,12 +275,12 @@ return [
 
     // search
     'search'                                              => 'Rechercher',
-    'long_query_warning'                                  => 'Votre requête de recherche est très longue et peut ne pas fonctionner comme prévu.',
     'search_query'                                        => 'Requête',
     'search_found_transactions'                           => 'Firefly III a trouvé :count opération en :time secondes.|Firefly III a trouvé :count opérations en :time secondes.',
     'search_found_more_transactions'                      => 'Firefly III a trouvé plus de :count transactions en :time secondes.',
     'search_for_query'                                    => 'Firefly III recherche des opérations contenant tous ces mots : <span class="text-info">:query</span>',
     'search_modifier_date_is'                             => 'La date de l\'opération est ":value"',
+    'search_modifier_id'                                  => 'L\'ID de l\'opération est ":value"',
     'search_modifier_date_before'                         => 'La date de l\'opération est avant ou le ":value"',
     'search_modifier_date_after'                          => 'La date de l\'opération est après ou le ":value"',
     'search_modifier_created_on'                          => 'L\'opération a été créée le ":value"',
@@ -411,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Appliquer la règle ":title" à une sélection de vos opérations',
     'apply_rule_selection_intro'                          => 'Les règles comme ":title" ne s\'appliquent normalement qu\'aux opérations nouvelles ou mises à jour, mais vous pouvez dire à Firefly III de l’exécuter sur une sélection de vos opérations existantes. Cela peut être utile lorsque vous avez mis à jour une règle et avez besoin que les modifications soient appliquées à l’ensemble de vos autres opérations.',
     'include_transactions_from_accounts'                  => 'Inclure les opérations depuis ces comptes',
-    'applied_rule_selection'                              => 'La règle ":title" a été appliquée à votre sélection.',
+    'applied_rule_selection'                              => '{0} Aucune opération dans votre sélection n\'a été modifiée par la règle ":title".|[1] Une opération dans votre sélection a été modifiée par la règle ":title".|[2,*] :count opérations dans votre sélection ont été modifiées par la règle ":title".',
     'execute'                                             => 'Exécuter',
     'apply_rule_group_selection'                          => 'Appliquer le groupe de règles ":title" à une sélection de vos opérations',
     'apply_rule_group_selection_intro'                    => 'Les groupes de règles comme ":title" ne s\'appliquent normalement qu\'aux opérations nouvelles ou mises à jour, mais vous pouvez dire à Firefly III d\'exécuter toutes les règles de ce groupe sur une sélection de vos opérations existantes. Cela peut être utile lorsque vous avez mis à jour un groupe de règles et avez besoin que les modifications soient appliquées à l’ensemble de vos autres opérations.',
@@ -666,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Champs optionnels pour les opérations',
     'pref_optional_fields_transaction_help'     => 'Par défaut, tous les champs ne sont pas disponibles lors de la création d\'une nouvelle opération (pour éviter de surcharger la page). Vous pouvez activer les champs suivants si vous pensez qu\'ils peuvent vous être utiles. Bien sûr, tout champ désactivé mais précédemment rempli restera visible quel que soit son paramétrage.',
     'optional_tj_date_fields'                   => 'Champ date',
-    'optional_tj_business_fields'               => 'Champs professionnels',
+    'optional_tj_other_fields'                  => 'Autres champs',
     'optional_tj_attachment_fields'             => 'Champs de pièces jointes',
     'pref_optional_tj_interest_date'            => 'Date de valeur (intérêts)',
     'pref_optional_tj_book_date'                => 'Date de réservation',
@@ -677,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Référence interne',
     'pref_optional_tj_notes'                    => 'Notes',
     'pref_optional_tj_attachments'              => 'Pièces jointes',
-    'pref_optional_tj_external_uri'             => 'URI externe',
+    'pref_optional_tj_external_uri'             => 'URL externe',
+    'pref_optional_tj_location'                 => 'Emplacement',
+    'pref_optional_tj_links'                    => 'Liens d\'opération',
     'optional_field_meta_dates'                 => 'Dates',
     'optional_field_meta_business'              => 'Commerce',
     'optional_field_attachments'                => 'Pièces jointes',
     'optional_field_meta_data'                  => 'Métadonnées facultatives',
-    'external_uri'                              => 'URI externe',
+    'external_uri'                              => 'URL externe',
 
     // profile:
     'delete_stuff_header'                       => 'Suppression de données',
@@ -872,6 +886,7 @@ return [
     'create_new_deposit'                        => 'Créer un nouveau dépôt',
     'create_new_transfer'                       => 'Créer un nouveau transfert',
     'create_new_asset'                          => 'Créer un nouveau compte d’actif',
+    'create_new_liabilities'                    => 'Créer un nouveau passif',
     'create_new_expense'                        => 'Créer nouveau compte de dépenses',
     'create_new_revenue'                        => 'Créer nouveau compte de recettes',
     'create_new_piggy_bank'                     => 'Créer une nouvelle tirelire',
@@ -915,6 +930,13 @@ return [
     'options'                                   => 'Options',
 
     // budgets:
+    'daily_budgets'                             => 'Budgets quotidiens',
+    'weekly_budgets'                            => 'Budgets hebdomadaires',
+    'monthly_budgets'                           => 'Budgets mensuels',
+    'quarterly_budgets'                         => 'Budgets trimestriels',
+    'half_year_budgets'                         => 'Budgets semestriels',
+    'yearly_budgets'                            => 'Budgets annuels',
+    'other_budgets'                             => 'Budgets à période personnalisée',
     'budget_limit_not_in_range'                 => 'Ce montant s\'applique du :start au :end :',
     'total_available_budget'                    => 'Budget total disponible (entre :start et :end)',
     'total_available_budget_in_currency'        => 'Budget total disponible en :currency',
@@ -954,7 +976,6 @@ return [
     'available_amount_indication'               => 'Utilisez ces montants pour avoir une indication de ce que pourrait être votre budget total.',
     'suggested'                                 => 'Suggéré',
     'average_between'                           => 'Moyenne entre :start et :end',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i> Généralement vous budgétez environ :amount par jour. Cette fois, c\'est :over_amount par jour. Êtes-vous sûr ?',
     'transferred_in'                            => 'Transféré (entrant)',
     'transferred_away'                          => 'Transféré (sortant)',
     'auto_budget_none'                          => 'Pas de budget automatique',
@@ -1003,6 +1024,7 @@ return [
     'list_inactive_rule'                        => 'règle inactive',
     'bill_edit_rules'                           => 'Firefly III tentera également de modifier la règle relative à cette facture. Si vous avez modifié cette règle vous-même, Firefly III ne changera rien. Firefly III tentera également de modifier les :count règles relatives à cette facture. Si vous avez modifié ces règles vous-même, Firefly III ne changera rien.',
     'bill_expected_date'                        => 'Prévu :date',
+    'bill_paid_on'                              => 'Payé le {date}',
 
     // accounts:
     'inactive_account_link'                     => 'Vous avez :count compte inactif (archivé) que vous pouvez consulter sur cette page dédiée.| Vous avez :count comptes inactifs (archivés) que vous pouvez consulter sur cette page dédiée.',
@@ -1109,6 +1131,7 @@ return [
     'interest_calc_monthly'                     => 'Par mois',
     'interest_calc_yearly'                      => 'Par an',
     'initial_balance_account'                   => 'Solde initial du compte :account',
+    'list_options'                              => 'Lister les options',
 
     // categories:
     'new_category'                              => 'Nouvelle catégorie',
@@ -1134,6 +1157,9 @@ return [
     'updated_withdrawal'                        => 'Dépense ":description" mise à jour',
     'updated_deposit'                           => 'Dépôt ":description" mis à jour',
     'updated_transfer'                          => 'Transfert ":description" mis à jour',
+    'no_changes_withdrawal'                     => 'Le retrait ":description" n\'a pas été modifié.',
+    'no_changes_deposit'                        => 'Le dépôt ":description" n\'a pas été modifié.',
+    'no_changes_transfer'                       => 'Le transfert ":description" n\'a pas été changé.',
     'delete_withdrawal'                         => 'Supprimer la dépense ":description"',
     'delete_deposit'                            => 'Supprimer le dépôt ":description"',
     'delete_transfer'                           => 'Supprimer le transfert ":description"',
@@ -1214,7 +1240,12 @@ return [
     'journal_link_bill'                         => 'Cette opération est liée à la facture <a href=":route">:name</a>. Pour supprimer l\'association, décocher la case. Utilisez les règles pour la connecter à une autre facture.',
     'transaction_stored_link'                   => '<a href="transactions/show/{ID}">L\'opération n°{ID} ("{title}")</a> a été enregistrée.',
     'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">L\'opération n°{ID}</a> a été enregistrée.',
-    'transaction_updated_link'                  => '<a href="transactions/show/{ID}">L\'opération n°{ID}</a> a été mise à jour.',
+    'transaction_updated_link'                  => '<a href="transactions/show/{ID}">L\'opération n°{ID}</a> ("{title}") a été mise à jour.',
+    'transaction_updated_no_changes'            => '<a href="transactions/show/{ID}">Transaction #{ID}</a> ("{title}") did not receive any changes.',
+    'first_split_decides'                       => 'La première ventilation détermine la valeur de ce champ',
+    'first_split_overrules_source'              => 'La première ventilation peut remplacer le compte source',
+    'first_split_overrules_destination'         => 'La première ventilation peut remplacer le compte de destination',
+    'spent_x_of_y'                              => 'Dépensé {amount} sur {total}',
 
     // new user:
     'welcome'                                   => 'Bienvenue sur Firefly III !',
@@ -1253,6 +1284,9 @@ return [
     'per_day'                                   => 'Par jour',
     'left_to_spend_per_day'                     => 'Reste à dépenser par jour',
     'bills_paid'                                => 'Factures payées',
+    'custom_period'                             => 'Période personnalisée',
+    'reset_to_current'                          => 'Réinitialiser à la période en cours',
+    'select_period'                             => 'Sélectionnez une période',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Devise',
@@ -1321,6 +1355,7 @@ return [
     'automation'                                => 'Automatisation',
     'others'                                    => 'Autres',
     'classification'                            => 'Classification',
+    'store_transaction'                         => 'Enregistrer l\'opération',
 
     // reports:
     'report_default'                            => 'Rapport financier par défaut entre le :start et le :end',
@@ -1348,7 +1383,7 @@ return [
     'leftInBudget'                              => 'Budget restant',
     'sumOfSums'                                 => 'Somme des montants',
     'noCategory'                                => '(aucune catégorie)',
-    'notCharged'                                => 'Pas encore chargé',
+    'notCharged'                                => 'Pas (encore) facturé',
     'inactive'                                  => 'Inactif',
     'active'                                    => 'Actif',
     'difference'                                => 'Différence',
@@ -1441,6 +1476,8 @@ return [
     'journal-amount'                            => 'Entrée de la facture courante',
     'name'                                      => 'Nom',
     'date'                                      => 'Date',
+    'date_and_time'                             => 'Date et heure',
+    'time'                                      => 'Heure',
     'paid'                                      => 'Payé',
     'unpaid'                                    => 'Impayé',
     'day'                                       => 'Jour',
@@ -1501,9 +1538,11 @@ return [
     'updated_tag'               => 'Mise à jour de la balise ":tag"',
     'created_tag'               => 'Tag ":tag" a été créé !',
 
-    'transaction_journal_information'  => 'Informations sur les opérations',
+    'transaction_journal_information'  => 'Informations sur l\'opération',
     'transaction_journal_meta'         => 'Méta informations',
     'transaction_journal_more'         => 'Plus d\'informations',
+    'basic_journal_information'        => 'Informations de base sur l\'opération',
+    'transaction_journal_extra'        => 'Informations supplémentaires',
     'att_part_of_journal'              => 'Stocké dans ":journal"',
     'total_amount'                     => 'Montant total',
     'number_of_decimals'               => 'Nombre de décimales',
@@ -1631,7 +1670,7 @@ return [
     'after_update_create_another'           => 'Après la mise à jour, revenir ici pour continuer l\'édition.',
     'store_as_new'                          => 'Enregistrer comme une nouvelle opération au lieu de mettre à jour.',
     'reset_after'                           => 'Réinitialiser le formulaire après soumission',
-    'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors.',
+    'errors_submission'                     => 'Certaines informations ne sont pas correctes dans votre formulaire. Veuillez vérifier les erreurs.',
 
     // object groups
     'default_group_title_name'              => '(Sans groupement)',

@@ -60,6 +60,7 @@ return [
     'less'                           => ':attribute musí byť menej než 10.000.000',
     'active_url'                     => ':attribute nie je platná adresa URL.',
     'after'                          => ':attribute musí byť neskôr, než :date.',
+    'date_after'                     => 'Počiatočný dátum musí byť starší, než konečný dátum.',
     'alpha'                          => ':attribute môže obsahovať len písmená.',
     'alpha_dash'                     => ':attribute môže obsahovať len písmená, čísla a pomlčky.',
     'alpha_num'                      => ':attribute môže obsahovať len písmená a čísla.',
@@ -130,15 +131,19 @@ return [
     'current_target_amount'          => 'Aktuálna suma musí být menšia, než cieľová suma.',
     'unique_piggy_bank_for_user'     => 'Názov pokladničky musí byť jedinečný.',
     'unique_object_group'            => 'Názov skupiny musí byť jedinečný',
+    'starts_with'                    => 'Hodnota musí začínať :values.',
+    'unique_webhook'                 => 'Webhook s týmito hodnotami už existuje.',
+    'unique_existing_webhook'        => 'Iný webhook s týmito hodnotami už existuje.',
 
-    'secure_password'                => 'Toto nie je bezpečné heslo. Skúste iné. Viac se dozviete na http://bit.ly/FF3-password-security',
-    'valid_recurrence_rep_type'      => 'Neplatný typ opakovania pre opakované transakcie.',
-    'valid_recurrence_rep_moment'    => 'Neplatný moment opakovania pre tento typ opakovania.',
-    'invalid_account_info'           => 'Neplatná informácia o účte.',
-    'attributes'                     => [
+    'secure_password'             => 'Toto nie je bezpečné heslo. Skúste iné. Viac se dozviete na http://bit.ly/FF3-password-security',
+    'valid_recurrence_rep_type'   => 'Neplatný typ opakovania pre opakované transakcie.',
+    'valid_recurrence_rep_moment' => 'Neplatný moment opakovania pre tento typ opakovania.',
+    'invalid_account_info'        => 'Neplatná informácia o účte.',
+    'attributes'                  => [
         'email'                   => 'e-mailová adresa',
         'description'             => 'popis',
         'amount'                  => 'suma',
+        'transactions.*.amount'   => 'suma transakcie',
         'name'                    => 'názov',
         'piggy_bank_id'           => 'ID pokladničky',
         'targetamount'            => 'cieľová suma',
@@ -173,10 +178,12 @@ return [
     ],
 
     // validation of accounts:
-    'withdrawal_source_need_data'    => 'Pre pokračovanie je potrebné platné ID zdrojového účtu a/alebo platný názov zdrojového účtu.',
-    'withdrawal_source_bad_data'     => 'Pre ID „:id“ alebo mena „:name“ sa nenašiel žiadny platný zdrojový účet.',
-    'withdrawal_dest_need_data'      => 'Pro pokračovanie je potrebné platné ID zdrojového účtu a/alebo platný názov zdrojového účtu.',
-    'withdrawal_dest_bad_data'       => 'Pre ID „:id“ alebo mena „:name“ sa nenašiel žiadny platný cieľový účet.',
+    'withdrawal_source_need_data' => 'Pre pokračovanie je potrebné platné ID zdrojového účtu a/alebo platný názov zdrojového účtu.',
+    'withdrawal_source_bad_data'  => 'Pre ID „:id“ alebo mena „:name“ sa nenašiel žiadny platný zdrojový účet.',
+    'withdrawal_dest_need_data'   => 'Pro pokračovanie je potrebné platné ID zdrojového účtu a/alebo platný názov zdrojového účtu.',
+    'withdrawal_dest_bad_data'    => 'Pre ID „:id“ alebo mena „:name“ sa nenašiel žiadny platný cieľový účet.',
+
+    'generic_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Pre pokračovanie je potrebné platné ID zdrojového účtu a/alebo platný názov zdrojového účtu.',
     'deposit_source_bad_data'  => 'Pre ID „:id“ alebo „:name“ sa nenašiel žiadny platný zdrojový účet.',
@@ -205,5 +212,5 @@ return [
 
     'amount_required_for_auto_budget' => 'Suma je povinná.',
     'auto_budget_amount_positive'     => 'Suma musí byť viac ako 0.',
-    'auto_budget_period_mandatory' => 'Obdobie rozpočtu je povinný údaj.',
+    'auto_budget_period_mandatory'    => 'Obdobie rozpočtu je povinný údaj.',
 ];

@@ -57,6 +57,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     public function countJournals(TransactionCurrency $currency): int
     {
         $count = $currency->transactions()->whereNull('deleted_at')->count() + $currency->transactionJournals()->whereNull('deleted_at')->count();
+
         // also count foreign:
         return $count + Transaction::where('foreign_currency_id', $currency->id)->count();
     }
@@ -170,8 +171,6 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     {
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
-
-
         if ($repository->hasRole($this->user, 'owner')) {
             /** @var CurrencyDestroyService $service */
             $service = app(CurrencyDestroyService::class);
@@ -453,8 +452,16 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function isFallbackCurrency(TransactionCurrency $currency): bool
+    {
+        return $currency->code === config('firefly.default_currency', 'EUR');
+    }
+
+    /**
      * @param string $search
-     * @param int $limit
+     * @param int    $limit
      *
      * @return Collection
      */
@@ -507,13 +514,5 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         $service = app(CurrencyUpdateService::class);
 
         return $service->update($currency, $data);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function isFallbackCurrency(TransactionCurrency $currency): bool
-    {
-        return $currency->code === config('firefly.default_currency', 'EUR');
     }
 }

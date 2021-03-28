@@ -103,7 +103,7 @@ class BudgetLimitController extends Controller
             }
         );
 
-        return view('budgets.budget-limits.create', compact('start', 'end', 'currencies', 'budget'));
+        return prefixView('budgets.budget-limits.create', compact('start', 'end', 'currencies', 'budget'));
     }
 
     /**
@@ -161,8 +161,6 @@ class BudgetLimitController extends Controller
 
         if ($request->expectsJson()) {
             $array = $limit->toArray();
-
-
             // add some extra meta data:
             $spentArr                  = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, null, new Collection([$budget]), $currency);
             $array['spent']            = $spentArr[$currency->id]['sum'] ?? '0';

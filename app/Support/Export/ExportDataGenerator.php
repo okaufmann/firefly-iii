@@ -48,7 +48,10 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\User;
+use Illuminate\Support\Collection;
+use League\Csv\CannotInsertRecord;
 use League\Csv\Writer;
 
 /**
@@ -56,35 +59,24 @@ use League\Csv\Writer;
  */
 class ExportDataGenerator
 {
-    /** @var Carbon */
-    private $end;
-    /** @var bool */
-    private $exportTransactions;
-    /** @var Carbon */
-    private $start;
-    /** @var bool */
-    private $exportAccounts;
-    /** @var bool */
-    private $exportBudgets;
-    /** @var bool */
-    private $exportCategories;
-    /** @var bool */
-    private $exportTags;
-    /** @var bool */
-    private $exportRecurring;
-    /** @var bool */
-    private $exportRules;
-    /** @var bool */
-    private $exportBills;
-    /** @var bool */
-    private $exportPiggies;
-
-    /** @var User */
-    private $user;
+    private Collection $accounts;
+    private Carbon     $end;
+    private bool       $exportAccounts;
+    private bool       $exportBills;
+    private bool       $exportBudgets;
+    private bool       $exportCategories;
+    private bool       $exportPiggies;
+    private bool       $exportRecurring;
+    private bool       $exportRules;
+    private bool       $exportTags;
+    private bool       $exportTransactions;
+    private Carbon     $start;
+    private User       $user;
 
     public function __construct()
     {
-        $this->start = today(config('app.timezone'));
+        $this->accounts = new Collection;
+        $this->start    = today(config('app.timezone'));
         $this->start->subYear();
         $this->end                = today(config('app.timezone'));
         $this->exportTransactions = false;
@@ -99,16 +91,8 @@ class ExportDataGenerator
     }
 
     /**
-     * @param User $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-    }
-
-    /**
      * @return array
-     * @throws \League\Csv\CannotInsertRecord
+     * @throws CannotInsertRecord
      */
     public function export(): array
     {
@@ -142,150 +126,6 @@ class ExportDataGenerator
         }
 
         return $return;
-    }
-
-    /**
-     * @param bool $exportAccounts
-     */
-    public function setExportAccounts(bool $exportAccounts): void
-    {
-        $this->exportAccounts = $exportAccounts;
-    }
-
-    /**
-     * @param bool $exportBudgets
-     */
-    public function setExportBudgets(bool $exportBudgets): void
-    {
-        $this->exportBudgets = $exportBudgets;
-    }
-
-    /**
-     * @param bool $exportCategories
-     */
-    public function setExportCategories(bool $exportCategories): void
-    {
-        $this->exportCategories = $exportCategories;
-    }
-
-    /**
-     * @param bool $exportTags
-     */
-    public function setExportTags(bool $exportTags): void
-    {
-        $this->exportTags = $exportTags;
-    }
-
-    /**
-     * @param bool $exportRecurring
-     */
-    public function setExportRecurring(bool $exportRecurring): void
-    {
-        $this->exportRecurring = $exportRecurring;
-    }
-
-    /**
-     * @param bool $exportRules
-     */
-    public function setExportRules(bool $exportRules): void
-    {
-        $this->exportRules = $exportRules;
-    }
-
-    /**
-     * @param bool $exportBills
-     */
-    public function setExportBills(bool $exportBills): void
-    {
-        $this->exportBills = $exportBills;
-    }
-
-    /**
-     * @param bool $exportPiggies
-     */
-    public function setExportPiggies(bool $exportPiggies): void
-    {
-        $this->exportPiggies = $exportPiggies;
-    }
-
-    /**
-     * @param Carbon $end
-     */
-    public function setEnd(Carbon $end): void
-    {
-        $this->end = $end;
-    }
-
-    /**
-     * @param bool $exportTransactions
-     */
-    public function setExportTransactions(bool $exportTransactions): void
-    {
-        $this->exportTransactions = $exportTransactions;
-    }
-
-    /**
-     * @param Carbon $start
-     */
-    public function setStart(Carbon $start): void
-    {
-        $this->start = $start;
-    }
-
-    /**
-     * @return string
-     */
-    private function exportRules(): string
-    {
-        $header    = ['user_id', 'rule_id', 'row_contains', 'created_at', 'updated_at', 'group_id', 'group_name', 'title', 'description', 'order', 'active',
-                      'stop_processing', 'strict', 'trigger_type', 'trigger_value', 'trigger_order', 'trigger_active', 'trigger_stop_processing', 'action_type',
-                      'action_value', 'action_order', 'action_active', 'action_stop_processing',];
-        $ruleRepos = app(RuleRepositoryInterface::class);
-        $ruleRepos->setUser($this->user);
-        $rules   = $ruleRepos->getAll();
-        $records = [];
-        /** @var Rule $rule */
-        foreach ($rules as $rule) {
-            $records[] = [
-                $this->user->id, $rule->id, 'rule',
-                $rule->created_at->toAtomString(), $rule->updated_at->toAtomString(),
-                $rule->ruleGroup->id, $rule->ruleGroup->name,
-                $rule->title, $rule->description, $rule->order, $rule->active, $rule->stop_processing, $rule->strict,
-            ];
-            /** @var RuleTrigger $trigger */
-            foreach ($rule->ruleTriggers as $trigger) {
-                $records[] = [
-                    $this->user->id, $rule->id, 'trigger',
-                    null, null,
-                    null, null,
-                    null, null, null, null, null, null,
-                    $trigger->trigger_type, $trigger->trigger_value, $trigger->order, $trigger->active, $trigger->stop_processing,
-                ];
-            }
-
-            /** @var RuleAction $action */
-            foreach ($rule->ruleActions as $action) {
-                $records[] = [
-                    $this->user->id, $rule->id, 'action',
-                    null, null,
-                    null, null,
-                    null, null, null, null, null, null,
-                    null, null, null, null, null,
-                    $action->action_type, $action->action_value, $action->order, $action->active, $action->stop_processing,
-                ];
-            }
-        }
-
-        //load the CSV document from a string
-        $csv = Writer::createFromString('');
-
-        //insert the header
-        $csv->insertOne($header);
-
-        //insert all the records
-        $csv->insertAll($records);
-
-        return $csv->getContent(); //returns the CSV document as a string
     }
 
     /**
@@ -381,7 +221,7 @@ class ExportDataGenerator
 
     /**
      * @return string
-     * @throws \League\Csv\CannotInsertRecord
+     * @throws CannotInsertRecord
      */
     private function exportBudgets(): string
     {
@@ -505,7 +345,7 @@ class ExportDataGenerator
                 $currency ? $currency->code : null,
                 $piggy->targetamount,
                 $repetition ? $repetition->currentamount : null,
-                $piggy->startdate->format('Y-m-d'),
+                $piggy->startdate ? $piggy->startdate->format('Y-m-d') : null,
                 $piggy->targetdate ? $piggy->targetdate->format('Y-m-d') : null,
                 $piggy->order,
                 $piggy->active,
@@ -614,6 +454,62 @@ class ExportDataGenerator
     /**
      * @return string
      */
+    private function exportRules(): string
+    {
+        $header    = ['user_id', 'rule_id', 'row_contains', 'created_at', 'updated_at', 'group_id', 'group_name', 'title', 'description', 'order', 'active',
+                      'stop_processing', 'strict', 'trigger_type', 'trigger_value', 'trigger_order', 'trigger_active', 'trigger_stop_processing', 'action_type',
+                      'action_value', 'action_order', 'action_active', 'action_stop_processing',];
+        $ruleRepos = app(RuleRepositoryInterface::class);
+        $ruleRepos->setUser($this->user);
+        $rules   = $ruleRepos->getAll();
+        $records = [];
+        /** @var Rule $rule */
+        foreach ($rules as $rule) {
+            $records[] = [
+                $this->user->id, $rule->id, 'rule',
+                $rule->created_at->toAtomString(), $rule->updated_at->toAtomString(),
+                $rule->ruleGroup->id, $rule->ruleGroup->name,
+                $rule->title, $rule->description, $rule->order, $rule->active, $rule->stop_processing, $rule->strict,
+            ];
+            /** @var RuleTrigger $trigger */
+            foreach ($rule->ruleTriggers as $trigger) {
+                $records[] = [
+                    $this->user->id, $rule->id, 'trigger',
+                    null, null,
+                    null, null,
+                    null, null, null, null, null, null,
+                    $trigger->trigger_type, $trigger->trigger_value, $trigger->order, $trigger->active, $trigger->stop_processing,
+                ];
+            }
+
+            /** @var RuleAction $action */
+            foreach ($rule->ruleActions as $action) {
+                $records[] = [
+                    $this->user->id, $rule->id, 'action',
+                    null, null,
+                    null, null,
+                    null, null, null, null, null, null,
+                    null, null, null, null, null,
+                    $action->action_type, $action->action_value, $action->order, $action->active, $action->stop_processing,
+                ];
+            }
+        }
+
+        //load the CSV document from a string
+        $csv = Writer::createFromString('');
+
+        //insert the header
+        $csv->insertOne($header);
+
+        //insert all the records
+        $csv->insertAll($records);
+
+        return $csv->getContent(); //returns the CSV document as a string
+    }
+
+    /**
+     * @return string
+     */
     private function exportTags(): string
     {
         $header = ['user_id', 'tag_id', 'created_at', 'updated_at', 'tag', 'date', 'description', 'latitude', 'longitude', 'zoom_level'];
@@ -656,18 +552,33 @@ class ExportDataGenerator
     private function exportTransactions(): string
     {
         // TODO better place for keys?
-        $header    = ['user_id', 'group_id', 'journal_id', 'created_at', 'updated_at', 'group_title', 'type', 'amount', 'foreign_amount', 'currency_code',
-                      'foreign_currency_code', 'description', 'date', 'source_name', 'source_iban', 'source_type', 'destination_name', 'destination_iban',
-                      'destination_type', 'reconciled', 'category', 'budget', 'bill', 'tags', 'notes'];
+        $header = ['user_id', 'group_id', 'journal_id', 'created_at', 'updated_at', 'group_title', 'type', 'amount', 'foreign_amount', 'currency_code',
+                   'foreign_currency_code', 'description', 'date', 'source_name', 'source_iban', 'source_type', 'destination_name', 'destination_iban',
+                   'destination_type', 'reconciled', 'category', 'budget', 'bill', 'tags', 'notes',
+                   // all optional meta fields:
+        ];
+
+        $metaFields = config('firefly.journal_meta_fields');
+        $header     = array_merge($header, $metaFields);
+
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user);
         $collector->setRange($this->start, $this->end)->withAccountInformation()->withCategoryInformation()->withBillInformation()
                   ->withBudgetInformation()->withTagInformation()->withNotes();
+        if (0 !== $this->accounts->count()) {
+            $collector->setAccounts($this->accounts);
+        }
+
         $journals = $collector->getExtractedJournals();
+
+        // get repository for meta data:
+        $repository = app(TransactionGroupRepositoryInterface::class);
+        $repository->setUser($this->user);
 
         $records = [];
         /** @var array $journal */
         foreach ($journals as $journal) {
+            $metaData  = $repository->getMetaFields($journal['transaction_journal_id'], $metaFields);
             $records[] = [
                 $journal['user_id'],
                 $journal['transaction_group_id'],
@@ -694,6 +605,40 @@ class ExportDataGenerator
                 $journal['bill_name'],
                 $this->mergeTags($journal['tags']),
                 $journal['notes'],
+
+                // export also the optional fields (ALL)
+
+                // sepa
+                $metaData['sepa_cc'],
+                $metaData['sepa_ct_op'],
+                $metaData['sepa_ct_id'],
+                $metaData['sepa_db'],
+                $metaData['sepa_country'],
+                $metaData['sepa_ep'],
+                $metaData['sepa_ci'],
+                $metaData['sepa_batch_id'],
+                $metaData['external_uri'],
+
+                // dates
+                $metaData['interest_date'],
+                $metaData['book_date'],
+                $metaData['process_date'],
+                $metaData['due_date'],
+                $metaData['payment_date'],
+                $metaData['invoice_date'],
+
+                // others
+                $metaData['recurrence_id'],
+                $metaData['internal_reference'],
+                $metaData['bunq_payment_id'],
+                $metaData['import_hash'],
+                $metaData['import_hash_v2'],
+                $metaData['external_id'],
+                $metaData['original_source'],
+
+                // recurring transactions
+                $metaData['recurrence_total'],
+                $metaData['recurrence_count'],
             ];
 
         }
@@ -726,6 +671,110 @@ class ExportDataGenerator
         }
 
         return implode(',', $smol);
+    }
+
+    /**
+     * @param Collection $accounts
+     */
+    public function setAccounts(Collection $accounts): void
+    {
+        $this->accounts = $accounts;
+    }
+
+    /**
+     * @param Carbon $end
+     */
+    public function setEnd(Carbon $end): void
+    {
+        $this->end = $end;
+    }
+
+    /**
+     * @param bool $exportAccounts
+     */
+    public function setExportAccounts(bool $exportAccounts): void
+    {
+        $this->exportAccounts = $exportAccounts;
+    }
+
+    /**
+     * @param bool $exportBills
+     */
+    public function setExportBills(bool $exportBills): void
+    {
+        $this->exportBills = $exportBills;
+    }
+
+    /**
+     * @param bool $exportBudgets
+     */
+    public function setExportBudgets(bool $exportBudgets): void
+    {
+        $this->exportBudgets = $exportBudgets;
+    }
+
+    /**
+     * @param bool $exportCategories
+     */
+    public function setExportCategories(bool $exportCategories): void
+    {
+        $this->exportCategories = $exportCategories;
+    }
+
+    /**
+     * @param bool $exportPiggies
+     */
+    public function setExportPiggies(bool $exportPiggies): void
+    {
+        $this->exportPiggies = $exportPiggies;
+    }
+
+    /**
+     * @param bool $exportRecurring
+     */
+    public function setExportRecurring(bool $exportRecurring): void
+    {
+        $this->exportRecurring = $exportRecurring;
+    }
+
+    /**
+     * @param bool $exportRules
+     */
+    public function setExportRules(bool $exportRules): void
+    {
+        $this->exportRules = $exportRules;
+    }
+
+    /**
+     * @param bool $exportTags
+     */
+    public function setExportTags(bool $exportTags): void
+    {
+        $this->exportTags = $exportTags;
+    }
+
+    /**
+     * @param bool $exportTransactions
+     */
+    public function setExportTransactions(bool $exportTransactions): void
+    {
+        $this->exportTransactions = $exportTransactions;
+    }
+
+    /**
+     * @param Carbon $start
+     */
+    public function setStart(Carbon $start): void
+    {
+        $this->start = $start;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
     }
 
 }

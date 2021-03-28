@@ -1,4 +1,4 @@
-{% extends "./layout/auth" %}
+{% extends './v2/layout/auth' %}
 {% block content %}
     {# alerts here #}
 
@@ -18,15 +18,10 @@
         </div>
 
     {% endif %}
-
-
-
-
     {# default header #}
     <div class="login-box">
         <div class="login-logo">
-            <img src="v2/images/firefly-iii-logo.png" alt="Firefly III" width="40"/>
-            <a href="{{ route('index') }}"><b>Firefly</b>III</a>
+            <img src="v2/images/firefly-iii-logo-new.png" alt="Firefly III" width="90"/><br />
         </div>
 
         <!-- /.login-logo -->
@@ -105,7 +100,7 @@
         </div>
     </div>
 
-    {% include 'partials.auth.password-modal' %}
+    {% include 'v2.partials.auth.password-modal' %}
 
     <!-- /.login-box -->
 {% endblock %}

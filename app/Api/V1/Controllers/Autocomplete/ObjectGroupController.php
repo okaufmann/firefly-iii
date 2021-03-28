@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
-
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
 use FireflyIII\Models\ObjectGroup;
@@ -37,7 +36,6 @@ use Illuminate\Http\JsonResponse;
 class ObjectGroupController extends Controller
 {
     private ObjectGroupRepositoryInterface $repository;
-
 
     /**
      * CurrencyController constructor.
@@ -71,7 +69,7 @@ class ObjectGroupController extends Controller
         /** @var ObjectGroup $account */
         foreach ($result as $objectGroup) {
             $return[] = [
-                'id'    => $objectGroup->id,
+                'id'    => (string)$objectGroup->id,
                 'name'  => $objectGroup->title,
                 'title' => $objectGroup->title,
             ];

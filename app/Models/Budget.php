@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use Carbon\Carbon;
 use Eloquent;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -32,32 +32,36 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class Budget.
+ * FireflyIII\Models\Budget
  *
- * @property int                                                                                   $id
- * @property string                                                                                $name
- * @property bool                                                               $active
- * @property int                                                                $user_id
- * @property-read string                                                        $email
- * @property bool                                                               encrypted
- * @property Collection                                                         budgetlimits
- * @property int                                                                $order
- * @property Carbon                                                             created_at
- * @property Carbon                                                             updated_at
- * @property User                                                               $user
- * @property \Illuminate\Support\Carbon|null                                    $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[] $transactionJournals
- * @property-read \Illuminate\Database\Eloquent\Collection|Transaction[]        $transactions
- * @method static bool|null forceDelete()
+ * @property int                                  $id
+ * @property Carbon|null      $created_at
+ * @property Carbon|null      $updated_at
+ * @property Carbon|null      $deleted_at
+ * @property int                                  $user_id
+ * @property string                               $name
+ * @property bool                                 $active
+ * @property bool                                 $encrypted
+ * @property int                                  $order
+ * @property-read Collection|Attachment[]         $attachments
+ * @property-read int|null                        $attachments_count
+ * @property-read Collection|AutoBudget[]         $autoBudgets
+ * @property-read int|null                        $auto_budgets_count
+ * @property-read Collection|BudgetLimit[]        $budgetlimits
+ * @property-read int|null                        $budgetlimits_count
+ * @property-read Collection|TransactionJournal[] $transactionJournals
+ * @property-read int|null                        $transaction_journals_count
+ * @property-read Collection|Transaction[]        $transactions
+ * @property-read int|null                        $transactions_count
+ * @property-read User                            $user
  * @method static \Illuminate\Database\Eloquent\Builder|Budget newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Budget newQuery()
  * @method static Builder|Budget onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Budget query()
- * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|Budget whereActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Budget whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Budget whereDeletedAt($value)
@@ -70,17 +74,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Budget withTrashed()
  * @method static Builder|Budget withoutTrashed()
  * @mixin Eloquent
- * @property-read \Illuminate\Database\Eloquent\Collection|Attachment[] $attachments
- * @property-read int|null                                              $attachments_count
- * @property-read \Illuminate\Database\Eloquent\Collection|AutoBudget[] $autoBudgets
- * @property-read int|null                                              $auto_budgets_count
- * @property-read int|null                                              $budgetlimits_count
- * @property-read int|null                                              $transaction_journals_count
- * @property-read int|null                                              $transactions_count
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property bool $encrypted
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\BudgetLimit[] $budgetlimits
  */
 class Budget extends Model
 {
@@ -109,13 +102,13 @@ class Budget extends Model
      *
      * @param string $value
      *
-     * @throws NotFoundHttpException
      * @return Budget
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): Budget
     {
         if (auth()->check()) {
-            $budgetId = (int) $value;
+            $budgetId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
             /** @var Budget $budget */
@@ -125,6 +118,15 @@ class Budget extends Model
             }
         }
         throw new NotFoundHttpException;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return MorphMany
+     */
+    public function attachments(): MorphMany
+    {
+        return $this->morphMany(Attachment::class, 'attachable');
     }
 
     /**
@@ -143,16 +145,6 @@ class Budget extends Model
     public function budgetlimits(): HasMany
     {
         return $this->hasMany(BudgetLimit::class);
-    }
-
-
-    /**
-     * @codeCoverageIgnore
-     * @return MorphMany
-     */
-    public function attachments(): MorphMany
-    {
-        return $this->morphMany(Attachment::class, 'attachable');
     }
 
     /**

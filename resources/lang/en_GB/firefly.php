@@ -33,10 +33,13 @@ return [
     'clone'                                               => 'Clone',
     'last_seven_days'                                     => 'Last seven days',
     'last_thirty_days'                                    => 'Last thirty days',
+    'last_180_days'                                       => 'Last 180 days',
+    'YTD'                                                 => 'YTD',
     'welcome_back'                                        => 'What\'s playing?',
     'everything'                                          => 'Everything',
     'today'                                               => 'today',
     'customRange'                                         => 'Custom range',
+    'date_range'                                          => 'Date range',
     'apply'                                               => 'Apply',
     'select_date'                                         => 'Select date..',
     'cancel'                                              => 'Cancel',
@@ -53,12 +56,13 @@ return [
     'Opening balance'                                     => 'Opening balance',
     'create_new_stuff'                                    => 'Create new stuff',
     'new_withdrawal'                                      => 'New withdrawal',
-    'create_new_transaction'                              => 'Create new transaction',
+    'create_new_transaction'                              => 'Create a new transaction',
     'sidebar_frontpage_create'                            => 'Create',
     'new_transaction'                                     => 'New transaction',
     'no_rules_for_bill'                                   => 'This bill has no rules associated to it.',
     'go_to_asset_accounts'                                => 'View your asset accounts',
     'go_to_budgets'                                       => 'Go to your budgets',
+    'go_to_withdrawals'                                   => 'Go to your withdrawals',
     'clones_journal_x'                                    => 'This transaction is a clone of ":description" (#:id)',
     'go_to_categories'                                    => 'Go to your categories',
     'go_to_bills'                                         => 'Go to your bills',
@@ -217,6 +221,12 @@ return [
     'expected_total'                                      => 'expected total',
     'reconciliation_account_name'                         => ':name reconciliation (:currency)',
     'saved'                                               => 'Saved',
+    'advanced_options'                                    => 'Advanced options',
+    'advanced_options_explain'                            => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',
+    'here_be_dragons'                                     => 'Hic sunt dracones',
+
+    // Webhooks
+    'webhooks'                                            => 'Webhooks',
 
     // API access
     'authorization_request'                               => 'Firefly III v:version Authorisation Request',
@@ -234,6 +244,8 @@ return [
     'all_source_accounts'                                 => 'Source accounts',
     'back_to_index'                                       => 'Back to the index',
     'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
+    'external_url'                                        => 'External URL',
+    'internal_reference'                                  => 'Internal reference',
 
     // check for updates:
     'update_check_title'                                  => 'Check for updates',
@@ -263,12 +275,12 @@ return [
 
     // search
     'search'                                              => 'Search',
-    'long_query_warning'                                  => 'Your search query is very long, and may not work as expected.',
     'search_query'                                        => 'Query',
     'search_found_transactions'                           => 'Firefly III found :count transaction in :time seconds.|Firefly III found :count transactions in :time seconds.',
     'search_found_more_transactions'                      => 'Firefly III found more than :count transactions in :time seconds.',
     'search_for_query'                                    => 'Firefly III is searching for transactions with all of these words in them: <span class="text-info">:query</span>',
     'search_modifier_date_is'                             => 'Transaction date is ":value"',
+    'search_modifier_id'                                  => 'Transaction ID is ":value"',
     'search_modifier_date_before'                         => 'Transaction date is before or on ":value"',
     'search_modifier_date_after'                          => 'Transaction date is after or on ":value"',
     'search_modifier_created_on'                          => 'Transaction was created on ":value"',
@@ -411,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Apply rule ":title" to a selection of your transactions',
     'apply_rule_selection_intro'                          => 'Rules like ":title" are normally only applied to new or updated transactions, but you can tell Firefly III to run it on a selection of your existing transactions. This can be useful when you have updated a rule and you need the changes to be applied to all of your other transactions.',
     'include_transactions_from_accounts'                  => 'Include transactions from these accounts',
-    'applied_rule_selection'                              => 'Rule ":title" has been applied to your selection.',
+    'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
     'execute'                                             => 'Execute',
     'apply_rule_group_selection'                          => 'Apply rule group ":title" to a selection of your transactions',
     'apply_rule_group_selection_intro'                    => 'Rule groups like ":title" are normally only applied to new or updated transactions, but you can tell Firefly III to run all the rules in this group on a selection of your existing transactions. This can be useful when you have updated a group of rules and you need the changes to be applied to all of your other transactions.',
@@ -666,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Optional fields for transactions',
     'pref_optional_fields_transaction_help'     => 'By default not all fields are enabled when creating a new transaction (because of the clutter). Below, you can enable these fields if you think they could be useful for you. Of course, any field that is disabled, but already filled in, will be visible regardless of the setting.',
     'optional_tj_date_fields'                   => 'Date fields',
-    'optional_tj_business_fields'               => 'Business fields',
+    'optional_tj_other_fields'                  => 'Other fields',
     'optional_tj_attachment_fields'             => 'Attachment fields',
     'pref_optional_tj_interest_date'            => 'Interest date',
     'pref_optional_tj_book_date'                => 'Book date',
@@ -677,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Internal reference',
     'pref_optional_tj_notes'                    => 'Notes',
     'pref_optional_tj_attachments'              => 'Attachments',
-    'pref_optional_tj_external_uri'             => 'External URI',
+    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_location'                 => 'Location',
+    'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Dates',
     'optional_field_meta_business'              => 'Business',
     'optional_field_attachments'                => 'Attachments',
     'optional_field_meta_data'                  => 'Optional meta data',
-    'external_uri'                              => 'External URI',
+    'external_uri'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Delete data',
@@ -872,6 +886,7 @@ return [
     'create_new_deposit'                        => 'Create new deposit',
     'create_new_transfer'                       => 'Create new transfer',
     'create_new_asset'                          => 'Create new asset account',
+    'create_new_liabilities'                    => 'Create new liability',
     'create_new_expense'                        => 'Create new expense account',
     'create_new_revenue'                        => 'Create new revenue account',
     'create_new_piggy_bank'                     => 'Create new piggy bank',
@@ -915,6 +930,13 @@ return [
     'options'                                   => 'Options',
 
     // budgets:
+    'daily_budgets'                             => 'Daily budgets',
+    'weekly_budgets'                            => 'Weekly budgets',
+    'monthly_budgets'                           => 'Monthly budgets',
+    'quarterly_budgets'                         => 'Quarterly budgets',
+    'half_year_budgets'                         => 'Half-yearly budgets',
+    'yearly_budgets'                            => 'Yearly budgets',
+    'other_budgets'                             => 'Custom timed budgets',
     'budget_limit_not_in_range'                 => 'This amount applies from :start to :end:',
     'total_available_budget'                    => 'Total available budget (between :start and :end)',
     'total_available_budget_in_currency'        => 'Total available budget in :currency',
@@ -954,7 +976,6 @@ return [
     'available_amount_indication'               => 'Use these amounts to get an indication of what your total budget could be.',
     'suggested'                                 => 'Suggested',
     'average_between'                           => 'Average between :start and :end',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i> Usually you budget about :amount per day. This time it\'s :over_amount per day. Are you sure?',
     'transferred_in'                            => 'Transferred (in)',
     'transferred_away'                          => 'Transferred (away)',
     'auto_budget_none'                          => 'No auto-budget',
@@ -1003,6 +1024,7 @@ return [
     'list_inactive_rule'                        => 'inactive rule',
     'bill_edit_rules'                           => 'Firefly III will attempt to edit the rule related to this bill as well. If you\'ve edited this rule yourself however, Firefly III won\'t change anything.|Firefly III will attempt to edit the :count rules related to this bill as well. If you\'ve edited these rules yourself however, Firefly III won\'t change anything.',
     'bill_expected_date'                        => 'Expected :date',
+    'bill_paid_on'                              => 'Paid on {date}',
 
     // accounts:
     'inactive_account_link'                     => 'You have :count inactive (archived) account, which you can view on this separate page.|You have :count inactive (archived) accounts, which you can view on this separate page.',
@@ -1109,6 +1131,7 @@ return [
     'interest_calc_monthly'                     => 'Per month',
     'interest_calc_yearly'                      => 'Per year',
     'initial_balance_account'                   => 'Initial balance account of :account',
+    'list_options'                              => 'List options',
 
     // categories:
     'new_category'                              => 'New category',
@@ -1134,6 +1157,9 @@ return [
     'updated_withdrawal'                        => 'Updated withdrawal ":description"',
     'updated_deposit'                           => 'Updated deposit ":description"',
     'updated_transfer'                          => 'Updated transfer ":description"',
+    'no_changes_withdrawal'                     => 'Withdrawal ":description" was not changed.',
+    'no_changes_deposit'                        => 'Deposit ":description" was not changed.',
+    'no_changes_transfer'                       => 'Transfer ":description" was not changed.',
     'delete_withdrawal'                         => 'Delete withdrawal ":description"',
     'delete_deposit'                            => 'Delete deposit ":description"',
     'delete_transfer'                           => 'Delete transfer ":description"',
@@ -1214,7 +1240,12 @@ return [
     'journal_link_bill'                         => 'This transaction is linked to bill <a href=":route">:name</a>. To remove the connection, untick the checkbox. Use rules to connect it to another bill.',
     'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID} ("{title}")</a> has been stored.',
     'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
-    'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
+    'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> ("{title}") has been updated.',
+    'transaction_updated_no_changes'            => '<a href="transactions/show/{ID}">Transaction #{ID}</a> ("{title}") did not receive any changes.',
+    'first_split_decides'                       => 'The first split determines the value of this field',
+    'first_split_overrules_source'              => 'The first split may overrule the source account',
+    'first_split_overrules_destination'         => 'The first split may overrule the destination account',
+    'spent_x_of_y'                              => 'Spent {amount} of {total}',
 
     // new user:
     'welcome'                                   => 'Welcome to Firefly III!',
@@ -1253,6 +1284,9 @@ return [
     'per_day'                                   => 'Per day',
     'left_to_spend_per_day'                     => 'Left to spend per day',
     'bills_paid'                                => 'Bills paid',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Currency',
@@ -1321,6 +1355,7 @@ return [
     'automation'                                => 'Automation',
     'others'                                    => 'Others',
     'classification'                            => 'Classification',
+    'store_transaction'                         => 'Store transaction',
 
     // reports:
     'report_default'                            => 'Default financial report between :start and :end',
@@ -1441,6 +1476,8 @@ return [
     'journal-amount'                            => 'Current bill entry',
     'name'                                      => 'Name',
     'date'                                      => 'Date',
+    'date_and_time'                             => 'Date and time',
+    'time'                                      => 'Time',
     'paid'                                      => 'Paid',
     'unpaid'                                    => 'Unpaid',
     'day'                                       => 'Day',
@@ -1504,6 +1541,8 @@ return [
     'transaction_journal_information'  => 'Transaction information',
     'transaction_journal_meta'         => 'Meta information',
     'transaction_journal_more'         => 'More information',
+    'basic_journal_information'        => 'Basic transaction information',
+    'transaction_journal_extra'        => 'Extra information',
     'att_part_of_journal'              => 'Stored under ":journal"',
     'total_amount'                     => 'Total amount',
     'number_of_decimals'               => 'Number of decimals',

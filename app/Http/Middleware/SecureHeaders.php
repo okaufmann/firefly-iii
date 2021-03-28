@@ -39,8 +39,8 @@ class SecureHeaders
      * @param Request $request
      * @param Closure $next
      *
-     * @throws Exception
      * @return mixed
+     * @throws Exception
      */
     public function handle(Request $request, Closure $next)
     {
@@ -58,7 +58,10 @@ class SecureHeaders
             "base-uri 'self'",
             "font-src 'self' data:",
             "connect-src 'self'",
-            sprintf("img-src 'self' data: https://a.tile.openstreetmap.org https://b.tile.openstreetmap.org https://c.tile.openstreetmap.org https://api.tiles.mapbox.com %s", $trackingScriptSrc),
+            sprintf(
+                "img-src 'self' data: https://a.tile.openstreetmap.org https://b.tile.openstreetmap.org https://c.tile.openstreetmap.org https://api.tiles.mapbox.com %s",
+                $trackingScriptSrc
+            ),
             "manifest-src 'self'",
         ];
 
@@ -106,8 +109,8 @@ class SecureHeaders
      */
     private function getTrackingScriptSource(): string
     {
-        if ('' !== (string) config('firefly.tracker_site_id') && '' !== (string) config('firefly.tracker_url')) {
-            return (string) config('firefly.tracker_url');
+        if ('' !== (string)config('firefly.tracker_site_id') && '' !== (string)config('firefly.tracker_url')) {
+            return (string)config('firefly.tracker_url');
         }
 
         return '';

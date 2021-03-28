@@ -60,6 +60,7 @@ return [
     'less'                           => ':attribute must be less than 10,000,000',
     'active_url'                     => 'The :attribute is not a valid URL.',
     'after'                          => 'The :attribute must be a date after :date.',
+    'date_after'                     => 'The start date must be before the end date.',
     'alpha'                          => 'The :attribute may only contain letters.',
     'alpha_dash'                     => 'The :attribute may only contain letters, numbers, and dashes.',
     'alpha_num'                      => 'The :attribute may only contain letters and numbers.',
@@ -130,15 +131,19 @@ return [
     'current_target_amount'          => 'The current amount must be less than the target amount.',
     'unique_piggy_bank_for_user'     => 'The name of the piggy bank must be unique.',
     'unique_object_group'            => 'The group name must be unique',
+    'starts_with'                    => 'The value must start with :values.',
+    'unique_webhook'                 => 'You already have a webhook with these values.',
+    'unique_existing_webhook'        => 'You already have another webhook with these values.',
 
-    'secure_password'                => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password-security',
-    'valid_recurrence_rep_type'      => 'Invalid repetition type for recurring transactions.',
-    'valid_recurrence_rep_moment'    => 'Invalid repetition moment for this type of repetition.',
-    'invalid_account_info'           => 'Invalid account information.',
-    'attributes'                     => [
+    'secure_password'             => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password-security',
+    'valid_recurrence_rep_type'   => 'Invalid repetition type for recurring transactions.',
+    'valid_recurrence_rep_moment' => 'Invalid repetition moment for this type of repetition.',
+    'invalid_account_info'        => 'Invalid account information.',
+    'attributes'                  => [
         'email'                   => 'email address',
         'description'             => 'description',
         'amount'                  => 'amount',
+        'transactions.*.amount'   => 'transaction amount',
         'name'                    => 'name',
         'piggy_bank_id'           => 'piggy bank ID',
         'targetamount'            => 'target amount',
@@ -173,10 +178,12 @@ return [
     ],
 
     // validation of accounts:
-    'withdrawal_source_need_data'    => 'Need to get a valid source account ID and/or valid source account name to continue.',
-    'withdrawal_source_bad_data'     => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
-    'withdrawal_dest_need_data'      => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
-    'withdrawal_dest_bad_data'       => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+    'withdrawal_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
+    'withdrawal_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'withdrawal_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'withdrawal_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+
+    'generic_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
     'deposit_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
@@ -205,5 +212,5 @@ return [
 
     'amount_required_for_auto_budget' => 'The amount is required.',
     'auto_budget_amount_positive'     => 'The amount must be more than zero.',
-    'auto_budget_period_mandatory' => 'The auto budget period is a mandatory field.',
+    'auto_budget_period_mandatory'    => 'The auto budget period is a mandatory field.',
 ];

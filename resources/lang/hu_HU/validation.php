@@ -60,6 +60,7 @@ return [
     'less'                           => ':attribute kisebbnek kell lennie 10,000,000-nél',
     'active_url'                     => ':attribute nem egy érvényes URL.',
     'after'                          => ':attribute egy :date utáni dátum kell legyen.',
+    'date_after'                     => 'The start date must be before the end date.',
     'alpha'                          => ':attribute csak betűket tartalmazhat.',
     'alpha_dash'                     => ':attribute csak számokat, betűket és kötőjeleket tartalmazhat.',
     'alpha_num'                      => ':attribute csak betűket és számokat tartalmazhat.',
@@ -130,15 +131,19 @@ return [
     'current_target_amount'          => 'A megadott értéknek kevesebbnek kell lennie, mint a célérték.',
     'unique_piggy_bank_for_user'     => 'A malacpersely nevének egyedinek kell lennie.',
     'unique_object_group'            => 'Csoport neve már foglalt',
+    'starts_with'                    => 'The value must start with :values.',
+    'unique_webhook'                 => 'You already have a webhook with these values.',
+    'unique_existing_webhook'        => 'You already have another webhook with these values.',
 
-    'secure_password'                => 'Ez nem biztonságos jelszó. Kérlek próbáld meg újra. További információért lásd: https://bit.ly/FF3-password-security',
-    'valid_recurrence_rep_type'      => 'Érvénytelen ismétléstípus az ismétlődő tranzakciókhoz.',
-    'valid_recurrence_rep_moment'    => 'Érvénytelen ismétlési időpont ehhez az ismétléstípushoz.',
-    'invalid_account_info'           => 'Érvénytelen számlainformáció.',
-    'attributes'                     => [
+    'secure_password'             => 'Ez nem biztonságos jelszó. Kérlek próbáld meg újra. További információért lásd: https://bit.ly/FF3-password-security',
+    'valid_recurrence_rep_type'   => 'Érvénytelen ismétléstípus az ismétlődő tranzakciókhoz.',
+    'valid_recurrence_rep_moment' => 'Érvénytelen ismétlési időpont ehhez az ismétléstípushoz.',
+    'invalid_account_info'        => 'Érvénytelen számlainformáció.',
+    'attributes'                  => [
         'email'                   => 'email cím',
         'description'             => 'leírás',
         'amount'                  => 'összeg',
+        'transactions.*.amount'   => 'tranzakció összege',
         'name'                    => 'név',
         'piggy_bank_id'           => 'malacpersely azonosító',
         'targetamount'            => 'cél összeg',
@@ -173,10 +178,12 @@ return [
     ],
 
     // validation of accounts:
-    'withdrawal_source_need_data'    => 'Egy érvényes forrásszámla azonosító és/vagy egy érvényes forrásszámla név kell a folytatáshoz.',
-    'withdrawal_source_bad_data'     => 'Nem található érvényes forrásszámla ":id" azonosító vagy ":name" név keresésekor.',
-    'withdrawal_dest_need_data'      => 'Egy érvényes célszámla azonosító és/vagy egy érvényes célszámla név kell a folytatáshoz.',
-    'withdrawal_dest_bad_data'       => 'Nem található érvényes célszámla ":id" azonosító vagy ":name" név keresésekor.',
+    'withdrawal_source_need_data' => 'Egy érvényes forrásszámla azonosító és/vagy egy érvényes forrásszámla név kell a folytatáshoz.',
+    'withdrawal_source_bad_data'  => 'Nem található érvényes forrásszámla ":id" azonosító vagy ":name" név keresésekor.',
+    'withdrawal_dest_need_data'   => 'Egy érvényes célszámla azonosító és/vagy egy érvényes célszámla név kell a folytatáshoz.',
+    'withdrawal_dest_bad_data'    => 'Nem található érvényes célszámla ":id" azonosító vagy ":name" név keresésekor.',
+
+    'generic_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Egy érvényes forrásszámla azonosító és/vagy egy érvényes forrásszámla név kell a folytatáshoz.',
     'deposit_source_bad_data'  => 'Nem található érvényes forrásszámla ":id" azonosító vagy ":name" név keresésekor.',
@@ -205,5 +212,5 @@ return [
 
     'amount_required_for_auto_budget' => 'Az összeg kötelező.',
     'auto_budget_amount_positive'     => 'Az értéknek nagyobbnak kell lennie nullánál.',
-    'auto_budget_period_mandatory' => 'Az auto költségvetési periódus kötelező mező.',
+    'auto_budget_period_mandatory'    => 'Az auto költségvetési periódus kötelező mező.',
 ];

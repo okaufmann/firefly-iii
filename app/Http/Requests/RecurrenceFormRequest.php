@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Requests;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Rules\ValidRecurrenceRepetitionType;
@@ -123,6 +124,19 @@ class RecurrenceFormRequest extends FormRequest
                 break;
         }
 
+        // replace category name with a new category:
+        $factory = app(CategoryFactory::class);
+        $factory->setUser(auth()->user());
+        foreach ($return['transactions'] as $index => $transaction) {
+            $categoryName = $transaction['category_name'] ?? null;
+            if (null !== $categoryName) {
+                $category = $factory->findOrCreate(null, $categoryName);
+                if (null !== $category) {
+                    $return['transactions'][$index]['category_id'] = $category->id;
+                }
+            }
+        }
+
         return $return;
     }
 
@@ -158,8 +172,6 @@ class RecurrenceFormRequest extends FormRequest
         }
 
         return $return;
-
-
     }
 
     /**
@@ -310,8 +322,6 @@ class RecurrenceFormRequest extends FormRequest
                 $destinationId = (int)$data['destination_id'];
                 break;
         }
-
-
         // validate source account.
         $validSource = $accountValidator->validateSource($sourceId, null, null);
 

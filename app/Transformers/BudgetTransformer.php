@@ -22,23 +22,20 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Transformers;
-
-
 use FireflyIII\Models\AutoBudget;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use Illuminate\Support\Collection;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class BudgetTransformer
  */
 class BudgetTransformer extends AbstractTransformer
 {
-    /** @var OperationsRepositoryInterface */
-    private $opsRepository;
-    /** @var BudgetRepositoryInterface */
-    private $repository;
+    private OperationsRepositoryInterface $opsRepository;
+    private BudgetRepositoryInterface     $repository;
 
     /**
      * BudgetTransformer constructor.
@@ -49,6 +46,7 @@ class BudgetTransformer extends AbstractTransformer
     {
         $this->opsRepository = app(OperationsRepositoryInterface::class);
         $this->repository    = app(BudgetRepositoryInterface::class);
+        $this->parameters    = new ParameterBag();
     }
 
     /**
@@ -66,7 +64,7 @@ class BudgetTransformer extends AbstractTransformer
         $autoBudget = $this->repository->getAutoBudget($budget);
         $spent      = [];
         if (null !== $start && null !== $end) {
-            $spent  = $this->beautify($this->opsRepository->sumExpenses($start, $end, null, new Collection([$budget])));
+            $spent = $this->beautify($this->opsRepository->sumExpenses($start, $end, null, new Collection([$budget])));
         }
 
         $abCurrencyId   = null;
@@ -81,15 +79,15 @@ class BudgetTransformer extends AbstractTransformer
         ];
 
         if (null !== $autoBudget) {
-            $abCurrencyId   = (int) $autoBudget->transactionCurrency->id;
+            $abCurrencyId   = (string)$autoBudget->transactionCurrency->id;
             $abCurrencyCode = $autoBudget->transactionCurrency->code;
             $abType         = $types[$autoBudget->auto_budget_type];
-            $abAmount       = number_format((float) $autoBudget->amount, $autoBudget->transactionCurrency->decimal_places, '.', '');
+            $abAmount       = number_format((float)$autoBudget->amount, $autoBudget->transactionCurrency->decimal_places, '.', '');
             $abPeriod       = $autoBudget->period;
         }
 
         return [
-            'id'                        => (int)$budget->id,
+            'id'                        => (string)$budget->id,
             'created_at'                => $budget->created_at->toAtomString(),
             'updated_at'                => $budget->updated_at->toAtomString(),
             'active'                    => $budget->active,
@@ -118,7 +116,7 @@ class BudgetTransformer extends AbstractTransformer
     {
         $return = [];
         foreach ($array as $data) {
-            $data['sum'] = number_format((float) $data['sum'], (int) $data['currency_decimal_places'], '.', '');
+            $data['sum'] = number_format((float)$data['sum'], (int)$data['currency_decimal_places'], '.', '');
             $return[]    = $data;
         }
 

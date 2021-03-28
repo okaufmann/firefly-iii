@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
-
 use Exception;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournalMeta;
@@ -48,7 +47,6 @@ class MigrateJournalNotes extends Command
      * @var string
      */
     protected $signature = 'firefly-iii:migrate-notes {--F|force : Force the execution of this command.}';
-
 
     /**
      * Execute the console command.
@@ -111,12 +109,11 @@ class MigrateJournalNotes extends Command
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool) $configVar->data;
+            return (bool)$configVar->data;
         }
 
         return false; // @codeCoverageIgnore
     }
-
 
     /**
      *

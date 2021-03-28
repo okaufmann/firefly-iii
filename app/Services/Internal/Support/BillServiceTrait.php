@@ -32,6 +32,7 @@ use Log;
 
 /**
  * Trait BillServiceTrait
+ *
  * @codeCoverageIgnore
  */
 trait BillServiceTrait
@@ -60,8 +61,6 @@ trait BillServiceTrait
             $ruleAction->save();
         }
     }
-
-
     /**
      * @param Bill   $bill
      * @param string $note

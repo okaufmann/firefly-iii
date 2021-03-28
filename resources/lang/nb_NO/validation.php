@@ -60,6 +60,7 @@ return [
     'less'                           => ':attribute må være mindre enn 10,000,000',
     'active_url'                     => ':attribute er ikke en gyldig URL.',
     'after'                          => ':attribute må være en dato etter :date.',
+    'date_after'                     => 'The start date must be before the end date.',
     'alpha'                          => ':attribute kan kun inneholde bokstaver.',
     'alpha_dash'                     => ':attribute kan bare inneholde bokstaver, tall og bindestreker.',
     'alpha_num'                      => ':attribute kan bare inneholde bokstaver og tall.',
@@ -130,15 +131,19 @@ return [
     'current_target_amount'          => 'The current amount must be less than the target amount.',
     'unique_piggy_bank_for_user'     => 'Navnet på sparegris må være unik.',
     'unique_object_group'            => 'The group name must be unique',
+    'starts_with'                    => 'The value must start with :values.',
+    'unique_webhook'                 => 'You already have a webhook with these values.',
+    'unique_existing_webhook'        => 'You already have another webhook with these values.',
 
-    'secure_password'                => 'Dette er ikke et sikkert passord. Vennligst prøv igjen. For mer informasjon, se https://bit.ly/FF3-password-security',
-    'valid_recurrence_rep_type'      => 'Ugyldig repetisjons type for gjentakende transaksjoner.',
-    'valid_recurrence_rep_moment'    => 'Ugyldig repetisjons tid for denne type repetisjon.',
-    'invalid_account_info'           => 'Ugyldig konto informasjon.',
-    'attributes'                     => [
+    'secure_password'             => 'Dette er ikke et sikkert passord. Vennligst prøv igjen. For mer informasjon, se https://bit.ly/FF3-password-security',
+    'valid_recurrence_rep_type'   => 'Ugyldig repetisjons type for gjentakende transaksjoner.',
+    'valid_recurrence_rep_moment' => 'Ugyldig repetisjons tid for denne type repetisjon.',
+    'invalid_account_info'        => 'Ugyldig konto informasjon.',
+    'attributes'                  => [
         'email'                   => 'epostadresse',
         'description'             => 'beskrivelse',
         'amount'                  => 'beløp',
+        'transactions.*.amount'   => 'transaction amount',
         'name'                    => 'navn',
         'piggy_bank_id'           => 'sparegris ID',
         'targetamount'            => 'målbeløp',
@@ -173,10 +178,12 @@ return [
     ],
 
     // validation of accounts:
-    'withdrawal_source_need_data'    => 'Trenger en gyldig kilde konto-ID og/eller gyldig kilde kontonavn for å fortsette.',
-    'withdrawal_source_bad_data'     => 'Finner ikke en gyldig kilde-konto ved å søke etter ID ":id" eller navn ":name".',
-    'withdrawal_dest_need_data'      => 'Trenger en gyldig destinasjons konto-ID og/eller gyldig destinasjons kontonavn for å fortsette.',
-    'withdrawal_dest_bad_data'       => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+    'withdrawal_source_need_data' => 'Trenger en gyldig kilde konto-ID og/eller gyldig kilde kontonavn for å fortsette.',
+    'withdrawal_source_bad_data'  => 'Finner ikke en gyldig kilde-konto ved å søke etter ID ":id" eller navn ":name".',
+    'withdrawal_dest_need_data'   => 'Trenger en gyldig destinasjons konto-ID og/eller gyldig destinasjons kontonavn for å fortsette.',
+    'withdrawal_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+
+    'generic_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Trenger en gyldig kilde konto-ID og/eller gyldig kilde kontonavn for å fortsette.',
     'deposit_source_bad_data'  => 'Kunne ikke finne en gyldig kilde-konto ved å søke etter ID ":id" eller navn ":name".',
@@ -205,5 +212,5 @@ return [
 
     'amount_required_for_auto_budget' => 'The amount is required.',
     'auto_budget_amount_positive'     => 'The amount must be more than zero.',
-    'auto_budget_period_mandatory' => 'The auto budget period is a mandatory field.',
+    'auto_budget_period_mandatory'    => 'The auto budget period is a mandatory field.',
 ];

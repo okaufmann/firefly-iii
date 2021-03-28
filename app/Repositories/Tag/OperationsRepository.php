@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Tag;
 
 use Carbon\Carbon;
-use Log;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionType;
@@ -39,17 +38,6 @@ class OperationsRepository implements OperationsRepositoryInterface
 {
     /** @var User */
     private $user;
-
-    /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-            die(__METHOD__);
-        }
-    }
 
     /**
      * This method returns a list of all the withdrawal transaction journals (as arrays) set in that period
@@ -81,8 +69,6 @@ class OperationsRepository implements OperationsRepositoryInterface
         $journals       = $collector->getExtractedJournals();
         $array          = [];
         $listedJournals = [];
-
-
         foreach ($journals as $journal) {
             $currencyId         = (int)$journal['currency_id'];
             $array[$currencyId] = $array[$currencyId] ?? [

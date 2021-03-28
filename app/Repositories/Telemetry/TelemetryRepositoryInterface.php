@@ -23,8 +23,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Telemetry;
-
-
 use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
@@ -40,15 +38,6 @@ interface TelemetryRepositoryInterface
     public function count(): int;
 
     /**
-     * Return paginated result of telemetry records.
-     *
-     * @param int $pageSize
-     *
-     * @return LengthAwarePaginator
-     */
-    public function paginated( int $pageSize): LengthAwarePaginator;
-
-    /**
      * Delete all records.
      */
     public function deleteAll(): void;
@@ -57,5 +46,14 @@ interface TelemetryRepositoryInterface
      *
      */
     public function deleteSubmitted(): void;
+
+    /**
+     * Return paginated result of telemetry records.
+     *
+     * @param int $pageSize
+     *
+     * @return LengthAwarePaginator
+     */
+    public function paginated(int $pageSize): LengthAwarePaginator;
 
 }

@@ -21,12 +21,12 @@
 
 declare(strict_types=1);
 
-
 namespace FireflyIII\Http\Middleware;
 
 use Closure;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\System\GeneratesInstallationId;
+use Illuminate\Http\Request;
 
 /**
  *
@@ -35,15 +35,16 @@ use FireflyIII\Support\System\GeneratesInstallationId;
 class InstallationId
 {
     use GeneratesInstallationId;
+
     /**
      * Handle an incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param Closure                  $next
-     *
-     * @throws FireflyException
+     * @param Request $request
+     * @param Closure $next
      *
      * @return mixed
+     *
+     * @throws FireflyException
      *
      */
     public function handle($request, Closure $next)

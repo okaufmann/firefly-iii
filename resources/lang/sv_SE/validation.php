@@ -60,6 +60,7 @@ return [
     'less'                           => ':attribute måste vara mindre än 10 000 000',
     'active_url'                     => ':attribute är inte en giltig URL.',
     'after'                          => ':attribute måste vara ett datum efter :date.',
+    'date_after'                     => 'The start date must be before the end date.',
     'alpha'                          => ':attribute får enbart innehålla bokstäver.',
     'alpha_dash'                     => ':attribute får endast innehålla bokstäver, siffror och bindestreck.',
     'alpha_num'                      => ':attribute får endast innehålla bokstäver och siffror.',
@@ -130,15 +131,19 @@ return [
     'current_target_amount'          => 'Det nuvarande beloppet måste vara mindre än målbeloppet.',
     'unique_piggy_bank_for_user'     => 'Namnet på spargrisen måste vara unikt.',
     'unique_object_group'            => 'Gruppnamnet måste vara unikt',
+    'starts_with'                    => 'Värdet måste börja med :values.',
+    'unique_webhook'                 => 'Du har redan en webhook med dessa värden.',
+    'unique_existing_webhook'        => 'Du har redan en annan webhook med dessa värden.',
 
-    'secure_password'                => 'Detta lösenord är inte säkert. Vänligen försök igen. För mer info se https://bit.ly/FF3-password-security',
-    'valid_recurrence_rep_type'      => 'Ogiltig repetitionstyp får återkommande transaktioner.',
-    'valid_recurrence_rep_moment'    => 'Ogiltig repetitionsmoment för denna typ av repetition.',
-    'invalid_account_info'           => 'Ogiltig kontoinformation.',
-    'attributes'                     => [
+    'secure_password'             => 'Detta lösenord är inte säkert. Vänligen försök igen. För mer info se https://bit.ly/FF3-password-security',
+    'valid_recurrence_rep_type'   => 'Ogiltig repetitionstyp får återkommande transaktioner.',
+    'valid_recurrence_rep_moment' => 'Ogiltig repetitionsmoment för denna typ av repetition.',
+    'invalid_account_info'        => 'Ogiltig kontoinformation.',
+    'attributes'                  => [
         'email'                   => 'e-postadress',
         'description'             => 'beskrivning',
         'amount'                  => 'belopp',
+        'transactions.*.amount'   => 'transaktionens belopp',
         'name'                    => 'namn',
         'piggy_bank_id'           => 'spargris ID',
         'targetamount'            => 'mål belopp',
@@ -173,10 +178,12 @@ return [
     ],
 
     // validation of accounts:
-    'withdrawal_source_need_data'    => 'Ett giltigt källkonto-ID och/eller ett giltigt källkontonamn behövs för att gå vidare.',
-    'withdrawal_source_bad_data'     => 'Det gick inte att hitta ett giltigt källkonto med ID ":id" eller namn ":name".',
-    'withdrawal_dest_need_data'      => 'Ett giltigt destinationskonto-ID och/eller giltigt mottagarkontonamn behövs för att gå vidare.',
-    'withdrawal_dest_bad_data'       => 'Det gick inte att hitta ett giltigt mottagarkonto med ID ":id" eller namn ":name".',
+    'withdrawal_source_need_data' => 'Ett giltigt källkonto-ID och/eller ett giltigt källkontonamn behövs för att gå vidare.',
+    'withdrawal_source_bad_data'  => 'Det gick inte att hitta ett giltigt källkonto med ID ":id" eller namn ":name".',
+    'withdrawal_dest_need_data'   => 'Ett giltigt destinationskonto-ID och/eller giltigt mottagarkontonamn behövs för att gå vidare.',
+    'withdrawal_dest_bad_data'    => 'Det gick inte att hitta ett giltigt mottagarkonto med ID ":id" eller namn ":name".',
+
+    'generic_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Ett giltigt källkonto-ID och/eller ett giltigt källkontonamn behövs för att gå vidare.',
     'deposit_source_bad_data'  => 'Det gick inte att hitta ett giltigt källkonto med ID ":id" eller namn ":name".',
@@ -205,5 +212,5 @@ return [
 
     'amount_required_for_auto_budget' => 'Beloppet är obligatoriskt.',
     'auto_budget_amount_positive'     => 'Beloppet måste vara mer än noll.',
-    'auto_budget_period_mandatory' => 'Den automatiska budgetperioden är ett obligatoriskt fält.',
+    'auto_budget_period_mandatory'    => 'Den automatiska budgetperioden är ett obligatoriskt fält.',
 ];

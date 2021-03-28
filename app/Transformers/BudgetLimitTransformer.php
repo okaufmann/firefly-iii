@@ -24,12 +24,33 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Repositories\Budget\OperationsRepository;
+use Illuminate\Support\Collection;
+use League\Fractal\Resource\Item;
 
 /**
  * Class BudgetLimitTransformer
  */
 class BudgetLimitTransformer extends AbstractTransformer
 {
+    /** @var string[] */
+    protected $availableIncludes
+        = [
+            'budget',
+        ];
+
+    /**
+     * Include Budget
+     *
+     * @param BudgetLimit $limit
+     *
+     * @return Item
+     */
+    public function includeBudget(BudgetLimit $limit)
+    {
+        return $this->item($limit->budget, new BudgetTransformer, 'budgets');
+    }
+
     /**
      * Transform the note.
      *
@@ -39,6 +60,11 @@ class BudgetLimitTransformer extends AbstractTransformer
      */
     public function transform(BudgetLimit $budgetLimit): array
     {
+        $repository = app(OperationsRepository::class);
+        $repository->setUser($budgetLimit->budget->user);
+        $expenses = $repository->sumExpenses(
+            $budgetLimit->start_date, $budgetLimit->end_date, null, new Collection([$budgetLimit->budget]), $budgetLimit->transactionCurrency
+        );
         $currency              = $budgetLimit->transactionCurrency;
         $amount                = $budgetLimit->amount;
         $currencyDecimalPlaces = 2;
@@ -48,26 +74,29 @@ class BudgetLimitTransformer extends AbstractTransformer
         $currencySymbol        = null;
         if (null !== $currency) {
             $amount                = $budgetLimit->amount;
-            $currencyId            = (int) $currency->id;
+            $currencyId            = (int)$currency->id;
             $currencyName          = $currency->name;
             $currencyCode          = $currency->code;
             $currencySymbol        = $currency->symbol;
             $currencyDecimalPlaces = $currency->decimal_places;
         }
-        $amount = number_format((float) $amount, $currencyDecimalPlaces, '.', '');
+        $amount = number_format((float)$amount, $currencyDecimalPlaces, '.', '');
+
         return [
-            'id'                      => (int) $budgetLimit->id,
+            'id'                      => (string)$budgetLimit->id,
             'created_at'              => $budgetLimit->created_at->toAtomString(),
             'updated_at'              => $budgetLimit->updated_at->toAtomString(),
             'start'                   => $budgetLimit->start_date->format('Y-m-d'),
             'end'                     => $budgetLimit->end_date->format('Y-m-d'),
-            'budget_id'               => (int) $budgetLimit->budget_id,
-            'currency_id'             => $currencyId,
+            'budget_id'               => (string)$budgetLimit->budget_id,
+            'currency_id'             => (string)$currencyId,
             'currency_code'           => $currencyCode,
             'currency_name'           => $currencyName,
-            'currency_decimal_places' => $currencyName,
+            'currency_decimal_places' => $currencyDecimalPlaces,
             'currency_symbol'         => $currencySymbol,
             'amount'                  => $amount,
+            'period'                  => $budgetLimit->period,
+            'spent'                   => $expenses[$currencyId]['sum'] ?? '0',
             'links'                   => [
                 [
                     'rel' => 'self',

@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Transformers;
-
-
 use FireflyIII\Models\Location;
 use FireflyIII\Models\Tag;
 
@@ -53,8 +51,9 @@ class TagTransformer extends AbstractTransformer
         if (null !== $location) {
             $latitude  = $location->latitude;
             $longitude = $location->longitude;
-            $zoomLevel = $location->zoom_level;
+            $zoomLevel = (int)$location->zoom_level;
         }
+
         return [
             'id'          => (int)$tag->id,
             'created_at'  => $tag->created_at->toAtomString(),

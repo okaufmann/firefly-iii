@@ -17,41 +17,60 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
 require('../../bootstrap');
 
-import VueRouter from 'vue-router';
+import Vue from "vue";
 import Index from "../../components/accounts/Index";
-
-const routes = [
-    {path: '/', component: Index},
-    // maybe "create" and "edit" in component.
-]
-
-// 3. Create the router instance and pass the `routes` option
-// You can pass in additional options here, but let's
-// keep it simple for now.
-const router = new VueRouter({
-                                 mode: 'history',
-                                 routes // short for `routes: routes`
-                             })
+import store from "../../components/store";
+import {BPagination, BTable} from 'bootstrap-vue';
+import Calendar from "../../components/dashboard/Calendar";
+import IndexOptions from "../../components/accounts/IndexOptions";
+//import Vuex from "vuex";
 
 // i18n
 let i18n = require('../../i18n');
-
 let props = {};
-// new Vue({router,
-//             i18n,
-//             el: "#accounts",
-//             render: (createElement) => {
-//                 return createElement(List, { props: props });
-//             },
-//         });
-Vue.use(VueRouter);          // <== very important
+
+Vue.component('b-table', BTable);
+Vue.component('b-pagination', BPagination);
+//Vue.use(Vuex);
+
 new Vue({
-            router,
             i18n,
-            render(createElement) {
+            store,
+            el: "#accounts",
+            render: (createElement) => {
                 return createElement(Index, {props: props});
-            }
-        }).$mount('#accounts');
+            },
+            beforeCreate() {
+                // init the old root store (TODO remove me)
+                this.$store.commit('initialiseStore');
+                this.$store.dispatch('updateCurrencyPreference');
+
+                // init the new root store (dont care about results)
+                this.$store.dispatch('root/initialiseStore');
+
+                // also init the dashboard store.
+                this.$store.dispatch('dashboard/index/initialiseStore');
+            },
+        });
+
+new Vue({
+            i18n,
+            store,
+            el: "#calendar",
+            render: (createElement) => {
+                return createElement(Calendar, {props: props});
+            },
+            // TODO init store as well?
+        });
+
+new Vue({
+            i18n,
+            store,
+            el: "#indexOptions",
+            render: (createElement) => {
+                return createElement(IndexOptions, {props: props});
+            },
+            // TODO init store as well?
+        });

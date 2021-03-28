@@ -22,42 +22,42 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use Carbon\Carbon;
 use Eloquent;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class Rule.
+ * FireflyIII\Models\Rule
  *
- * @property bool                            $stop_processing
- * @property int                             $id
- * @property Collection                      $ruleTriggers
- * @property Collection                      $ruleActions
- * @property bool                            $active
- * @property bool                            $strict
- * @property User                            $user
- * @property Carbon                          $created_at
- * @property Carbon                          $updated_at
- * @property string                          $title
- * @property int                             $order
- * @property RuleGroup                       $ruleGroup
- * @property int                             $rule_group_id
- * @property string                          $description
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property int                             $user_id
- * @method static bool|null forceDelete()
+ * @property int                           $id
+ * @property Carbon|null                   $created_at
+ * @property Carbon|null                   $updated_at
+ * @property Carbon|null                   $deleted_at
+ * @property int                           $user_id
+ * @property int                           $rule_group_id
+ * @property string                        $title
+ * @property string|null                   $description
+ * @property int                           $order
+ * @property bool                          $active
+ * @property bool                          $stop_processing
+ * @property bool                          $strict
+ * @property-read Collection|RuleAction[]  $ruleActions
+ * @property-read int|null                 $rule_actions_count
+ * @property-read RuleGroup                $ruleGroup
+ * @property-read Collection|RuleTrigger[] $ruleTriggers
+ * @property-read int|null                 $rule_triggers_count
+ * @property-read User                     $user
  * @method static \Illuminate\Database\Eloquent\Builder|Rule newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Rule newQuery()
  * @method static Builder|Rule onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Rule query()
- * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|Rule whereActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Rule whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Rule whereDeletedAt($value)
@@ -73,8 +73,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Rule withTrashed()
  * @method static Builder|Rule withoutTrashed()
  * @mixin Eloquent
- * @property-read int|null $rule_actions_count
- * @property-read int|null $rule_triggers_count
  */
 class Rule extends Model
 {
@@ -104,13 +102,13 @@ class Rule extends Model
      *
      * @param string $value
      *
-     * @throws NotFoundHttpException
      * @return Rule
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): Rule
     {
         if (auth()->check()) {
-            $ruleId = (int) $value;
+            $ruleId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
             /** @var Rule $rule */

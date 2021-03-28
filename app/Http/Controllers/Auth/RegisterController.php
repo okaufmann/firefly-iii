@@ -98,7 +98,7 @@ class RegisterController extends Controller
         if (false === $allowRegistration) {
             $message = 'Registration is currently not available.';
 
-            return view('error', compact('message'));
+            return prefixView('error', compact('message'));
         }
 
         $this->validator($request->all())->validate();
@@ -108,7 +108,7 @@ class RegisterController extends Controller
 
         $this->guard()->login($user);
 
-        session()->flash('success', (string) trans('firefly.registered'));
+        session()->flash('success', (string)trans('firefly.registered'));
 
         $this->registered($request, $user);
 
@@ -132,7 +132,7 @@ class RegisterController extends Controller
         $isDemoSite        = app('fireflyconfig')->get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
         $singleUserMode    = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $userCount         = User::count();
-        $pageTitle         = (string) trans('firefly.register_page_title');
+        $pageTitle         = (string)trans('firefly.register_page_title');
 
         if (true === $isDemoSite) {
             $allowRegistration = false;
@@ -149,12 +149,12 @@ class RegisterController extends Controller
         if (false === $allowRegistration) {
             $message = 'Registration is currently not available.';
 
-            return view('error', compact('message'));
+            return prefixView('error', compact('message'));
         }
 
         $email = $request->old('email');
 
-        return view('auth.register', compact('isDemoSite', 'email', 'pageTitle'));
+        return prefixView('auth.register', compact('isDemoSite', 'email', 'pageTitle'));
     }
 
 }

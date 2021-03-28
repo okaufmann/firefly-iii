@@ -64,7 +64,7 @@ class ReconcileController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
-                app('view')->share('title', (string) trans('firefly.accounts'));
+                app('view')->share('title', (string)trans('firefly.accounts'));
                 $this->repository    = app(JournalRepositoryInterface::class);
                 $this->accountRepos  = app(AccountRepositoryInterface::class);
                 $this->currencyRepos = app(CurrencyRepositoryInterface::class);
@@ -138,7 +138,7 @@ class ReconcileController extends Controller
         $reconSum = bcadd(bcadd($startBalance, $amount), $clearedAmount);
 
         try {
-            $view = view(
+            $view = prefixView(
                 'accounts.reconcile.overview',
                 compact(
                     'account',
@@ -162,69 +162,12 @@ class ReconcileController extends Controller
             $view = sprintf('Could not render accounts.reconcile.overview: %s', $e->getMessage());
         }
         // @codeCoverageIgnoreEnd
-
-
         $return = [
             'post_uri' => $route,
             'html'     => $view,
         ];
 
         return response()->json($return);
-    }
-
-
-    /**
-     * Returns a list of transactions in a modal.
-     *
-     * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
-     *
-     * @return mixed
-     *
-     */
-    public function transactions(Account $account, Carbon $start, Carbon $end)
-    {
-        if ($end->lt($start)) {
-            [$end, $start] = [$start, $end];
-        }
-        $startDate = clone $start;
-        $startDate->subDay();
-
-        $currency     = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
-        $startBalance = round(app('steam')->balance($account, $startDate), $currency->decimal_places);
-        $endBalance   = round(app('steam')->balance($account, $end), $currency->decimal_places);
-
-        // get the transactions
-        $selectionStart = clone $start;
-        $selectionStart->subDays(3);
-        $selectionEnd = clone $end;
-        $selectionEnd->addDays(3);
-
-        // grab transactions:
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-
-        $collector->setAccounts(new Collection([$account]))
-                  ->setRange($selectionStart, $selectionEnd)
-                  ->withBudgetInformation()->withCategoryInformation()->withAccountInformation();
-        $array    = $collector->getExtractedJournals();
-        $journals = $this->processTransactions($account, $array);
-
-        try {
-            $html = view(
-                'accounts.reconcile.transactions',
-                compact('account', 'journals', 'currency', 'start', 'end', 'selectionStart', 'selectionEnd')
-            )->render();
-            // @codeCoverageIgnoreStart
-        } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render: %s', $e->getMessage()));
-            $html = sprintf('Could not render accounts.reconcile.transactions: %s', $e->getMessage());
-        }
-
-        // @codeCoverageIgnoreEnd
-
-        return response()->json(['html' => $html, 'startBalance' => $startBalance, 'endBalance' => $endBalance]);
     }
 
     /**
@@ -268,10 +211,65 @@ class ReconcileController extends Controller
     }
 
     /**
+     * Returns a list of transactions in a modal.
+     *
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return mixed
+     *
+     */
+    public function transactions(Account $account, Carbon $start, Carbon $end)
+    {
+        if ($end->lt($start)) {
+            [$end, $start] = [$start, $end];
+        }
+        $startDate = clone $start;
+        $startDate->subDay();
+
+        $currency     = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
+        $startBalance = round((float)app('steam')->balance($account, $startDate), $currency->decimal_places);
+        $endBalance   = round((float)app('steam')->balance($account, $end), $currency->decimal_places);
+
+        // get the transactions
+        $selectionStart = clone $start;
+        $selectionStart->subDays(3);
+        $selectionEnd = clone $end;
+        $selectionEnd->addDays(3);
+
+        // grab transactions:
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
+        $collector->setAccounts(new Collection([$account]))
+                  ->setRange($selectionStart, $selectionEnd)
+                  ->withBudgetInformation()->withCategoryInformation()->withAccountInformation();
+        $array    = $collector->getExtractedJournals();
+        $journals = $this->processTransactions($account, $array);
+
+        try {
+            $html = prefixView(
+                'accounts.reconcile.transactions',
+                compact('account', 'journals', 'currency', 'start', 'end', 'selectionStart', 'selectionEnd')
+            )->render();
+            // @codeCoverageIgnoreStart
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render: %s', $e->getMessage()));
+            $html = sprintf('Could not render accounts.reconcile.transactions: %s', $e->getMessage());
+        }
+
+        // @codeCoverageIgnoreEnd
+
+        return response()->json(['html' => $html, 'startBalance' => $startBalance, 'endBalance' => $endBalance]);
+    }
+
+    /**
      * "fix" amounts to make it easier on the reconciliation overview:
      *
      * @param Account $account
      * @param array   $array
+     *
      * @return array
      */
     private function processTransactions(Account $account, array $array): array
@@ -305,6 +303,7 @@ class ReconcileController extends Controller
 
             $journals[] = $journal;
         }
+
         return $journals;
     }
 }

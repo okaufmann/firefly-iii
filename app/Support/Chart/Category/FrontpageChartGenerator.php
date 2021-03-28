@@ -40,20 +40,14 @@ use Illuminate\Support\Collection;
 class FrontpageChartGenerator
 {
     use AugumentData;
-    /** @var AccountRepositoryInterface */
-    private $accountRepos;
-    /** @var array */
-    private $currencies;
-    /** @var Carbon */
-    private $end;
-    /** @var NoCategoryRepositoryInterface */
-    private $noCatRepos;
-    /** @var OperationsRepositoryInterface */
-    private $opsRepos;
-    /** @var CategoryRepositoryInterface */
-    private $repository;
-    /** @var Carbon */
-    private $start;
+
+    private AccountRepositoryInterface    $accountRepos;
+    private array                         $currencies;
+    private Carbon                        $end;
+    private NoCategoryRepositoryInterface $noCatRepos;
+    private OperationsRepositoryInterface $opsRepos;
+    private CategoryRepositoryInterface   $repository;
+    private Carbon                        $start;
 
     /**
      * FrontpageChartGenerator constructor.
@@ -106,22 +100,6 @@ class FrontpageChartGenerator
     }
 
     /**
-     * @param array $currency
-     */
-    private function addCurrency(array $currency): void
-    {
-        $currencyId = (int) $currency['currency_id'];
-
-        $this->currencies[$currencyId] = $this->currencies[$currencyId] ?? [
-                'currency_id'             => $currencyId,
-                'currency_name'           => $currency['currency_name'],
-                'currency_symbol'         => $currency['currency_symbol'],
-                'currency_code'           => $currency['currency_code'],
-                'currency_decimal_places' => $currency['currency_decimal_places'],
-            ];
-    }
-
-    /**
      * @param Category   $category
      * @param Collection $accounts
      *
@@ -136,12 +114,28 @@ class FrontpageChartGenerator
             $tempData[] = [
                 'name'        => $category->name,
                 'sum'         => $currency['sum'],
-                'sum_float'   => round($currency['sum'], $currency['currency_decimal_places']),
-                'currency_id' => (int) $currency['currency_id'],
+                'sum_float'   => round((float)$currency['sum'], $currency['currency_decimal_places']),
+                'currency_id' => (int)$currency['currency_id'],
             ];
         }
 
         return $tempData;
+    }
+
+    /**
+     * @param array $currency
+     */
+    private function addCurrency(array $currency): void
+    {
+        $currencyId = (int)$currency['currency_id'];
+
+        $this->currencies[$currencyId] = $this->currencies[$currencyId] ?? [
+                'currency_id'             => $currencyId,
+                'currency_name'           => $currency['currency_name'],
+                'currency_symbol'         => $currency['currency_symbol'],
+                'currency_code'           => $currency['currency_code'],
+                'currency_decimal_places' => $currency['currency_decimal_places'],
+            ];
     }
 
     /**
@@ -158,8 +152,8 @@ class FrontpageChartGenerator
             $tempData[] = [
                 'name'        => trans('firefly.no_category'),
                 'sum'         => $currency['sum'],
-                'sum_float'   => round($currency['sum'], $currency['currency_decimal_places'] ?? 2),
-                'currency_id' => (int) $currency['currency_id'],
+                'sum_float'   => round((float)$currency['sum'], $currency['currency_decimal_places'] ?? 2),
+                'currency_id' => (int)$currency['currency_id'],
             ];
         }
 
@@ -181,7 +175,7 @@ class FrontpageChartGenerator
         foreach ($this->currencies as $currencyId => $currency) {
             $key          = sprintf('spent-%d', $currencyId);
             $return[$key] = [
-                'label'           => sprintf('%s (%s)', (string) trans('firefly.spent'), $currency['currency_name']),
+                'label'           => sprintf('%s (%s)', (string)trans('firefly.spent'), $currency['currency_name']),
                 'type'            => 'bar',
                 'currency_symbol' => $currency['currency_symbol'],
                 'entries'         => $names,
@@ -190,8 +184,6 @@ class FrontpageChartGenerator
 
         return $return;
     }
-
-
     /**
      * @param array $currencyData
      * @param array $monetaryData

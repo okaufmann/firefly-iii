@@ -40,7 +40,7 @@ return [
     'reports'                => 'Отчёты',
     'search_result'          => 'Результаты поиска для ":query"',
     'withdrawal_list'        => 'Мои расходы',
-    'Withdrawal_list'        => 'Мои расходы',
+    'Withdrawal_list'        => 'Расходы',
     'deposit_list'           => 'Мои доходы',
     'transfer_list'          => 'Переводы',
     'transfers_list'         => 'Переводы',
@@ -52,7 +52,7 @@ return [
     'edit_journal'           => 'Редактирование транзакции ":description"',
     'edit_reconciliation'    => 'Редактировать ":description"',
     'delete_journal'         => 'Удаление транзакции ":description"',
-    'delete_group'           => 'Удаление транзакции ":description"',
+    'delete_group'           => 'Удалить транзакцию ":description"',
     'tags'                   => 'Метки',
     'createTag'              => 'Создать новую метку',
     'edit_tag'               => 'Редактирование метки ":tag"',
@@ -60,7 +60,7 @@ return [
     'delete_journal_link'    => 'Удалить связь между транзакциями',
     'telemetry_index'        => 'Телеметрия',
     'telemetry_view'         => 'Просмотр телеметрии',
-    'edit_object_group'      => 'Изменить группу ":title"',
+    'edit_object_group'      => 'Редактировать группу ":title"',
     'delete_object_group'    => 'Удалить группу ":title"',
     'logout_others'          => 'Завершить другие сессии'
 ];

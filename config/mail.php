@@ -65,7 +65,7 @@ return [
         'log' => [
             'transport' => 'log',
             'channel'   => env('MAIL_LOG_CHANNEL', 'stack'),
-            'level'     => 'debug',
+            'level'     => 'notice',
         ],
 
         'array' => [
@@ -74,9 +74,6 @@ return [
     ],
 
     'from' => ['address' => envNonEmpty('MAIL_FROM', 'changeme@example.com'), 'name' => 'Firefly III Mailer'],
-
-
-
     'markdown' => [
         'theme' => 'default',
 

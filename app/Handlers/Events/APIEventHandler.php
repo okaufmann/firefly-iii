@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
-
 use Exception;
 use FireflyIII\Mail\AccessTokenCreatedMail;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
@@ -49,12 +48,12 @@ class APIEventHandler
     {
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
-        $user       = $repository->findNull((int) $event->userId);
+        $user       = $repository->findNull((int)$event->userId);
         if (null !== $user) {
-            $email     = $user->email;
+            $email = $user->email;
 
             // if user is demo user, send to owner:
-            if($user->hasRole('demo')) {
+            if ($user->hasRole('demo')) {
                 $email = config('firefly.site_owner');
             }
 
@@ -82,8 +81,6 @@ class APIEventHandler
         }
 
         return true;
-
-
     }
 
 }

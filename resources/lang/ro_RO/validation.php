@@ -60,6 +60,7 @@ return [
     'less'                           => ':attribute trebuie să fie mai mic decât 10,000,000',
     'active_url'                     => ':attribute nu este o adresă URL validă.',
     'after'                          => ':attribute trebuie să fie o dată ulterioară :date.',
+    'date_after'                     => 'The start date must be before the end date.',
     'alpha'                          => ':attribute poate conține numai litere.',
     'alpha_dash'                     => ':attribute poate conține numai litere, numere și liniuțe.',
     'alpha_num'                      => ':attribute poate conține numai litere și numere.',
@@ -130,15 +131,19 @@ return [
     'current_target_amount'          => 'Suma curentă trebuie să fie mai mică decât suma vizată.',
     'unique_piggy_bank_for_user'     => 'Numele pușculiței trebuie să fie unic.',
     'unique_object_group'            => 'The group name must be unique',
+    'starts_with'                    => 'The value must start with :values.',
+    'unique_webhook'                 => 'You already have a webhook with these values.',
+    'unique_existing_webhook'        => 'You already have another webhook with these values.',
 
-    'secure_password'                => 'Aceasta nu este o parolă sigură. Vă rugăm să încercați din nou. Pentru mai multe informații, vizitați https://bit.ly/FF3-password-security',
-    'valid_recurrence_rep_type'      => 'Tip de repetare nevalid pentru tranzacțiile recurente.',
-    'valid_recurrence_rep_moment'    => 'Momentul repetiției nevalid pentru acest tip de repetare.',
-    'invalid_account_info'           => 'Informațiile contului nevalide.',
-    'attributes'                     => [
+    'secure_password'             => 'Aceasta nu este o parolă sigură. Vă rugăm să încercați din nou. Pentru mai multe informații, vizitați https://bit.ly/FF3-password-security',
+    'valid_recurrence_rep_type'   => 'Tip de repetare nevalid pentru tranzacțiile recurente.',
+    'valid_recurrence_rep_moment' => 'Momentul repetiției nevalid pentru acest tip de repetare.',
+    'invalid_account_info'        => 'Informațiile contului nevalide.',
+    'attributes'                  => [
         'email'                   => 'adresă e-mail',
         'description'             => 'descriere',
         'amount'                  => 'sumă',
+        'transactions.*.amount'   => 'transaction amount',
         'name'                    => 'nume',
         'piggy_bank_id'           => 'ID-ul pușculiței',
         'targetamount'            => 'suma țintă',
@@ -173,10 +178,12 @@ return [
     ],
 
     // validation of accounts:
-    'withdrawal_source_need_data'    => 'Trebuie să continuați să obțineți un ID de cont sursă valabil și / sau un nume de cont sursă valabil.',
-    'withdrawal_source_bad_data'     => 'Nu s-a găsit un cont sursă valabil la căutarea ID ":id" sau nume ":name".',
-    'withdrawal_dest_need_data'      => 'Trebuie să continuați să obțineți un ID de cont de destinație valabil și / sau un nume de cont de destinație valabil.',
-    'withdrawal_dest_bad_data'       => 'Nu s-a găsit un cont de destinaţie valabil la căutarea ID ":id" sau nume ":name".',
+    'withdrawal_source_need_data' => 'Trebuie să continuați să obțineți un ID de cont sursă valabil și / sau un nume de cont sursă valabil.',
+    'withdrawal_source_bad_data'  => 'Nu s-a găsit un cont sursă valabil la căutarea ID ":id" sau nume ":name".',
+    'withdrawal_dest_need_data'   => 'Trebuie să continuați să obțineți un ID de cont de destinație valabil și / sau un nume de cont de destinație valabil.',
+    'withdrawal_dest_bad_data'    => 'Nu s-a găsit un cont de destinaţie valabil la căutarea ID ":id" sau nume ":name".',
+
+    'generic_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Trebuie să continuați să obțineți un ID de cont sursă valabil și / sau un nume de cont sursă valabil.',
     'deposit_source_bad_data'  => 'Nu s-a găsit un cont sursă valabil la căutarea ID ":id" sau nume ":name".',
@@ -205,5 +212,5 @@ return [
 
     'amount_required_for_auto_budget' => 'Suma este necesară.',
     'auto_budget_amount_positive'     => 'Suma trebuie să fie mai mare decât zero.',
-    'auto_budget_period_mandatory' => 'Perioada de autobuget este un câmp obligatoriu.',
+    'auto_budget_period_mandatory'    => 'Perioada de autobuget este un câmp obligatoriu.',
 ];

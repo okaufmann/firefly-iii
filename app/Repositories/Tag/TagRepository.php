@@ -24,12 +24,11 @@ namespace FireflyIII\Repositories\Tag;
 
 use Carbon\Carbon;
 use DB;
+use Exception;
 use FireflyIII\Factory\TagFactory;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Location;
-use FireflyIII\Models\RuleAction;
-use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
@@ -57,7 +56,7 @@ class TagRepository implements TagRepositoryInterface
      * @param Tag $tag
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     public function destroy(Tag $tag): bool
     {
@@ -78,24 +77,6 @@ class TagRepository implements TagRepositoryInterface
             DB::table('tag_transaction_journal')->where('tag_id', $tag->id)->delete();
             $tag->delete();
         }
-    }
-
-    /**
-     * @param Tag    $tag
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return string
-     */
-    public function earnedInPeriod(Tag $tag, Carbon $start, Carbon $end): string
-    {
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-
-        $collector->setUser($this->user);
-        $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setTag($tag);
-
-        return $collector->getSum();
     }
 
     /**
@@ -157,6 +138,26 @@ class TagRepository implements TagRepositoryInterface
     public function get(): Collection
     {
         return $this->user->tags()->orderBy('tag', 'ASC')->get();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAttachments(Tag $tag): Collection
+    {
+        $set = $tag->attachments()->get();
+        /** @var Storage $disk */
+        $disk = Storage::disk('upload');
+
+        return $set->each(
+            static function (Attachment $attachment) use ($disk) {
+                $notes                   = $attachment->notes()->first();
+                $attachment->file_exists = $disk->exists($attachment->fileName());
+                $attachment->notes       = $notes ? $notes->text : '';
+
+                return $attachment;
+            }
+        );
     }
 
     /**
@@ -298,24 +299,6 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param Tag    $tag
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return string
-     */
-    public function spentInPeriod(Tag $tag, Carbon $start, Carbon $end): string
-    {
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-
-        $collector->setUser($this->user);
-        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setTag($tag);
-
-        return $collector->getSum();
-    }
-
-    /**
      * @param array $data
      *
      * @return Tag
@@ -353,7 +336,7 @@ class TagRepository implements TagRepositoryInterface
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $currencyId        = (int) $journal['currency_id'];
+            $currencyId        = (int)$journal['currency_id'];
             $sums[$currencyId] = $sums[$currencyId] ?? [
                     'currency_id'                    => $currencyId,
                     'currency_name'                  => $journal['currency_name'],
@@ -367,7 +350,7 @@ class TagRepository implements TagRepositoryInterface
                 ];
 
             // add amount to correct type:
-            $amount = app('steam')->positive((string) $journal['amount']);
+            $amount = app('steam')->positive((string)$journal['amount']);
             $type   = $journal['transaction_type_type'];
             if (TransactionType::WITHDRAWAL === $type) {
                 $amount = bcmul($amount, '-1');
@@ -388,7 +371,7 @@ class TagRepository implements TagRepositoryInterface
                         TransactionType::OPENING_BALANCE => '0',
                     ];
                 // add foreign amount to correct type:
-                $amount = app('steam')->positive((string) $journal['foreign_amount']);
+                $amount = app('steam')->positive((string)$journal['foreign_amount']);
                 $type   = $journal['transaction_type_type'];
                 if (TransactionType::WITHDRAWAL === $type) {
                     $amount = bcmul($amount, '-1');
@@ -397,6 +380,7 @@ class TagRepository implements TagRepositoryInterface
 
             }
         }
+
         return $sums;
     }
 
@@ -431,7 +415,7 @@ class TagRepository implements TagRepositoryInterface
         Log::debug(sprintf('Each coin in a tag earns it %s points', $pointsPerCoin));
         /** @var Tag $tag */
         foreach ($tags as $tag) {
-            $amount       = (string) $tag->amount_sum;
+            $amount       = (string)$tag->amount_sum;
             $amount       = '' === $amount ? '0' : $amount;
             $amountMin    = bcsub($amount, $min);
             $pointsForTag = bcmul($amountMin, $pointsPerCoin);
@@ -476,16 +460,24 @@ class TagRepository implements TagRepositoryInterface
      */
     public function update(Tag $tag, array $data): Tag
     {
-        $tag->tag         = $data['tag'];
-        $tag->date        = $data['date'];
-        $tag->description = $data['description'];
-        $tag->latitude    = null;
-        $tag->longitude   = null;
-        $tag->zoomLevel   = null;
+        if (array_key_exists('tag', $data)) {
+            $tag->tag = $data['tag'];
+        }
+        if (array_key_exists('date', $data)) {
+            $tag->date = $data['date'];
+        }
+        if (array_key_exists('description', $data)) {
+            $tag->description = $data['description'];
+        }
+
+        $tag->latitude  = null;
+        $tag->longitude = null;
+        $tag->zoomLevel = null;
         $tag->save();
 
         // update, delete or create location:
         $updateLocation = $data['update_location'] ?? false;
+        $deleteLocation = $data['remove_location'] ?? false;
 
         // location must be updated?
         if (true === $updateLocation) {
@@ -508,6 +500,9 @@ class TagRepository implements TagRepositoryInterface
                 $location->save();
             }
         }
+        if (true === $deleteLocation) {
+            $tag->locations()->delete();
+        }
 
         return $tag;
     }
@@ -522,7 +517,7 @@ class TagRepository implements TagRepositoryInterface
         $max = '0';
         /** @var Tag $tag */
         foreach ($tags as $tag) {
-            $amount = (string) $tag->amount_sum;
+            $amount = (string)$tag->amount_sum;
             $amount = '' === $amount ? '0' : $amount;
             $max    = 1 === bccomp($amount, $max) ? $amount : $max;
 
@@ -544,7 +539,7 @@ class TagRepository implements TagRepositoryInterface
 
         /** @var Tag $tag */
         foreach ($tags as $tag) {
-            $amount = (string) $tag->amount_sum;
+            $amount = (string)$tag->amount_sum;
             $amount = '' === $amount ? '0' : $amount;
 
             if (null === $min) {
@@ -552,33 +547,11 @@ class TagRepository implements TagRepositoryInterface
             }
             $min = -1 === bccomp($amount, $min) ? $amount : $min;
         }
-
-
         if (null === $min) {
             $min = '0';
         }
         Log::debug(sprintf('Minimum is %s.', $min));
 
         return $min;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getAttachments(Tag $tag): Collection
-    {
-        $set = $tag->attachments()->get();
-        /** @var Storage $disk */
-        $disk = Storage::disk('upload');
-
-        return $set->each(
-            static function (Attachment $attachment) use ($disk) {
-                $notes                   = $attachment->notes()->first();
-                $attachment->file_exists = $disk->exists($attachment->fileName());
-                $attachment->notes       = $notes ? $notes->text : '';
-
-                return $attachment;
-            }
-        );
     }
 }

@@ -1,5 +1,5 @@
 {% set VUE_SCRIPT_NAME = 'profile' %}
-{% extends "./layout/default" %}
+{% extends './v1/layout/default' %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
@@ -18,11 +18,9 @@
                 <li role="presentation">
                     <a href="#cmd" aria-controls="profile" role="tab" data-toggle="tab">{{ 'command_line_token'|_ }}</a>
                 </li>
-                {% if true == isInternalAuth %}
                 <li role="presentation">
                     <a href="#oauth" aria-controls="messages" role="tab" data-toggle="tab">{{ 'oauth'|_ }}</a>
                 </li>
-                {% endif %}
                 {% if true == isInternalAuth and true == isInternalIdentity %}
                 <li role="presentation">
                     <a href="#mfa" aria-controls="settings" role="tab" data-toggle="tab">{{ 'pref_two_factor_auth'|_ }}</a>
@@ -97,12 +95,10 @@
                     </div>
                 </div>
 
-                {% if true == isInternalAuth %}
                 <!-- OAuth -->
                 <div role="tabpanel" class="tab-pane" id="oauth">
                     <div id="passport_clients"></div>
                 </div>
-                {% endif %}
 
                 {% if true == isInternalAuth and true == isInternalIdentity %}
                 <!-- MFA -->

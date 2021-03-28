@@ -22,26 +22,20 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Transformers;
-
-
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\NoBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  * Class AvailableBudgetTransformer
  */
 class AvailableBudgetTransformer extends AbstractTransformer
 {
-    /** @var NoBudgetRepositoryInterface */
-    private $noBudgetRepository;
-    /** @var OperationsRepositoryInterface */
-    private $opsRepository;
-    /** @var BudgetRepositoryInterface */
-    private $repository;
+    private NoBudgetRepositoryInterface   $noBudgetRepository;
+    private OperationsRepositoryInterface $opsRepository;
+    private BudgetRepositoryInterface     $repository;
 
     /**
      * CurrencyTransformer constructor.
@@ -53,9 +47,6 @@ class AvailableBudgetTransformer extends AbstractTransformer
         $this->repository         = app(BudgetRepositoryInterface::class);
         $this->opsRepository      = app(OperationsRepositoryInterface::class);
         $this->noBudgetRepository = app(NoBudgetRepositoryInterface::class);
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
     }
 
     /**
@@ -71,14 +62,14 @@ class AvailableBudgetTransformer extends AbstractTransformer
 
         $currency = $availableBudget->transactionCurrency;
         $data     = [
-            'id'                      => (int)$availableBudget->id,
+            'id'                      => (string)$availableBudget->id,
             'created_at'              => $availableBudget->created_at->toAtomString(),
             'updated_at'              => $availableBudget->updated_at->toAtomString(),
-            'currency_id'             => (int) $currency->id,
+            'currency_id'             => (string)$currency->id,
             'currency_code'           => $currency->code,
             'currency_symbol'         => $currency->symbol,
-            'currency_decimal_places' => (int) $currency->decimal_places,
-            'amount'                  => number_format((float) $availableBudget->amount, $currency->decimal_places, '.', ''),
+            'currency_decimal_places' => (int)$currency->decimal_places,
+            'amount'                  => number_format((float)$availableBudget->amount, $currency->decimal_places, '.', ''),
             'start'                   => $availableBudget->start_date->format('Y-m-d'),
             'end'                     => $availableBudget->end_date->format('Y-m-d'),
             'spent_in_budgets'        => [],

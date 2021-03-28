@@ -35,6 +35,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
 use Log;
 use Validator;
@@ -45,6 +46,8 @@ use Validator;
  */
 trait AccountServiceTrait
 {
+    protected AccountRepositoryInterface $accountRepository;
+
     /**
      * @param null|string $iban
      *
@@ -63,9 +66,33 @@ trait AccountServiceTrait
 
             return null;
         }
-
-
         return $iban;
+    }
+
+    /**
+     * Returns true if the data in the array is submitted but empty.
+     *
+     * @param array $data
+     *
+     * @return bool
+     */
+    public function isEmptyOBData(array $data): bool
+    {
+        if (!array_key_exists('opening_balance', $data)
+            && !array_key_exists('opening_balance_date', $data)
+        ) {
+            // not set, so false.
+            return false;
+        }
+        // if isset, but is empty:
+        if (
+            (array_key_exists('opening_balance', $data) && '' === $data['opening_balance'])
+            || (array_key_exists('opening_balance_date', $data) && '' === $data['opening_balance_date'])
+        ) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -80,11 +107,24 @@ trait AccountServiceTrait
     public function updateMetaData(Account $account, array $data): void
     {
         $fields = $this->validFields;
-
         if ($account->accountType->type === AccountType::ASSET) {
             $fields = $this->validAssetFields;
         }
-        if ($account->accountType->type === AccountType::ASSET && isset($data['account_role']) && 'ccAsset' === $data['account_role']) {
+
+        // the account role may not be set in the data but we may have it already:
+        if (!array_key_exists('account_role', $data)) {
+            $data['account_role'] = null;
+        }
+        if (null === $data['account_role']) {
+            $data['account_role'] = $this->accountRepository->getMetaValue($account, 'account_role');
+        }
+
+        // only asset account may have a role:
+        if ($account->accountType->type !== AccountType::ASSET) {
+            $data['account_role'] = '';
+        }
+
+        if ($account->accountType->type === AccountType::ASSET && array_key_exists('account_role', $data) && 'ccAsset' === $data['account_role']) {
             $fields = $this->validCCFields; // @codeCoverageIgnore
         }
         /** @var AccountMetaFactory $factory */
@@ -163,30 +203,122 @@ trait AccountServiceTrait
     }
 
     /**
-     * Returns true if the data in the array is submitted but empty.
+     * Delete TransactionGroup with opening balance in it.
      *
-     * @param array $data
-     *
-     * @return bool
+     * @param Account $account
      */
-    public function isEmptyOBData(array $data): bool
+    protected function deleteOBGroup(Account $account): void
     {
-        if (!array_key_exists('opening_balance', $data) &&
-            !array_key_exists('opening_balance_date', $data)
-        ) {
-            // not set, so false.
-            return false;
+        Log::debug(sprintf('deleteOB() for account #%d', $account->id));
+        $openingBalanceGroup = $this->getOBGroup($account);
+
+        // opening balance data? update it!
+        if (null !== $openingBalanceGroup) {
+            Log::debug('Opening balance journal found, delete journal.');
+            /** @var TransactionGroupDestroyService $service */
+            $service = app(TransactionGroupDestroyService::class);
+            $service->destroy($openingBalanceGroup);
         }
-        // if isset, but is empty:
-        if (
-            (array_key_exists('opening_balance', $data) && '' === $data['opening_balance'])
-            ||
-            (array_key_exists('opening_balance_date', $data) && '' === $data['opening_balance_date'])
-        ) {
-            return true;
+    }
+
+    /**
+     * Returns the opening balance group, or NULL if it does not exist.
+     *
+     * @param Account $account
+     *
+     * @return TransactionGroup|null
+     */
+    protected function getOBGroup(Account $account): ?TransactionGroup
+    {
+        return $this->accountRepository->getOpeningBalanceGroup($account);
+    }
+
+    /**
+     * @param int    $currencyId
+     * @param string $currencyCode
+     *
+     * @return TransactionCurrency
+     */
+    protected function getCurrency(int $currencyId, string $currencyCode): TransactionCurrency
+    {
+        // find currency, or use default currency instead.
+        /** @var TransactionCurrencyFactory $factory */
+        $factory = app(TransactionCurrencyFactory::class);
+        /** @var TransactionCurrency $currency */
+        $currency = $factory->find($currencyId, $currencyCode);
+
+        if (null === $currency) {
+            // use default currency:
+            $currency = app('amount')->getDefaultCurrencyByUser($this->user);
+        }
+        $currency->enabled = true;
+        $currency->save();
+
+        return $currency;
+    }
+
+    /**
+     * Update or create the opening balance group. Assumes valid data in $data.
+     *
+     * Returns null if this fails.
+     *
+     * @param Account $account
+     * @param array   $data
+     *
+     * @return TransactionGroup|null
+     */
+    protected function updateOBGroup(Account $account, array $data): ?TransactionGroup
+    {
+        $obGroup = $this->getOBGroup($account);
+        if (null === $obGroup) {
+            return $this->createOBGroup($account, $data);
         }
 
-        return false;
+        // $data['currency_id'] is empty so creating a new journal may break.
+        if (!array_key_exists('currency_id', $data)) {
+            $currency = $this->accountRepository->getAccountCurrency($account);
+            if (null === $currency) {
+                $currency = app('default')->getDefaultCurrencyByUser($account->user);
+            }
+            $data['currency_id'] = $currency->id;
+        }
+
+        /** @var TransactionJournal $journal */
+        $journal                          = $obGroup->transactionJournals()->first();
+        $journal->date                    = $data['opening_balance_date'] ?? $journal->date;
+        $journal->transaction_currency_id = $data['currency_id'];
+
+        /** @var Transaction $obTransaction */
+        $obTransaction = $journal->transactions()->where('account_id', '!=', $account->id)->first();
+        /** @var Transaction $accountTransaction */
+        $accountTransaction = $journal->transactions()->where('account_id', $account->id)->first();
+
+        // if amount is negative:
+        if (1 === bccomp('0', $data['opening_balance'])) {
+            // account transaction loses money:
+            $accountTransaction->amount                  = app('steam')->negative($data['opening_balance']);
+            $accountTransaction->transaction_currency_id = $data['currency_id'];
+
+            // OB account transaction gains money
+            $obTransaction->amount                  = app('steam')->positive($data['opening_balance']);
+            $obTransaction->transaction_currency_id = $data['currency_id'];
+        }
+        if (-1 === bccomp('0', $data['opening_balance'])) {
+            // account gains money:
+            $accountTransaction->amount                  = app('steam')->positive($data['opening_balance']);
+            $accountTransaction->transaction_currency_id = $data['currency_id'];
+
+            // OB account loses money:
+            $obTransaction->amount                  = app('steam')->negative($data['opening_balance']);
+            $obTransaction->transaction_currency_id = $data['currency_id'];
+        }
+        // save both
+        $accountTransaction->save();
+        $obTransaction->save();
+        $journal->save();
+        $obGroup->refresh();
+
+        return $obGroup;
     }
 
     /**
@@ -223,7 +355,15 @@ trait AccountServiceTrait
             return null;
             // @codeCoverageIgnoreEnd
         }
-        $amount     = app('steam')->positive($amount);
+        $amount = app('steam')->positive($amount);
+        if (!array_key_exists('currency_id', $data)) {
+            $currency = $this->accountRepository->getAccountCurrency($account);
+            if (null === $currency) {
+                $currency = app('default')->getDefaultCurrencyByUser($account->user);
+            }
+            $data['currency_id'] = $currency->id;
+        }
+
         $submission = [
             'group_title'  => null,
             'user'         => $account->user_id,
@@ -266,117 +406,9 @@ trait AccountServiceTrait
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
         }
+
         // @codeCoverageIgnoreEnd
 
         return $group;
-    }
-
-    /**
-     * Delete TransactionGroup with opening balance in it.
-     *
-     * @param Account $account
-     */
-    protected function deleteOBGroup(Account $account): void
-    {
-        Log::debug(sprintf('deleteOB() for account #%d', $account->id));
-        $openingBalanceGroup = $this->getOBGroup($account);
-
-        // opening balance data? update it!
-        if (null !== $openingBalanceGroup) {
-            Log::debug('Opening balance journal found, delete journal.');
-            /** @var TransactionGroupDestroyService $service */
-            $service = app(TransactionGroupDestroyService::class);
-            $service->destroy($openingBalanceGroup);
-        }
-    }
-
-    /**
-     * @param int    $currencyId
-     * @param string $currencyCode
-     *
-     * @return TransactionCurrency
-     */
-    protected function getCurrency(int $currencyId, string $currencyCode): TransactionCurrency
-    {
-        // find currency, or use default currency instead.
-        /** @var TransactionCurrencyFactory $factory */
-        $factory = app(TransactionCurrencyFactory::class);
-        /** @var TransactionCurrency $currency */
-        $currency = $factory->find($currencyId, $currencyCode);
-
-        if (null === $currency) {
-            // use default currency:
-            $currency = app('amount')->getDefaultCurrencyByUser($this->user);
-        }
-        $currency->enabled = true;
-        $currency->save();
-
-        return $currency;
-    }
-
-    /**
-     * Returns the opening balance group, or NULL if it does not exist.
-     *
-     * @param Account $account
-     *
-     * @return TransactionGroup|null
-     */
-    protected function getOBGroup(Account $account): ?TransactionGroup
-    {
-        return $this->accountRepository->getOpeningBalanceGroup($account);
-    }
-
-    /**
-     * Update or create the opening balance group. Assumes valid data in $data.
-     *
-     * Returns null if this fails.
-     *
-     * @param Account $account
-     * @param array   $data
-     *
-     * @return TransactionGroup|null
-     */
-    protected function updateOBGroup(Account $account, array $data): ?TransactionGroup
-    {
-        $obGroup = $this->getOBGroup($account);
-        if (null === $obGroup) {
-            return $this->createOBGroup($account, $data);
-        }
-        /** @var TransactionJournal $journal */
-        $journal                          = $obGroup->transactionJournals()->first();
-        $journal->date                    = $data['opening_balance_date'] ?? $journal->date;
-        $journal->transaction_currency_id = $data['currency_id'];
-
-        /** @var Transaction $obTransaction */
-        $obTransaction = $journal->transactions()->where('account_id', '!=', $account->id)->first();
-        /** @var Transaction $accountTransaction */
-        $accountTransaction = $journal->transactions()->where('account_id', $account->id)->first();
-
-        // if amount is negative:
-        if (1 === bccomp('0', $data['opening_balance'])) {
-            // account transaction loses money:
-            $accountTransaction->amount                  = app('steam')->negative($data['opening_balance']);
-            $accountTransaction->transaction_currency_id = $data['currency_id'];
-
-            // OB account transaction gains money
-            $obTransaction->amount                  = app('steam')->positive($data['opening_balance']);
-            $obTransaction->transaction_currency_id = $data['currency_id'];
-        }
-        if (-1 === bccomp('0', $data['opening_balance'])) {
-            // account gains money:
-            $accountTransaction->amount                  = app('steam')->positive($data['opening_balance']);
-            $accountTransaction->transaction_currency_id = $data['currency_id'];
-
-            // OB account loses money:
-            $obTransaction->amount                  = app('steam')->negative($data['opening_balance']);
-            $obTransaction->transaction_currency_id = $data['currency_id'];
-        }
-        // save both
-        $accountTransaction->save();
-        $obTransaction->save();
-        $journal->save();
-        $obGroup->refresh();
-
-        return $obGroup;
     }
 }

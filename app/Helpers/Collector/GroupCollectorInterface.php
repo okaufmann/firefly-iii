@@ -67,6 +67,33 @@ interface GroupCollectorInterface
     public function amountMore(string $amount): GroupCollectorInterface;
 
     /**
+     * End of the description must match:
+     *
+     * @param array $array
+     *
+     * @return GroupCollectorInterface
+     */
+    public function descriptionEnds(array $array): GroupCollectorInterface;
+
+    /**
+     * Description must be:
+     *
+     * @param string $value
+     *
+     * @return GroupCollectorInterface
+     */
+    public function descriptionIs(string $value): GroupCollectorInterface;
+
+    /**
+     * Beginning of the description must match:
+     *
+     * @param array $array
+     *
+     * @return GroupCollectorInterface
+     */
+    public function descriptionStarts(array $array): GroupCollectorInterface;
+
+    /**
      * Exclude destination accounts.
      *
      * @param Collection $accounts
@@ -106,11 +133,44 @@ interface GroupCollectorInterface
     public function getPaginatedGroups(): LengthAwarePaginator;
 
     /**
-     * Return the sum of all journals.
-     *
-     * @return string
+     * @return GroupCollectorInterface
      */
-    public function getSum(): string;
+    public function hasAnyTag(): GroupCollectorInterface;
+
+    /**
+     * Has attachments
+     *
+     * @return GroupCollectorInterface
+     */
+    public function hasAttachments(): GroupCollectorInterface;
+
+    /**
+     * @param string $value
+     *
+     * @return GroupCollectorInterface
+     */
+    public function notesContain(string $value): GroupCollectorInterface;
+
+    /**
+     * @param string $value
+     *
+     * @return GroupCollectorInterface
+     */
+    public function notesEndWith(string $value): GroupCollectorInterface;
+
+    /**
+     * @param string $value
+     *
+     * @return GroupCollectorInterface
+     */
+    public function notesExactly(string $value): GroupCollectorInterface;
+
+    /**
+     * @param string $value
+     *
+     * @return GroupCollectorInterface
+     */
+    public function notesStartWith(string $value): GroupCollectorInterface;
 
     /**
      * Define which accounts can be part of the source and destination transactions.
@@ -221,6 +281,24 @@ interface GroupCollectorInterface
     public function setCurrency(TransactionCurrency $currency): GroupCollectorInterface;
 
     /**
+     * Set destination accounts.
+     *
+     * @param Collection $accounts
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setDestinationAccounts(Collection $accounts): GroupCollectorInterface;
+
+    /**
+     * Look for specific external ID's.
+     *
+     * @param string $externalId
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setExternalId(string $externalId): GroupCollectorInterface;
+
+    /**
      * Limit results to a specific foreign currency.
      *
      * @param TransactionCurrency $currency
@@ -230,13 +308,22 @@ interface GroupCollectorInterface
     public function setForeignCurrency(TransactionCurrency $currency): GroupCollectorInterface;
 
     /**
-     * Set destination accounts.
+     * Limit the result to a set of specific transaction groups.
      *
-     * @param Collection $accounts
+     * @param array $groupIds
      *
      * @return GroupCollectorInterface
      */
-    public function setDestinationAccounts(Collection $accounts): GroupCollectorInterface;
+    public function setIds(array $groupIds): GroupCollectorInterface;
+
+    /**
+     * Look for specific external ID's.
+     *
+     * @param string $externalId
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setInternalReference(string $externalId): GroupCollectorInterface;
 
     /**
      * Limit the result to a set of specific transaction journals.
@@ -285,33 +372,6 @@ interface GroupCollectorInterface
     public function setSearchWords(array $array): GroupCollectorInterface;
 
     /**
-     * Beginning of the description must match:
-     *
-     * @param array $array
-     *
-     * @return GroupCollectorInterface
-     */
-    public function descriptionStarts(array $array): GroupCollectorInterface;
-
-    /**
-     * End of the description must match:
-     *
-     * @param array $array
-     *
-     * @return GroupCollectorInterface
-     */
-    public function descriptionEnds(array $array): GroupCollectorInterface;
-
-    /**
-     * Description must be:
-     *
-     * @param string $value
-     *
-     * @return GroupCollectorInterface
-     */
-    public function descriptionIs(string $value): GroupCollectorInterface;
-
-    /**
      * Set source accounts.
      *
      * @param Collection $accounts
@@ -337,16 +397,6 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function setTags(Collection $tags): GroupCollectorInterface;
-
-    /**
-     * @return GroupCollectorInterface
-     */
-    public function withoutTags(): GroupCollectorInterface;
-
-    /**
-     * @return GroupCollectorInterface
-     */
-    public function hasAnyTag(): GroupCollectorInterface;
 
     /**
      * Limit the search to one specific transaction group.
@@ -408,18 +458,18 @@ interface GroupCollectorInterface
     public function withAccountInformation(): GroupCollectorInterface;
 
     /**
+     * Any notes, no matter what.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withAnyNotes(): GroupCollectorInterface;
+
+    /**
      * Add basic info on attachments of transactions.
      *
      * @return GroupCollectorInterface
      */
     public function withAttachmentInformation(): GroupCollectorInterface;
-
-    /**
-     * Has attachments
-     *
-     * @return GroupCollectorInterface
-     */
-    public function hasAttachments(): GroupCollectorInterface;
 
     /**
      * Include bill name + ID.
@@ -429,11 +479,25 @@ interface GroupCollectorInterface
     public function withBillInformation(): GroupCollectorInterface;
 
     /**
+     * Limit results to a transactions with a budget.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withBudget(): GroupCollectorInterface;
+
+    /**
      * Will include budget ID + name, if any.
      *
      * @return GroupCollectorInterface
      */
     public function withBudgetInformation(): GroupCollectorInterface;
+
+    /**
+     * Limit results to a transactions with a category.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withCategory(): GroupCollectorInterface;
 
     /**
      * Will include category ID + name, if any.
@@ -450,47 +514,18 @@ interface GroupCollectorInterface
     public function withNotes(): GroupCollectorInterface;
 
     /**
-     * Any notes, no matter what.
-     *
-     * @return GroupCollectorInterface
-     */
-    public function withAnyNotes(): GroupCollectorInterface;
-
-    /**
-     * @param string $value
-     * @return GroupCollectorInterface
-     */
-    public function notesContain(string $value): GroupCollectorInterface;
-    /**
-     * @param string $value
-     * @return GroupCollectorInterface
-     */
-    public function withoutNotes(): GroupCollectorInterface;
-
-    /**
-     * @param string $value
-     * @return GroupCollectorInterface
-     */
-    public function notesStartWith(string $value): GroupCollectorInterface;
-
-    /**
-     * @param string $value
-     * @return GroupCollectorInterface
-     */
-    public function notesEndWith(string $value): GroupCollectorInterface;
-
-    /**
-     * @param string $value
-     * @return GroupCollectorInterface
-     */
-    public function notesExactly(string $value): GroupCollectorInterface;
-
-    /**
      * Add tag info.
      *
      * @return GroupCollectorInterface
      */
     public function withTagInformation(): GroupCollectorInterface;
+
+    /**
+     * Limit results to a transactions without a bill.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withoutBill(): GroupCollectorInterface;
 
     /**
      * Limit results to a transactions without a budget.
@@ -507,35 +542,15 @@ interface GroupCollectorInterface
     public function withoutCategory(): GroupCollectorInterface;
 
     /**
-     * Limit results to a transactions with a category.
+     * @param string $value
      *
      * @return GroupCollectorInterface
      */
-    public function withCategory(): GroupCollectorInterface;
+    public function withoutNotes(): GroupCollectorInterface;
 
     /**
-     * Limit results to a transactions with a budget.
-     *
      * @return GroupCollectorInterface
      */
-    public function withBudget(): GroupCollectorInterface;
-
-    /**
-     * Look for specific external ID's.
-     *
-     * @param string $externalId
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setExternalId(string $externalId): GroupCollectorInterface;
-
-    /**
-     * Look for specific external ID's.
-     *
-     * @param string $externalId
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setInternalReference(string $externalId): GroupCollectorInterface;
+    public function withoutTags(): GroupCollectorInterface;
 
 }

@@ -40,16 +40,6 @@ class AccountTasker implements AccountTaskerInterface
     private $user;
 
     /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
-    }
-
-    /**
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
@@ -86,9 +76,7 @@ class AccountTasker implements AccountTaskerInterface
                     'currency_symbol'         => $currency->symbol,
                     'currency_name'           => $currency->name,
                     'currency_decimal_places' => $currency->decimal_places,];
-
-
-            $entry = [
+            $entry                         = [
                 'name'                    => $account->name,
                 'id'                      => $account->id,
                 'currency_id'             => $currency->id,

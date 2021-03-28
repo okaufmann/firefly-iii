@@ -22,50 +22,55 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use Carbon\Carbon;
 use Eloquent;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class Bill.
+ * FireflyIII\Models\Bill
  *
- * @property bool                                                                                  $active
- * @property int                                                                                   $transaction_currency_id
- * @property string                                                                                $amount_min
- * @property string                                                                                $amount_max
- * @property int                                                                                   $id
- * @property string                                                                                $name
- * @property Collection                                                                            $notes
- * @property TransactionCurrency                                                                   $transactionCurrency
- * @property Carbon                                                                                $created_at
- * @property Carbon                                                                                $updated_at
- * @property Carbon                                                                                $date
- * @property string                                                                                $repeat_freq
- * @property int                                                                                   $skip
- * @property bool                                                               $automatch
- * @property User                                                               $user
- * @property string                                                             $match
- * @property bool                                                               match_encrypted
- * @property bool                                                               name_encrypted
- * @SuppressWarnings (PHPMD.CouplingBetweenObjects)
- * @property \Illuminate\Support\Carbon|null                                    $deleted_at
- * @property int                                                                $user_id
- * @property-read \Illuminate\Database\Eloquent\Collection|Attachment[]         $attachments
- * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[] $transactionJournals
- * @method static bool|null forceDelete()
+ * @property int                                  $id
+ * @property Carbon|null                          $created_at
+ * @property Carbon|null                          $updated_at
+ * @property Carbon|null                          $deleted_at
+ * @property int                                  $user_id
+ * @property int|null                             $transaction_currency_id
+ * @property string                               $name
+ * @property string                               $match
+ * @property string                               $amount_min
+ * @property string                               $amount_max
+ * @property Carbon                               $date
+ * @property string|null                          $end_date
+ * @property string|null                          $extension_date
+ * @property string                               $repeat_freq
+ * @property int                                  $skip
+ * @property bool                                 $automatch
+ * @property bool                                 $active
+ * @property bool                                 $name_encrypted
+ * @property bool                                 $match_encrypted
+ * @property int                                  $order
+ * @property-read Collection|Attachment[]         $attachments
+ * @property-read int|null                        $attachments_count
+ * @property-read Collection|Note[]               $notes
+ * @property-read int|null                        $notes_count
+ * @property-read Collection|ObjectGroup[]        $objectGroups
+ * @property-read int|null                        $object_groups_count
+ * @property-read TransactionCurrency|null        $transactionCurrency
+ * @property-read Collection|TransactionJournal[] $transactionJournals
+ * @property-read int|null                        $transaction_journals_count
+ * @property-read User                            $user
  * @method static \Illuminate\Database\Eloquent\Builder|Bill newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Bill newQuery()
  * @method static Builder|Bill onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Bill query()
- * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereAmountMax($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereAmountMin($value)
@@ -73,11 +78,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Bill whereEndDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Bill whereExtensionDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereMatch($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereMatchEncrypted($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereNameEncrypted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Bill whereOrder($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereRepeatFreq($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereSkip($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereTransactionCurrencyId($value)
@@ -86,15 +94,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Bill withTrashed()
  * @method static Builder|Bill withoutTrashed()
  * @mixin Eloquent
- * @property-read int|null $attachments_count
- * @property-read int|null $notes_count
- * @property-read int|null $transaction_journals_count
- * @property bool $name_encrypted
- * @property bool $match_encrypted
  */
 class Bill extends Model
 {
     use SoftDeletes;
+
     /**
      * The attributes that should be casted to native types.
      *
@@ -125,13 +129,13 @@ class Bill extends Model
      *
      * @param string $value
      *
-     * @throws NotFoundHttpException
      * @return Bill
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): Bill
     {
         if (auth()->check()) {
-            $billId = (int) $value;
+            $billId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
             /** @var Bill $bill */
@@ -176,7 +180,7 @@ class Bill extends Model
      */
     public function setAmountMaxAttribute($value): void
     {
-        $this->attributes['amount_max'] = (string) $value;
+        $this->attributes['amount_max'] = (string)$value;
     }
 
     /**
@@ -186,7 +190,7 @@ class Bill extends Model
      */
     public function setAmountMinAttribute($value): void
     {
-        $this->attributes['amount_min'] = (string) $value;
+        $this->attributes['amount_min'] = (string)$value;
     }
 
     /**

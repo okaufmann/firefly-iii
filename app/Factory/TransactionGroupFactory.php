@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Factory;
 
 use FireflyIII\Exceptions\DuplicateTransactionException;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\User;
 use Log;
@@ -40,7 +41,6 @@ class TransactionGroupFactory
     /** @var User The user */
     private $user;
 
-
     /**
      * TransactionGroupFactory constructor.
      */
@@ -54,8 +54,8 @@ class TransactionGroupFactory
      *
      * @param array $data
      *
-     * @throws DuplicateTransactionException
      * @return TransactionGroup
+     * @throws DuplicateTransactionException
      */
     public function create(array $data): TransactionGroup
     {
@@ -73,6 +73,9 @@ class TransactionGroupFactory
 
         if (null !== $title) {
             $title = substr($title, 0, 1000);
+        }
+        if (0 === $collection->count()) {
+            throw new FireflyException('Created zero transaction journals.');
         }
 
         $group = new TransactionGroup;

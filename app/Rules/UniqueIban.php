@@ -33,11 +33,8 @@ use Log;
  */
 class UniqueIban implements Rule
 {
-    /** @var Account */
-    private $account;
-
-    /** @var string */
-    private $expectedType;
+    private ?Account $account;
+    private ?string  $expectedType;
 
     /**
      * Create a new rule instance.
@@ -51,6 +48,16 @@ class UniqueIban implements Rule
     {
         $this->account      = $account;
         $this->expectedType = $expectedType;
+        // a very basic fix to make sure we get the correct account type:
+        if ('expense' === $expectedType) {
+            $this->expectedType = AccountType::EXPENSE;
+        }
+        if ('revenue' === $expectedType) {
+            $this->expectedType = AccountType::REVENUE;
+        }
+        if ('asset' === $expectedType) {
+            $this->expectedType = AccountType::ASSET;
+        }
     }
 
     /**
@@ -68,8 +75,8 @@ class UniqueIban implements Rule
     /**
      * Determine if the validation rule passes.
      *
-     * @param  string $attribute
-     * @param  mixed  $value
+     * @param string $attribute
+     * @param mixed  $value
      *
      * @return bool
      *
@@ -103,28 +110,6 @@ class UniqueIban implements Rule
     }
 
     /**
-     * @param string $type
-     * @param string $iban
-     *
-     * @return int
-     */
-    private function countHits(string $type, string $iban): int
-    {
-        $query
-            = auth()->user()
-                    ->accounts()
-                    ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                    ->where('accounts.iban', $iban)
-                    ->where('account_types.type', $type);
-
-        if (null !== $this->account) {
-            $query->where('accounts.id', '!=', $this->account->id);
-        }
-
-        return $query->count();
-    }
-
-    /**
      * @return array
      *
      */
@@ -148,5 +133,27 @@ class UniqueIban implements Rule
         }
 
         return $maxCounts;
+    }
+
+    /**
+     * @param string $type
+     * @param string $iban
+     *
+     * @return int
+     */
+    private function countHits(string $type, string $iban): int
+    {
+        $query
+            = auth()->user()
+                    ->accounts()
+                    ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                    ->where('accounts.iban', $iban)
+                    ->where('account_types.type', $type);
+
+        if (null !== $this->account) {
+            $query->where('accounts.id', '!=', $this->account->id);
+        }
+
+        return $query->count();
     }
 }

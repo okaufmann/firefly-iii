@@ -73,6 +73,7 @@ class BudgetController extends Controller
 
     /**
      * Partial used in the budget report.
+     *
      * @param Collection $accounts
      * @param Collection $budgets
      * @param Carbon     $start
@@ -93,7 +94,8 @@ class BudgetController extends Controller
 
         $generator->accountPerBudget();
         $report = $generator->getReport();
-        return view('reports.budget.partials.account-per-budget', compact('report', 'budgets'));
+
+        return prefixView('reports.budget.partials.account-per-budget', compact('report', 'budgets'));
     }
 
     /**
@@ -149,7 +151,7 @@ class BudgetController extends Controller
             }
         }
 
-        return view('reports.budget.partials.accounts', compact('sums', 'report'));
+        return prefixView('reports.budget.partials.accounts', compact('sums', 'report'));
     }
 
     /**
@@ -183,8 +185,8 @@ class BudgetController extends Controller
                         ];
                     $result[$key]['transactions']++;
                     $result[$key]['sum']       = bcadd($journal['amount'], $result[$key]['sum']);
-                    $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string) $result[$key]['transactions']);
-                    $result[$key]['avg_float'] = (float) $result[$key]['avg'];
+                    $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string)$result[$key]['transactions']);
+                    $result[$key]['avg_float'] = (float)$result[$key]['avg'];
                 }
             }
         }
@@ -194,7 +196,7 @@ class BudgetController extends Controller
         array_multisort($amounts, SORT_ASC, $result);
 
         try {
-            $result = view('reports.budget.partials.avg-expenses', compact('result'))->render();
+            $result = prefixView('reports.budget.partials.avg-expenses', compact('result'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
@@ -263,12 +265,13 @@ class BudgetController extends Controller
                 $total = $sums[$currencyId]['sum'] ?? '0';
                 $pct   = '0';
                 if (0 !== bccomp($sum, '0') && 0 !== bccomp($total, '9')) {
-                    $pct = round(bcmul(bcdiv($sum, $total), '100'));
+                    $pct = round((float)bcmul(bcdiv($sum, $total), '100'));
                 }
                 $report[$budgetId]['currencies'][$currencyId]['sum_pct'] = $pct;
             }
         }
-        return view('reports.budget.partials.budgets', compact('sums', 'report'));
+
+        return prefixView('reports.budget.partials.budgets', compact('sums', 'report'));
     }
 
     /**
@@ -293,7 +296,7 @@ class BudgetController extends Controller
         $generator->general();
         $report = $generator->getReport();
 
-        return view('reports.partials.budgets', compact('report'))->render();
+        return prefixView('reports.partials.budgets', compact('report'))->render();
     }
 
     /**
@@ -318,8 +321,6 @@ class BudgetController extends Controller
 
         $periods   = app('navigation')->listOfPeriods($start, $end);
         $keyFormat = app('navigation')->preferredCarbonFormat($start, $end);
-
-
         // list expenses for budgets in account(s)
         $expenses = $this->opsRepository->listExpenses($start, $end, $accounts);
 
@@ -345,12 +346,12 @@ class BudgetController extends Controller
                     $report[$key]['entries'][$dateKey] = $report[$key] ['entries'][$dateKey] ?? '0';
                     $report[$key]['entries'][$dateKey] = bcadd($journal['amount'], $report[$key] ['entries'][$dateKey]);
                     $report[$key]['sum']               = bcadd($report[$key] ['sum'], $journal['amount']);
-                    $report[$key]['avg']               = bcdiv($report[$key]['sum'], (string) count($periods));
+                    $report[$key]['avg']               = bcdiv($report[$key]['sum'], (string)count($periods));
                 }
             }
         }
         try {
-            $result = view('reports.partials.budget-period', compact('report', 'periods'))->render();
+            $result = prefixView('reports.partials.budget-period', compact('report', 'periods'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
@@ -380,9 +381,10 @@ class BudgetController extends Controller
                     $result[] = [
                         'description'              => $journal['description'],
                         'transaction_group_id'     => $journal['transaction_group_id'],
-                        'amount_float'             => (float) $journal['amount'],
+                        'amount_float'             => (float)$journal['amount'],
                         'amount'                   => $journal['amount'],
                         'date'                     => $journal['date']->formatLocalized($this->monthAndDayFormat),
+                        'date_sort'                => $journal['date']->format('Y-m-d'),
                         'destination_account_name' => $journal['destination_account_name'],
                         'destination_account_id'   => $journal['destination_account_id'],
                         'currency_id'              => $currency['currency_id'],
@@ -401,7 +403,7 @@ class BudgetController extends Controller
         array_multisort($amounts, SORT_ASC, $result);
 
         try {
-            $result = view('reports.budget.partials.top-expenses', compact('result'))->render();
+            $result = prefixView('reports.budget.partials.top-expenses', compact('result'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));

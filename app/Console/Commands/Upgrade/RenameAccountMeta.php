@@ -45,7 +45,6 @@ class RenameAccountMeta extends Command
      */
     protected $signature = 'firefly-iii:rename-account-meta {--F|force : Force the execution of this command.}';
 
-
     /**
      * Execute the console command.
      *
@@ -102,12 +101,11 @@ class RenameAccountMeta extends Command
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool) $configVar->data;
+            return (bool)$configVar->data;
         }
 
         return false; // @codeCoverageIgnore
     }
-
 
     /**
      *

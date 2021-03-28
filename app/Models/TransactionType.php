@@ -32,20 +32,19 @@ use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class TransactionType.
+ * FireflyIII\Models\TransactionType
  *
- * @property string                                                             $type
- * @property int                                                                $id
- * @property Carbon|null                                    $created_at
- * @property Carbon|null                                    $updated_at
- * @property Carbon|null                                    $deleted_at
- * @property-read Collection|TransactionJournal[] $transactionJournals
- * @method static bool|null forceDelete()
+ * @property int $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ * @property string $type
+ * @property-read Collection|\FireflyIII\Models\TransactionJournal[] $transactionJournals
+ * @property-read int|null $transaction_journals_count
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionType newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionType newQuery()
  * @method static Builder|TransactionType onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionType query()
- * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionType whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionType whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionType whereId($value)
@@ -54,44 +53,24 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|TransactionType withTrashed()
  * @method static Builder|TransactionType withoutTrashed()
  * @mixin Eloquent
- * @property-read int|null                                                      $transaction_journals_count
  */
 class TransactionType extends Model
 {
     use SoftDeletes;
-
-    /**
-     *
-     */
     public const WITHDRAWAL = 'Withdrawal';
-    /**
-     *
-     */
     public const DEPOSIT = 'Deposit';
-    /**
-     *
-     */
     public const TRANSFER = 'Transfer';
-    /**
-     *
-     */
     public const OPENING_BALANCE = 'Opening balance';
-    /**
-     *
-     */
     public const RECONCILIATION = 'Reconciliation';
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+    public const INVALID = 'Invalid';
+    /** @var string[] */
     protected $casts
         = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
         ];
-    /** @var array Fields that can be filled */
+    /** @var string[]  */
     protected $fillable = ['type'];
 
     /**

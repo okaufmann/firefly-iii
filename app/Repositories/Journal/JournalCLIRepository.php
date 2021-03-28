@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Journal;
-
-
 use Carbon\Carbon;
 use DB;
 use Exception;
@@ -41,16 +39,6 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
 {
     /** @var User */
     private $user;
-
-    /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
-    }
 
     /**
      * Get all transaction journals with a specific type, regardless of user.

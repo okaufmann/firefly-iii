@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
 
-
 use Carbon\Carbon;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -52,15 +51,11 @@ class BillController extends Controller
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
-
-
         /** @var ReportHelperInterface $helper */
         $helper = app(ReportHelperInterface::class);
         $report = $helper->getBillReport($accounts, $start, $end);
-
-
         try {
-            $result = view('reports.partials.bills', compact('report'))->render();
+            $result = prefixView('reports.partials.bills', compact('report'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budgets: %s', $e->getMessage()));

@@ -35,18 +35,6 @@ use Log;
 class TransactionJournalMetaFactory
 {
     /**
-     * Constructor.
-     *
-     * @codeCoverageIgnore
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
-    }
-
-    /**
      * @param array $data
      *
      * @return TransactionJournalMeta|null
@@ -72,7 +60,7 @@ class TransactionJournalMetaFactory
             Log::debug('Is a carbon object.');
             $value = $data['data']->toW3cString();
         }
-        if ('' === (string) $value) {
+        if ('' === (string)$value) {
             Log::debug('Is an empty string.');
             // don't store blank strings.
             if (null !== $entry) {

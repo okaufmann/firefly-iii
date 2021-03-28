@@ -21,7 +21,6 @@
 const mix = require('laravel-mix');
 require('laravel-mix-bundle-analyzer');
 
-
 // production
 mix.webpackConfig({
                       resolve: {
@@ -51,15 +50,22 @@ mix
     // COPY SCRIPT
     //.copy('../resources/assets/js/v2/classic/adminlte.js', 'public/v2/js/classic.js')
 
-    // dashboard component (frontpage):
+    // misc pages
     .js('src/pages/dashboard.js', 'public/js')
     .js('src/pages/empty.js', 'public/js')
+    .js('src/pages/new-user/index.js', 'public/js/new-user')
 
     // accounts.
     .js('src/pages/accounts/index.js', 'public/js/accounts')
+    .js('src/pages/accounts/show.js', 'public/js/accounts')
 
+    // transactions.
+    .js('src/pages/transactions/create.js', 'public/js/transactions')
+    .js('src/pages/transactions/edit.js', 'public/js/transactions')
     // register page
     .js('src/pages/register.js', 'public/js')
+
+
 
     .extract().sourceMaps()
     .sass('src/app.scss', 'public/css')
@@ -67,6 +73,7 @@ mix
     // move to right dir
     .copy('public/js','../public/v2/js')
     .copy('fonts','../public/fonts')
+    .copy('images','../public/images')
     .copy('public/css','../public/v2/css')
 ;
 

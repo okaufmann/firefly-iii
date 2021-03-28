@@ -23,8 +23,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Validation;
-
-
 use Illuminate\Validation\Validator;
 use Log;
 
@@ -35,13 +33,6 @@ use Log;
  */
 trait CurrencyValidation
 {
-    /**
-     * @param Validator $validator
-     *
-     * @return array
-     */
-    abstract protected function getTransactionsArray(Validator $validator): array;
-
     /**
      * If the transactions contain foreign amounts, there must also be foreign currency information.
      *
@@ -59,16 +50,23 @@ trait CurrencyValidation
             ) {
                 $validator->errors()->add(
                     'transactions.' . $index . '.foreign_amount',
-                    (string) trans('validation.require_currency_info')
+                    (string)trans('validation.require_currency_info')
                 );
             }
             // if the currency is present, then the amount must be present as well.
             if ((isset($transaction['foreign_currency_id']) || isset($transaction['foreign_currency_code'])) && !isset($transaction['foreign_amount'])) {
                 $validator->errors()->add(
                     'transactions.' . $index . '.foreign_amount',
-                    (string) trans('validation.require_currency_amount')
+                    (string)trans('validation.require_currency_amount')
                 );
             }
         }
     }
+
+    /**
+     * @param Validator $validator
+     *
+     * @return array
+     */
+    abstract protected function getTransactionsArray(Validator $validator): array;
 }

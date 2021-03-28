@@ -33,10 +33,13 @@ return [
     'clone'                                               => 'Klonla',
     'last_seven_days'                                     => 'Son yedi gün',
     'last_thirty_days'                                    => 'Son otuz gün',
+    'last_180_days'                                       => 'Last 180 days',
+    'YTD'                                                 => 'YTD',
     'welcome_back'                                        => 'What\'s playing?',
     'everything'                                          => 'Her şey',
     'today'                                               => 'bugün',
     'customRange'                                         => 'Özel menzil',
+    'date_range'                                          => 'Date range',
     'apply'                                               => 'Uygula',
     'select_date'                                         => 'Tarih Seç..',
     'cancel'                                              => 'İptal',
@@ -53,13 +56,14 @@ return [
     'Opening balance'                                     => 'Açılış bakiyesi',
     'create_new_stuff'                                    => 'Yeni bir şey oluştur',
     'new_withdrawal'                                      => 'Yeni para çekme',
-    'create_new_transaction'                              => 'Yeni  işlem oluştur',
+    'create_new_transaction'                              => 'Create a new transaction',
     'sidebar_frontpage_create'                            => 'Create',
     'new_transaction'                                     => 'Yeni işlem',
     'no_rules_for_bill'                                   => 'Bu faturaya bağlı bir kural yok.',
     'go_to_asset_accounts'                                => 'Varlık hesaplarınızı görüntüleyin
 ',
     'go_to_budgets'                                       => 'Bütçelerine git',
+    'go_to_withdrawals'                                   => 'Go to your withdrawals',
     'clones_journal_x'                                    => 'This transaction is a clone of ":description" (#:id)',
     'go_to_categories'                                    => 'Kategorilerinize gidin',
     'go_to_bills'                                         => 'Faturalarına git',
@@ -218,6 +222,12 @@ return [
     'expected_total'                                      => 'beklenen toplam',
     'reconciliation_account_name'                         => ':name reconciliation (:currency)',
     'saved'                                               => 'Saved',
+    'advanced_options'                                    => 'Advanced options',
+    'advanced_options_explain'                            => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',
+    'here_be_dragons'                                     => 'Hic sunt dracones',
+
+    // Webhooks
+    'webhooks'                                            => 'Webhooks',
 
     // API access
     'authorization_request'                               => 'Firefly III v: version Yetkilendirme İsteği',
@@ -235,6 +245,8 @@ return [
     'all_source_accounts'                                 => 'Source accounts',
     'back_to_index'                                       => 'Back to the index',
     'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
+    'external_url'                                        => 'External URL',
+    'internal_reference'                                  => 'Internal reference',
 
     // check for updates:
     'update_check_title'                                  => 'Güncellemeleri kontrol et',
@@ -264,12 +276,12 @@ return [
 
     // search
     'search'                                              => 'Ara',
-    'long_query_warning'                                  => 'Your search query is very long, and may not work as expected.',
     'search_query'                                        => 'Sorgu',
     'search_found_transactions'                           => 'Firefly III found :count transaction in :time seconds.|Firefly III found :count transactions in :time seconds.',
     'search_found_more_transactions'                      => 'Firefly III found more than :count transactions in :time seconds.',
     'search_for_query'                                    => 'Firefly III şu kelimelerin hepsini içeren hareketleri arıyor: <span class="text-info">:query</span>',
     'search_modifier_date_is'                             => 'Transaction date is ":value"',
+    'search_modifier_id'                                  => 'Transaction ID is ":value"',
     'search_modifier_date_before'                         => 'Transaction date is before or on ":value"',
     'search_modifier_date_after'                          => 'Transaction date is after or on ":value"',
     'search_modifier_created_on'                          => 'Transaction was created on ":value"',
@@ -412,7 +424,7 @@ return [
     'apply_rule_selection'                                => 'İşleminizin bir bölümüne ":title" kuralını uygulayın',
     'apply_rule_selection_intro'                          => '":title" gibi kurallar normalde sadece yeni ve güncellenen işlemlerde geçerlidir ama Firefly III\'e onları mevcut işlemlerinizin istediğiniz bölümlerinde uygulanmasını söyleyebilirsiniz. Bu bir kuralı değiştirdiğinizde ve bunun diğer tüm işlemlerde uygulanmasını istediğinizde yararlı olabilir.',
     'include_transactions_from_accounts'                  => 'Bu hesaplardan gelen işlemleri dahil et',
-    'applied_rule_selection'                              => 'Seçtiğiniz ":title" kuralı uygulandı.',
+    'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
     'execute'                                             => 'Çalıştır',
     'apply_rule_group_selection'                          => 'İşlemlerinizin bir bölümüne ":title" kural grubunu uygulayın',
     'apply_rule_group_selection_intro'                    => '":title" gibi kural grupları normalde sadece yeni ve güncellenen işlemlerde geçerlidir ama Firefly III\'e onları mevcut işlemlerinizin istediğiniz bölümlerinde uygulanmasını söyleyebilirsiniz. Bu bir kural grubunu değiştirdiğinizde ve bunun diğer tüm işlemlerde uygulanmasını istediğinizde yararlı olabilir.',
@@ -667,7 +679,7 @@ return [
     'pref_optional_fields_transaction'          => 'İşlemler için bağlı alanlar',
     'pref_optional_fields_transaction_help'     => 'Yeni bir işlem oluşturulurken (dağınıklık nedeniyle) varsayılan olarak tüm alanlar ektinleştirilmez. Aşağıdan, eğer işinize yarayacağını düşünüyorsanız bu alanları ektinleştirebilirsiniz. Tabii ki, devre dışı bırakılmış ama zaten doldurulmuş alanlar ayarlar ne olursa olsun görünecektir.',
     'optional_tj_date_fields'                   => 'Tarih alanları',
-    'optional_tj_business_fields'               => 'İş alanları',
+    'optional_tj_other_fields'                  => 'Other fields',
     'optional_tj_attachment_fields'             => 'Ek alanları',
     'pref_optional_tj_interest_date'            => 'Faiz tarihi',
     'pref_optional_tj_book_date'                => 'Kitap tarihi',
@@ -678,12 +690,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Dahili referans',
     'pref_optional_tj_notes'                    => 'Notlar',
     'pref_optional_tj_attachments'              => 'Ekler',
-    'pref_optional_tj_external_uri'             => 'External URI',
+    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_location'                 => 'Location',
+    'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Tarih',
     'optional_field_meta_business'              => 'İş',
     'optional_field_attachments'                => 'Ekler',
     'optional_field_meta_data'                  => 'İsteğe bağlı meta veriler',
-    'external_uri'                              => 'External URI',
+    'external_uri'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Delete data',
@@ -873,6 +887,7 @@ return [
     'create_new_deposit'                        => 'Yeni mevduat oluştur',
     'create_new_transfer'                       => 'Yeni transfer oluştur',
     'create_new_asset'                          => 'Yeni varlık hesabı oluştur',
+    'create_new_liabilities'                    => 'Create new liability',
     'create_new_expense'                        => 'Yeni gider hesabı oluştur',
     'create_new_revenue'                        => 'Yeni gelir hesabı oluştur',
     'create_new_piggy_bank'                     => 'Yeni bir kumbara oluştur',
@@ -916,6 +931,13 @@ return [
     'options'                                   => 'Seçenekler',
 
     // budgets:
+    'daily_budgets'                             => 'Daily budgets',
+    'weekly_budgets'                            => 'Weekly budgets',
+    'monthly_budgets'                           => 'Monthly budgets',
+    'quarterly_budgets'                         => 'Quarterly budgets',
+    'half_year_budgets'                         => 'Half-yearly budgets',
+    'yearly_budgets'                            => 'Yearly budgets',
+    'other_budgets'                             => 'Custom timed budgets',
     'budget_limit_not_in_range'                 => 'This amount applies from :start to :end:',
     'total_available_budget'                    => 'Total available budget (between :start and :end)',
     'total_available_budget_in_currency'        => 'Total available budget in :currency',
@@ -955,7 +977,6 @@ return [
     'available_amount_indication'               => 'Toplam bütçenizin ne olabileceğinin bir göstergesi olarak bu tutarı kullanın.',
     'suggested'                                 => 'Önerilen',
     'average_between'                           => ':start ve :end arasında Averaj',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i> Usually you budget about :amount per day. This time it\'s :over_amount per day. Are you sure?',
     'transferred_in'                            => 'Transferred (in)',
     'transferred_away'                          => 'Transferred (away)',
     'auto_budget_none'                          => 'No auto-budget',
@@ -1004,6 +1025,7 @@ return [
     'list_inactive_rule'                        => 'Etkin Olmayan Kurallar',
     'bill_edit_rules'                           => 'Firefly III will attempt to edit the rule related to this bill as well. If you\'ve edited this rule yourself however, Firefly III won\'t change anything.|Firefly III will attempt to edit the :count rules related to this bill as well. If you\'ve edited these rules yourself however, Firefly III won\'t change anything.',
     'bill_expected_date'                        => 'Expected :date',
+    'bill_paid_on'                              => 'Paid on {date}',
 
     // accounts:
     'inactive_account_link'                     => 'You have :count inactive (archived) account, which you can view on this separate page.|You have :count inactive (archived) accounts, which you can view on this separate page.',
@@ -1110,6 +1132,7 @@ return [
     'interest_calc_monthly'                     => 'Per month',
     'interest_calc_yearly'                      => 'Per year',
     'initial_balance_account'                   => 'Initial balance account of :account',
+    'list_options'                              => 'List options',
 
     // categories:
     'new_category'                              => 'Yeni Kategori',
@@ -1135,6 +1158,9 @@ return [
     'updated_withdrawal'                        => 'Para çekme güncellendi ":description"',
     'updated_deposit'                           => 'Güncellenmiş depozito ":description"',
     'updated_transfer'                          => 'Güncellenmiş ":description"',
+    'no_changes_withdrawal'                     => 'Withdrawal ":description" was not changed.',
+    'no_changes_deposit'                        => 'Deposit ":description" was not changed.',
+    'no_changes_transfer'                       => 'Transfer ":description" was not changed.',
     'delete_withdrawal'                         => 'Çekimi sil ":description"',
     'delete_deposit'                            => 'Mevduat sil ":description"',
     'delete_transfer'                           => 'Aktarımı sil ":description"',
@@ -1215,7 +1241,12 @@ return [
     'journal_link_bill'                         => 'This transaction is linked to bill <a href=":route">:name</a>. To remove the connection, uncheck the checkbox. Use rules to connect it to another bill.',
     'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID} ("{title}")</a> has been stored.',
     'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
-    'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
+    'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> ("{title}") has been updated.',
+    'transaction_updated_no_changes'            => '<a href="transactions/show/{ID}">Transaction #{ID}</a> ("{title}") did not receive any changes.',
+    'first_split_decides'                       => 'The first split determines the value of this field',
+    'first_split_overrules_source'              => 'The first split may overrule the source account',
+    'first_split_overrules_destination'         => 'The first split may overrule the destination account',
+    'spent_x_of_y'                              => 'Spent {amount} of {total}',
 
     // new user:
     'welcome'                                   => 'Firefly III\'e hoşgeldiniz!',
@@ -1254,6 +1285,9 @@ return [
     'per_day'                                   => 'Hergün',
     'left_to_spend_per_day'                     => 'Günlük harcama için bırakıldı',
     'bills_paid'                                => 'Ödenen Faturalar',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Para birimi',
@@ -1322,6 +1356,7 @@ return [
     'automation'                                => 'Automation',
     'others'                                    => 'Others',
     'classification'                            => 'Classification',
+    'store_transaction'                         => 'Store transaction',
 
     // reports:
     'report_default'                            => ':start ve :end arasında varsayılan finans raporu',
@@ -1442,6 +1477,8 @@ return [
     'journal-amount'                            => 'Geçerli fatura girişi',
     'name'                                      => 'İsim',
     'date'                                      => 'Tarih',
+    'date_and_time'                             => 'Date and time',
+    'time'                                      => 'Time',
     'paid'                                      => 'Ödendi',
     'unpaid'                                    => 'Ödenmedi',
     'day'                                       => 'Gün',
@@ -1505,6 +1542,8 @@ return [
     'transaction_journal_information'  => 'İşlem Bilgileri',
     'transaction_journal_meta'         => 'Meta Bilgisi',
     'transaction_journal_more'         => 'More information',
+    'basic_journal_information'        => 'Basic transaction information',
+    'transaction_journal_extra'        => 'Extra information',
     'att_part_of_journal'              => 'Stored under ":journal"',
     'total_amount'                     => 'Toplam Tutar',
     'number_of_decimals'               => 'Ondalık Sayı',

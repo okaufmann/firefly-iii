@@ -2,6 +2,75 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+- No unreleased changes.
+
+## 5.5.0 (API 1.5.0) 2021-03-27
+
+### Added
+
+- [Issue 3717](https://github.com/firefly-iii/firefly-iii/issues/3717) The CSV export will also export all optional metadata.
+- [Issue 4007](https://github.com/firefly-iii/firefly-iii/issues/4007) The message returned when updating transactions using a rull will return the number of changed transactions.
+- [Issue 4334](https://github.com/firefly-iii/firefly-iii/issues/4334) Support for Portuguese! 🇵🇹
+- [Issue 4338](https://github.com/firefly-iii/firefly-iii/issues/4338) The recurring transactions calendar was off by one day, this is now fixed.
+- [Issue 4339](https://github.com/firefly-iii/firefly-iii/issues/4339) A bad redirect would send you to a 404.
+- [Issue 4340](https://github.com/firefly-iii/firefly-iii/issues/4340) Any date related rule actions and triggers will pick up the correct date from the transaction.
+- [Issue 4406](https://github.com/firefly-iii/firefly-iii/issues/4406) SQL errors when submitting large amounts to the budget overview are now fixed.
+- [Issue 4412](https://github.com/firefly-iii/firefly-iii/issues/4412) The cron job could show you a null pointer.
+- [Issue 4488](https://github.com/firefly-iii/firefly-iii/issues/4488) The Japanese Yen has been corrected to zero decimals.
+- [Issue 4503](https://github.com/firefly-iii/firefly-iii/issues/4503) When bills skip a moment the amounts in the overview would be off.
+- Firefly III now supports [webhooks](https://docs.firefly-iii.org/firefly-iii/pages-and-features/webhooks/).
+- The search now also supports searching for transactions using `id:123`.
+
+### Changed
+
+- OAuth settings are visible for LDAP users.
+- If you set `FIREFLY_III_LAYOUT=v2`, Firefly III will show you the new layout on pages where it's available.
+- A new favicon based on the future logo of Firefly III.
+- ⚠️ The URL to call the cron job from the web has changed to `api/v1/cron/[token here]`.
+
+### Deprecated
+- The current layout will no longer receive fixes and changes.
+
+### Fixed
+- [Issue 4045](https://github.com/firefly-iii/firefly-iii/issues/4045) The error message for "amount missing" now has a look up value
+- [Issue 4055](https://github.com/firefly-iii/firefly-iii/issues/4055) The budget report crashed when opening.
+- [Issue 4060](https://github.com/firefly-iii/firefly-iii/issues/4060) The remote user guard would show a 500 error about type conversion.
+- [Issue 4070](https://github.com/firefly-iii/firefly-iii/issues/4070) Tagging recurring transactions would not work.
+- [Issue 4071](https://github.com/firefly-iii/firefly-iii/issues/4071) Selecting piggy banks in rules was broken.
+- [Issue 4074](https://github.com/firefly-iii/firefly-iii/issues/4074) Audit logging would break some Apache servers
+- [Issue 4098](https://github.com/firefly-iii/firefly-iii/issues/4098) Search reports "Firefly III found 50 transactions in x seconds" even when it only finds one.
+- [Issue 4108](https://github.com/firefly-iii/firefly-iii/issues/4108) Fix category update in bulk update.
+- [Issue 4112](https://github.com/firefly-iii/firefly-iii/issues/4112) Broken redirect after delete.
+- [Issue 4158](https://github.com/firefly-iii/firefly-iii/issues/4158) `strtolower` breaks some translations.
+- [Issue 4162](https://github.com/firefly-iii/firefly-iii/issues/4162) Stop processing does not stop other rules in rule group
+- [Issue 4169](https://github.com/firefly-iii/firefly-iii/issues/4169) Sorting by date on category Report sorts alphabetically instead.
+- [Issue 4175](https://github.com/firefly-iii/firefly-iii/issues/4175) Bad math in long periods.
+- [Issue 4186](https://github.com/firefly-iii/firefly-iii/issues/4186) Could not add translation link.
+- [Issue 4200](https://github.com/firefly-iii/firefly-iii/issues/4200) A rare null pointer exception when running rules.
+- [Issue 4207](https://github.com/firefly-iii/firefly-iii/issues/4207) Fix the "spent per day" box.
+- [Issue 4231](https://github.com/firefly-iii/firefly-iii/issues/4231) Inconsistent hiding of columns.
+- [Issue 4235](https://github.com/firefly-iii/firefly-iii/issues/4235) The info popup in the standard financial report does not apply report's account filter.
+- [Issue 4241](https://github.com/firefly-iii/firefly-iii/issues/4241) A broken chart works again.
+- [Issue 4520](https://github.com/firefly-iii/firefly-iii/issues/4520) RSA token generation is now PHP7/8 compatible.
+- [Issue 4529](https://github.com/firefly-iii/firefly-iii/issues/4529) Convert transaction routine was broken.  
+- PHP configurations that have "MB" as size indicator would be parsed badly.
+
+### API
+
+⚠️ *Lots of API changes, make sure you read [the documentation](https://api-docs.firefly-iii.org/).* ⚠️
+
+- [Issue 4050](https://github.com/firefly-iii/firefly-iii/issues/4050) Updated Transaction Search API to set limit from user preferences
+- [Issue 4113](https://github.com/firefly-iii/firefly-iii/issues/4113) Piggy Bank API Deletes Some Piggy Metadata
+- [Issue 4122](https://github.com/firefly-iii/firefly-iii/issues/4122) Remove reconciliation accounts from autocomplete
+- [Issue 4195](https://github.com/firefly-iii/firefly-iii/issues/4195) User endpoint was broken.
+- [Issue 4199](https://github.com/firefly-iii/firefly-iii/issues/4199) Unable to update tags using API.
+- [Issue 4394](https://github.com/firefly-iii/firefly-iii/issues/4394) Storing budgets works again.
+- [Issue 4426](https://github.com/firefly-iii/firefly-iii/issues/4426) Storing accounts would lead to bad capitalization in liability type.
+- [Issue 4435](https://github.com/firefly-iii/firefly-iii/issues/4435) Storing piggy banks with object group information would fail.
+- Users can submit almost any field without other fields changing as well.
+
 ## 5.4.6 (API 1.4.0) - 2020-10-07
 
 ### Added
@@ -11,12 +80,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - Upgrade to Laravel 8
 
-### Deprecated
-- Initial release.
-
-### Removed
-- Initial release.
-
 ### Fixed
 - [Issue 4001](https://github.com/firefly-iii/firefly-iii/issues/4001) [issue 4005](https://github.com/firefly-iii/firefly-iii/issues/4005) [issue 4011](https://github.com/firefly-iii/firefly-iii/issues/4011) Special characters are double escaped.
 - [Issue 4006](https://github.com/firefly-iii/firefly-iii/issues/4006) Unclear error message fixed.
@@ -24,14 +87,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 4023](https://github.com/firefly-iii/firefly-iii/issues/4023) Fix issue with logout and admin view.
 - Missing help text can now be translated.
 - Demo sites send messages to me, not "demo@firefly".
-
-
-### Security
-- Initial release.
-
-### API
-- Initial release
-
 
 ## 5.4.5 (API 1.4.0) - 2020-10-28
 

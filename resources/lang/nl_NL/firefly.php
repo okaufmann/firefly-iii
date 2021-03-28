@@ -33,10 +33,13 @@ return [
     'clone'                                               => 'Dupliceren',
     'last_seven_days'                                     => 'Laatste zeven dagen',
     'last_thirty_days'                                    => 'Laatste dertig dagen',
+    'last_180_days'                                       => 'Laatste 180 dagen',
+    'YTD'                                                 => 'YTD',
     'welcome_back'                                        => 'Hoe staat het er voor?',
     'everything'                                          => 'Alles',
     'today'                                               => 'vandaag',
     'customRange'                                         => 'Zelf bereik kiezen',
+    'date_range'                                          => 'Datumbereik',
     'apply'                                               => 'Go',
     'select_date'                                         => 'Selecteer periode..',
     'cancel'                                              => 'Annuleren',
@@ -53,12 +56,13 @@ return [
     'Opening balance'                                     => 'Startsaldo',
     'create_new_stuff'                                    => 'Nieuw',
     'new_withdrawal'                                      => 'Nieuwe uitgave',
-    'create_new_transaction'                              => 'Maak nieuwe transactie',
+    'create_new_transaction'                              => 'Maak een nieuwe transactie',
     'sidebar_frontpage_create'                            => 'Maak',
     'new_transaction'                                     => 'Nieuwe transactie',
     'no_rules_for_bill'                                   => 'Dit contract heeft geen regels.',
     'go_to_asset_accounts'                                => 'Bekijk je betaalrekeningen',
     'go_to_budgets'                                       => 'Ga naar je budgetten',
+    'go_to_withdrawals'                                   => 'Ga naar je uitgaven',
     'clones_journal_x'                                    => 'Deze transactie is een kloon van ":description" (#:id)',
     'go_to_categories'                                    => 'Ga naar je categorieën',
     'go_to_bills'                                         => 'Ga naar je contracten',
@@ -217,6 +221,12 @@ return [
     'expected_total'                                      => 'verwacht totaal',
     'reconciliation_account_name'                         => ':name afstemming (:currency)',
     'saved'                                               => 'Opgeslagen',
+    'advanced_options'                                    => 'Geavanceerde opties',
+    'advanced_options_explain'                            => 'Sommige pagina\'s in Firefly III hebben geavanceerde opties verborgen achter deze knop. Voor deze pagina geldt dat niet, maar check zeker de andere pagina\'s!',
+    'here_be_dragons'                                     => 'Hic sunt dracones',
+
+    // Webhooks
+    'webhooks'                                            => 'Webhooks',
 
     // API access
     'authorization_request'                               => 'Firefly III v:version autorisatieverzoek',
@@ -234,6 +244,8 @@ return [
     'all_source_accounts'                                 => 'Bronrekeningen',
     'back_to_index'                                       => 'Terug naar de index',
     'cant_logout_guard'                                   => 'Firefly III kan je niet uitloggen.',
+    'external_url'                                        => 'Externe URL',
+    'internal_reference'                                  => 'Interne referentie',
 
     // check for updates:
     'update_check_title'                                  => 'Op updates controleren',
@@ -263,12 +275,12 @@ return [
 
     // search
     'search'                                              => 'Zoeken',
-    'long_query_warning'                                  => 'Je zoekopdracht is erg lang en werkt misschien niet lekker.',
     'search_query'                                        => 'Zoekopdracht',
     'search_found_transactions'                           => 'Firefly III vond :count transactie in :time seconden.|Firefly III vond :count transacties in :time seconden.',
     'search_found_more_transactions'                      => 'Firefly III vond meer dan :count transacties in :time seconden.',
     'search_for_query'                                    => 'Firefly III zoekt transacties met al deze woorden: <span class="text-info">:query</span>',
     'search_modifier_date_is'                             => 'Transactiedatum is ":value"',
+    'search_modifier_id'                                  => 'Transactie ID is ":value"',
     'search_modifier_date_before'                         => 'Transactiedatum is vóór of op ":value"',
     'search_modifier_date_after'                          => 'Transactiedatum is na of op ":value"',
     'search_modifier_created_on'                          => 'Transactie werd gemaakt op ":value"',
@@ -411,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Pas regel ":title" toe op een selectie van je transacties',
     'apply_rule_selection_intro'                          => 'Regels zoals ":title" worden normaal alleen op nieuwe of geüpdate transacties toegepast, maar Firefly III kan ze ook toepassen op (een selectie van) je bestaande transacties. Dit kan praktisch zijn als je een regels hebt veranderd en je wilt de veranderingen toepassen op al je transacties.',
     'include_transactions_from_accounts'                  => 'Gebruik transacties van deze rekeningen',
-    'applied_rule_selection'                              => 'Regel ":title" is toegepast op je selectie.',
+    'applied_rule_selection'                              => '{0} Er zijn geen transacties in je selectie veranderd door regel ":title".|[1] Eén transactie in je selectie is veranderd door regel ":title".|[2,*] :count transacties in je selectie zijn veranderd door regel ":title".',
     'execute'                                             => 'Uitvoeren',
     'apply_rule_group_selection'                          => 'Pas regelgroep ":title" toe op een selectie van je transacties',
     'apply_rule_group_selection_intro'                    => 'Regelgroepen zoals ":title" worden normaal alleen op nieuwe of geüpdate transacties toegepast, maar Firefly III kan ze ook toepassen op (een selectie van) je bestaande transacties. Dit kan praktisch zijn als je regels in de groep hebt veranderd en je wilt de veranderingen toepassen op al je transacties.',
@@ -666,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Optionele velden voor transacties',
     'pref_optional_fields_transaction_help'     => 'Standaard staan niet alle velden aan (vanwege het overzicht). Hier kan je zulke extra velden alsnog aanzetten, als je denkt dat ze handig zijn. Als je een veld uitzet, maar deze heeft wel degelijk een waarde, dan is-ie altijd zichtbaar, wat je ook doet.',
     'optional_tj_date_fields'                   => 'Datumvelden',
-    'optional_tj_business_fields'               => 'Zakelijke velden',
+    'optional_tj_other_fields'                  => 'Overige velden',
     'optional_tj_attachment_fields'             => 'Bijlagen',
     'pref_optional_tj_interest_date'            => 'Rentedatum',
     'pref_optional_tj_book_date'                => 'Boekdatum',
@@ -677,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Interne verwijzing',
     'pref_optional_tj_notes'                    => 'Notities',
     'pref_optional_tj_attachments'              => 'Bijlagen',
-    'pref_optional_tj_external_uri'             => 'Externe URI',
+    'pref_optional_tj_external_uri'             => 'Externe URL',
+    'pref_optional_tj_location'                 => 'Locatie',
+    'pref_optional_tj_links'                    => 'Transactiekoppelingen',
     'optional_field_meta_dates'                 => 'Data',
     'optional_field_meta_business'              => 'Zakelijk',
     'optional_field_attachments'                => 'Bijlagen',
     'optional_field_meta_data'                  => 'Optionele meta-gegevens',
-    'external_uri'                              => 'Externe URI',
+    'external_uri'                              => 'Externe URL',
 
     // profile:
     'delete_stuff_header'                       => 'Verwijder gegevens',
@@ -872,6 +886,7 @@ return [
     'create_new_deposit'                        => 'Nieuwe inkomsten',
     'create_new_transfer'                       => 'Nieuwe overschrijving',
     'create_new_asset'                          => 'Nieuwe betaalrekening',
+    'create_new_liabilities'                    => 'Maak nieuwe passiva',
     'create_new_expense'                        => 'Nieuwe crediteur',
     'create_new_revenue'                        => 'Nieuwe debiteur',
     'create_new_piggy_bank'                     => 'Nieuw spaarpotje',
@@ -915,6 +930,13 @@ return [
     'options'                                   => 'Opties',
 
     // budgets:
+    'daily_budgets'                             => 'Dagelijkse budgetten',
+    'weekly_budgets'                            => 'Wekelijkse budgetten',
+    'monthly_budgets'                           => 'Maandelijkse budgetten',
+    'quarterly_budgets'                         => 'Driemaandelijkse budgetten',
+    'half_year_budgets'                         => 'Halfjaarlijkse budgetten',
+    'yearly_budgets'                            => 'Jaarlijkse budgetten',
+    'other_budgets'                             => 'Aangepaste budgetten',
     'budget_limit_not_in_range'                 => 'Dit bedrag is van toepassing op :start tot :end:',
     'total_available_budget'                    => 'Totaal beschikbare budget (tussen :start en :end)',
     'total_available_budget_in_currency'        => 'Totaal beschikbare budget in :currency',
@@ -954,7 +976,6 @@ return [
     'available_amount_indication'               => 'Gebruik deze bedragen om een indruk te krijgen van wat je totale budget zou kunnen zijn.',
     'suggested'                                 => 'Gesuggereerd',
     'average_between'                           => 'Gemiddelde tussen :start en :end',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i> Normaalgesproken budgetteer je :amount per dag. Nu sta je op :over_amount per dag. Zeker weten?',
     'transferred_in'                            => 'Overgeboekt (inkomend)',
     'transferred_away'                          => 'Overgeboekt (uitgaand)',
     'auto_budget_none'                          => 'Geen auto-budget',
@@ -1003,6 +1024,7 @@ return [
     'list_inactive_rule'                        => 'inactieve regel',
     'bill_edit_rules'                           => 'Firefly III gaat proberen de gerelateerde regel ook aan te passen. Als je deze zelf al hebt gewijzigd echter, zal dit niet gebeuren.|Firefly III gaat proberen de :count gerelateerde regels ook aan te passen. Als je deze zelf al hebt gewijzigd echter, zal dit niet gebeuren.',
     'bill_expected_date'                        => 'Verwacht :date',
+    'bill_paid_on'                              => 'Betaald op {date}',
 
     // accounts:
     'inactive_account_link'                     => 'Je hebt :count inactieve (gearchiveerde) rekening, die je kan bekijken op deze aparte pagina.|Je hebt :count inactieve (gearchiveerde) rekeningen, die je kan bekijken op deze aparte pagina.',
@@ -1109,6 +1131,7 @@ return [
     'interest_calc_monthly'                     => 'Per maand',
     'interest_calc_yearly'                      => 'Per jaar',
     'initial_balance_account'                   => 'Startsaldorekening voor :account',
+    'list_options'                              => 'Lijstopties',
 
     // categories:
     'new_category'                              => 'Nieuwe categorie',
@@ -1134,6 +1157,9 @@ return [
     'updated_withdrawal'                        => 'Uitgave ":description" geüpdatet',
     'updated_deposit'                           => 'Inkomsten ":description" geüpdatet',
     'updated_transfer'                          => 'Overschrijving ":description" geüpdatet',
+    'no_changes_withdrawal'                     => 'Uitgave ":description" is niet gewijzigd.',
+    'no_changes_deposit'                        => 'Inkomsten ":description" is niet gewijzigd.',
+    'no_changes_transfer'                       => 'Overschrijving ":description" is niet gewijzigd.',
     'delete_withdrawal'                         => 'Verwijder uitgave ":description"',
     'delete_deposit'                            => 'Verwijder inkomsten ":description"',
     'delete_transfer'                           => 'Verwijder overschrijving ":description"',
@@ -1214,7 +1240,12 @@ return [
     'journal_link_bill'                         => 'Deze transactie is gekoppeld aan contract <a href=":route">:name</a>. Om de verbinding te verwijderen haal je het vinkje weg. Gebruik regels om een ander contract te koppelen.',
     'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transactie #{ID} ("{title}")</a> is opgeslagen.',
     'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transactie #{ID}</a> is opgeslagen.',
-    'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transactie #{ID}</a> is geüpdatet.',
+    'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transactie #{ID}</a> ("{title}") is geüpdatet.',
+    'transaction_updated_no_changes'            => '<a href="transactions/show/{ID}">Transactie #{ID}</a> ("{title}") is niet gewijzigd.',
+    'first_split_decides'                       => 'De eerste split bepaalt wat hier staat',
+    'first_split_overrules_source'              => 'De eerste split kan de bronrekening overschrijven',
+    'first_split_overrules_destination'         => 'De eerste split kan de doelrekening overschrijven',
+    'spent_x_of_y'                              => '{amount} van {total} uitgegeven',
 
     // new user:
     'welcome'                                   => 'Welkom bij Firefly III!',
@@ -1253,6 +1284,9 @@ return [
     'per_day'                                   => 'Per dag',
     'left_to_spend_per_day'                     => 'Te besteden per dag',
     'bills_paid'                                => 'Betaalde contracten',
+    'custom_period'                             => 'Aangepaste periode',
+    'reset_to_current'                          => 'Reset naar huidige periode',
+    'select_period'                             => 'Selecteer een periode',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Valuta',
@@ -1321,6 +1355,7 @@ return [
     'automation'                                => 'Automatisering',
     'others'                                    => 'Overige',
     'classification'                            => 'Indeling',
+    'store_transaction'                         => 'Transactie opslaan',
 
     // reports:
     'report_default'                            => 'Standaard financieel rapport (:start tot :end)',
@@ -1441,6 +1476,8 @@ return [
     'journal-amount'                            => 'Bedrag voor dit contract',
     'name'                                      => 'Naam',
     'date'                                      => 'Datum',
+    'date_and_time'                             => 'Datum en tijd',
+    'time'                                      => 'Tijd',
     'paid'                                      => 'Betaald',
     'unpaid'                                    => 'Niet betaald',
     'day'                                       => 'Dag',
@@ -1504,6 +1541,8 @@ return [
     'transaction_journal_information'  => 'Transactieinformatie',
     'transaction_journal_meta'         => 'Metainformatie',
     'transaction_journal_more'         => 'Meer informatie',
+    'basic_journal_information'        => 'Standaard transactieinformatie',
+    'transaction_journal_extra'        => 'Extra informatie',
     'att_part_of_journal'              => 'Opgeslagen onder ":journal"',
     'total_amount'                     => 'Totaalbedrag',
     'number_of_decimals'               => 'Aantal decimalen',

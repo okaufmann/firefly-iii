@@ -50,6 +50,7 @@ trait DateCalculation
         if ($start->lte($today) && $end->gte($today)) {
             $difference = $today->diffInDays($end);
         }
+
         return 0 === $difference ? 1 : $difference;
     }
 
@@ -98,8 +99,6 @@ trait DateCalculation
 
         return $step;
     }
-
-
     /**
      * Get a list of the periods that will occur after this date. For example,
      * March 2018, April 2018, etc.
@@ -129,8 +128,6 @@ trait DateCalculation
                 'start' => clone $currentStart,
                 'end'   => clone $current,
             ];
-
-
             ++$count;
             $current->addDay();
         }

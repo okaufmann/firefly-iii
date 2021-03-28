@@ -39,7 +39,7 @@ class TagList implements BinderInterface
      * @param Route  $route
      *
      * @return Collection
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value, Route $route): Collection
     {
@@ -50,8 +50,6 @@ class TagList implements BinderInterface
                              ->orderBy('tag', 'ASC')
                              ->get();
             }
-
-
             $list = array_unique(array_map('\strtolower', explode(',', $value)));
             Log::debug('List of tags is', $list);
             // @codeCoverageIgnoreStart
