@@ -99,8 +99,8 @@ return [
         'webhooks'  => false,
     ],
 
-    'version'                      => '5.5.1',
-    'api_version'                  => '1.5.0',
+    'version'                      => '5.5.3',
+    'api_version'                  => '1.5.1',
     'db_version'                   => 16,
     'maxUploadSize'                => 1073741824, // 1 GB
     'send_error_message'           => env('SEND_ERROR_MESSAGE', true),
@@ -123,6 +123,7 @@ return [
     'authentication_guard'         => envNonEmpty('AUTHENTICATION_GUARD', 'web'),
     'custom_logout_uri'            => envNonEmpty('CUSTOM_LOGOUT_URI', ''),
     'cer_provider'                 => envNonEmpty('CER_PROVIDER', 'fixer'),
+    'ipinfo_token'                 => env('IPINFO_TOKEN',''),
     'update_endpoint'              => 'https://version.firefly-iii.org/index.json',
     'send_telemetry'               => env('SEND_TELEMETRY', false),
     'allow_webhooks'               => env('ALLOW_WEBHOOKS', false),

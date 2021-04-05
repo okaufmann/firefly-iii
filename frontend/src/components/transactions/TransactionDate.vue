@@ -66,7 +66,8 @@ export default {
     return {
       localDate: this.date,
       localTime: this.time,
-      timeZone: ''
+      timeZone: '',
+      timeString: '',
     }
   },
   methods: {},
@@ -92,13 +93,19 @@ export default {
     },
     timeStr: {
       get() {
+        // console.log('getTimeStr: ' + this.localTime);
         if (this.localTime instanceof Date && !isNaN(this.localTime)) {
-          return ('0' + this.localTime.getHours()).slice(-2) + ':' + ('0' + this.localTime.getMinutes()).slice(-2) + ':' + ('0' + this.localTime.getSeconds()).slice(-2);
+          let localStr = ('0' + this.localTime.getHours()).slice(-2) + ':' + ('0' + this.localTime.getMinutes()).slice(-2) + ':' + ('0' + this.localTime.getSeconds()).slice(-2);
+          // console.log('Time is: ' + localStr);
+          return localStr;
         }
+        // console.log('Return empty string!');
         return '';
       },
       set(value) {
+        // console.log('Set: ' + value);
         if ('' === value) {
+          // console.log('Value is empty, set 00:00:00');
           this.localTime.setHours(0);
           this.localTime.setMinutes(0);
           this.localTime.setSeconds(0);
@@ -108,9 +115,22 @@ export default {
         // bit of a hack but meh.
         let current = new Date(this.localTime.getTime());
         let parts = value.split(':');
-        current.setHours(parseInt(parts[0]));
-        current.setMinutes(parseInt(parts[1]));
-        current.setSeconds(parseInt(parts[2]));
+        // console.log('Parts are:');
+        // console.log(parts);
+
+        let hrs = parts[0] ?? '0';
+        let min = parts[1] ?? '0';
+        let sec = parts[2] ?? '0';
+        hrs = 3 === hrs.length ? hrs.substr(1, 2) : hrs;
+        min = 3 === min.length ? min.substr(1, 2) : min;
+        sec = 3 === sec.length ? sec.substr(1, 2) : sec;
+        // console.log('Hrs: ' + hrs);
+        // console.log('Min: ' + min);
+        // console.log('Sec: ' + sec);
+
+        current.setHours(parseInt(hrs));
+        current.setMinutes(parseInt(min));
+        current.setSeconds(parseInt(sec));
         this.localTime = current;
         this.$emit('set-time', {time: this.localTime});
       }

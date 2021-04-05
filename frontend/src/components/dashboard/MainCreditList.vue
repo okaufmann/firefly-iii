@@ -38,6 +38,13 @@
     <!-- body if normal -->
     <div v-if="!loading && !error" class="card-body table-responsive p-0">
       <table class="table table-sm">
+        <caption style="display:none;">{{ $t('firefly.revenue_accounts') }}</caption>
+        <thead>
+        <tr>
+          <th scope="col">{{ $t('firefly.category') }}</th>
+          <th scope="col">{{ $t('firefly.spent') }}</th>
+        </tr>
+        </thead>
         <tbody>
         <tr v-for="entry in income">
           <td style="width:20%;"><a :href="'./accounts/show/' +  entry.id">{{ entry.name }}</a></td>
@@ -71,6 +78,7 @@ import {createNamespacedHelpers} from "vuex";
 
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('dashboard/index')
 
+// TODO same as credit list but reversed
 
 export default {
   name: "MainCreditList",
@@ -131,20 +139,27 @@ export default {
     },
     parseIncome(data) {
       for (let mainKey in data) {
-        if (data.hasOwnProperty(mainKey) && /^0$|^[1-9]\d*$/.test(mainKey) && mainKey <= 4294967294) {
+        if (data.hasOwnProperty(mainKey)) {
+          mainKey = parseInt(mainKey);
           // contains currency info and entries.
           let current = data[mainKey];
-          if (0 === parseInt(mainKey)) {
-            this.max = data[mainKey].difference_float;
-            current.pct = 100;
-          }
-          if (0 !== parseInt(mainKey)) {
-            // calc percentage:
-            current.pct = (data[mainKey].difference_float / this.max) * 100;
-          }
+          current.pct = 0;
+          this.max = current.difference_float > this.max ? current.difference_float : this.max;
           this.income.push(current);
         }
       }
+      if (0 === this.max) {
+        this.max = 1;
+      }
+      // now sort + pct:
+      for (let i in this.income) {
+        if (this.income.hasOwnProperty(i)) {
+          let current = this.income[i];
+          current.pct = (current.difference_float / this.max) * 100;
+          this.income[i] = current;
+        }
+      }
+      this.income.sort((a,b) => (a.pct > b.pct) ? -1 : ((b.pct > a.pct) ? 1 : 0));
     }
   }
 }

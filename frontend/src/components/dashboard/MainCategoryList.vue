@@ -38,6 +38,13 @@
     <!-- body if normal -->
     <div v-if="!loading && !error" class="card-body table-responsive p-0">
       <table class="table table-sm">
+        <caption style="display:none;">{{ $t('firefly.categories') }}</caption>
+        <thead>
+        <tr>
+          <th scope="col">{{ $t('firefly.category') }}</th>
+          <th scope="col">{{ $t('firefly.spent') }}</th>
+        </tr>
+        </thead>
         <tbody>
         <tr v-for="category in sortedList">
           <td style="width:20%;">
@@ -105,10 +112,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-                    'start',
-                    'end'
-                  ]),
+    ...mapGetters(['start', 'end']),
     'datesReady': function () {
       return null !== this.start && null !== this.end && this.ready;
     }
@@ -150,17 +154,17 @@ export default {
           });
         },
         parseCategories(data) {
-          for (let key in data.data) {
-            if (data.data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-              let current = data.data[key];
+          for (let i in data.data) {
+            if (data.data.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+              let current = data.data[i];
               let entryKey = null;
               let categoryId = parseInt(current.id);
 
               // loop spent info:
-              for (let subKey in current.attributes.spent) {
-                if (current.attributes.spent.hasOwnProperty(subKey) && /^0$|^[1-9]\d*$/.test(subKey) && subKey <= 4294967294) {
-                  let spentData = current.attributes.spent[subKey];
-                  entryKey = spentData.currency_id.toString() + '-' + current.id.toString();
+              for (let ii in current.attributes.spent) {
+                if (current.attributes.spent.hasOwnProperty(ii) && /^0$|^[1-9]\d*$/.test(ii) && ii <= 4294967294) {
+                  let spentData = current.attributes.spent[ii];
+                  entryKey = spentData.currency_id + '-' + current.id;
 
                   // does the categories list thing have this combo? if not, create it.
                   this.categories[entryKey] = this.categories[entryKey] ??
@@ -180,10 +184,10 @@ export default {
               }
 
               // loop earned info
-              for (let subKey in current.attributes.earned) {
-                if (current.attributes.earned.hasOwnProperty(subKey) && /^0$|^[1-9]\d*$/.test(subKey) && subKey <= 4294967294) {
-                  let earnedData = current.attributes.earned[subKey];
-                  entryKey = earnedData.currency_id.toString() + '-' + current.id.toString();
+              for (let ii in current.attributes.earned) {
+                if (current.attributes.earned.hasOwnProperty(ii) && /^0$|^[1-9]\d*$/.test(ii) && ii <= 4294967294) {
+                  let earnedData = current.attributes.earned[ii];
+                  entryKey = earnedData.currency_id + '-' + current.id;
 
                   // does the categories list thing have this combo? if not, create it.
                   this.categories[entryKey] = this.categories[entryKey] ??
@@ -208,17 +212,17 @@ export default {
         sortCategories() {
           // no longer care about keys:
           let array = [];
-          for (let cat in this.categories) {
-            if (this.categories.hasOwnProperty(cat)) {
-              array.push(this.categories[cat]);
+          for (let i in this.categories) {
+            if (this.categories.hasOwnProperty(i)) {
+              array.push(this.categories[i]);
             }
           }
           array.sort(function (one, two) {
             return (one.spent + one.earned) - (two.spent + two.earned);
           });
-          for (let cat in array) {
-            if (array.hasOwnProperty(cat)) {
-              let current = array[cat];
+          for (let i in array) {
+            if (array.hasOwnProperty(i)) {
+              let current = array[i];
               current.spentPct = (current.spent / this.spent) * 100;
               current.earnedPct = (current.earned / this.earned) * 100;
               this.sortedList.push(current);

@@ -423,6 +423,7 @@ return [
     'apply_rule_selection'                                => 'Zastosuj regułę ":title" do niektórych swoich transakcji',
     'apply_rule_selection_intro'                          => 'Reguły takie jak ":title" są zwykle stosowane tylko do nowych lub modyfikowanych transakcji, ale możesz powiedzieć Firefly III aby uruchomił ją dla istniejących transakcji. Może to być przydatne, gdy zmodyfikowałeś regułę i potrzebujesz zastosować zmiany dla wszystkich pozostałych transakcji.',
     'include_transactions_from_accounts'                  => 'Uwzględnij transakcje z tych kont',
+    'include'                                             => 'Include?',
     'applied_rule_selection'                              => '{0} Żadna transakcja w Twoim wyborze nie została zmieniona przez regułę ":title".|[1] Jedna transakcja w Twoim wyborze została zmieniona przez regułę ":title".|[2,*] :count transakcje w Twoim wyborze zostały zmienione przez regułę ":title".',
     'execute'                                             => 'Wykonaj',
     'apply_rule_group_selection'                          => 'Zastosuj grupę reguł ":title" do niektórych swoich transakcji',
@@ -886,7 +887,7 @@ return [
     'create_new_deposit'                        => 'Utwórz nową wpłatę',
     'create_new_transfer'                       => 'Utwórz nowy transfer',
     'create_new_asset'                          => 'Utwórz nowe konto aktywów',
-    'create_new_liabilities'                    => 'Create new liability',
+    'create_new_liabilities'                    => 'Utwórz nowe zobowiązanie',
     'create_new_expense'                        => 'Utwórz nowe konto wydatków',
     'create_new_revenue'                        => 'Utwórz nowe konto przychodów',
     'create_new_piggy_bank'                     => 'Utwórz nową skarbonkę',
@@ -1131,7 +1132,7 @@ return [
     'interest_calc_monthly'                     => 'Co miesiąc',
     'interest_calc_yearly'                      => 'Co rok',
     'initial_balance_account'                   => 'Początkowe saldo konta :account',
-    'list_options'                              => 'List options',
+    'list_options'                              => 'Opcje listy',
 
     // categories:
     'new_category'                              => 'Nowa kategoria',
