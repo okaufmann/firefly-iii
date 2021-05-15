@@ -33,9 +33,6 @@
       <div v-if="error" class="text-center">
         <i class="fas fa-exclamation-triangle text-danger"></i>
       </div>
-      <div v-if="timezoneDifference" class="text-muted small">
-        {{ $t('firefly.timezone_difference', {local: localTimeZone, system: systemTimeZone}) }}
-      </div>
     </div>
     <div class="card-footer">
       <a class="btn btn-default button-sm" href="./accounts/asset"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_asset_accounts') }}</a>
@@ -49,10 +46,9 @@ import DataConverter from "../charts/DataConverter";
 import DefaultLineOptions from "../charts/DefaultLineOptions";
 import {mapGetters} from "vuex";
 import * as ChartJs from 'chart.js'
+import format from "date-fns/format";
+
 ChartJs.Chart.register.apply(null, Object.values(ChartJs).filter((chartClass) => (chartClass.id)));
-
-
-
 
 
 export default {
@@ -63,27 +59,20 @@ export default {
       loading: true,
       error: false,
       ready: false,
+      initialised: false,
       dataCollection: {},
       chartOptions: {},
       _chart: null,
-      localTimeZone: '',
-      systemTimeZone: '',
     }
   },
   created() {
-    this.ready = true;
     this.chartOptions = DefaultLineOptions.methods.getDefaultOptions();
-    this.localTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    this.systemTimeZone = this.timezone;
+    this.ready = true;
   },
   computed: {
-    ...mapGetters('dashboard/index',['start', 'end']),
-    ...mapGetters('root',['timezone']),
+    ...mapGetters('dashboard/index', ['start', 'end']),
     'datesReady': function () {
       return null !== this.start && null !== this.end && this.ready;
-    },
-    timezoneDifference: function() {
-      return this.localTimeZone !== this.systemTimeZone;
     }
   },
   watch: {
@@ -93,18 +82,20 @@ export default {
       }
     },
     start: function () {
-      //this.initialiseChart();
+      this.updateChart();
     },
     end: function () {
-      //this.initialiseChart();
+      this.updateChart();
     },
   },
   methods: {
     initialiseChart: function () {
       this.loading = true;
       this.error = false;
-      let startStr = this.start.toISOString().split('T')[0];
-      let endStr = this.end.toISOString().split('T')[0];
+      //let startStr = this.start.toISOString().split('T')[0];
+      //let endStr = this.end.toISOString().split('T')[0];
+      let startStr = format(this.start, 'y-MM-dd');
+      let endStr = format(this.end, 'y-MM-dd');
       let url = './api/v1/chart/account/overview?start=' + startStr + '&end=' + endStr;
       axios.get(url)
           .then(response => {
@@ -116,18 +107,39 @@ export default {
             this.drawChart();
           })
           .catch(error => {
-            // console.log('Has error!');
-            // console.log(error);
+            console.log('Has error!');
+            console.log(error);
             this.error = true;
           });
     },
     drawChart: function () {
-      this._chart = new ChartJs.Chart(this.$refs.canvas.getContext('2d'), {
-                                        type: 'line',
-                                        data: this.dataCollection,
-                                        options: this.chartOptions
-                                      }
-      );
+      //console.log('drawChart');
+      if ('undefined' !== typeof this._chart) {
+        // console.log('update!');
+        this._chart.data = this.dataCollection;
+        this._chart.update();
+        this.initialised = true;
+      }
+
+      if ('undefined' === typeof this._chart) {
+        // console.log('new!');
+        this._chart = new ChartJs.Chart(this.$refs.canvas.getContext('2d'), {
+                                          type: 'line',
+                                          data: this.dataCollection,
+                                          options: this.chartOptions
+                                        }
+        );
+        this.initialised = true;
+      }
+    },
+    updateChart: function () {
+      // console.log('updateChart');
+      if (this.initialised) {
+        // console.log('MUST Update chart!');
+        // reset some vars so it wont trigger again:
+        this.initialised = false;
+        this.initialiseChart();
+      }
     }
   },
 }

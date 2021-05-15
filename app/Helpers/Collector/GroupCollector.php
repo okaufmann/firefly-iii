@@ -497,7 +497,7 @@ class GroupCollector implements GroupCollectorInterface
                         ->where(
                             static function (EloquentBuilder $q1) {
                                 $q1->where('attachments.attachable_type', TransactionJournal::class);
-                                $q1->where('attachments.uploaded', 1);
+                                $q1->where('attachments.uploaded', true);
                                 $q1->orWhereNull('attachments.attachable_type');
                             }
                         );
@@ -699,7 +699,7 @@ class GroupCollector implements GroupCollectorInterface
         $result = $this->convertToInteger($result);
 
         $result['reconciled'] = 1 === (int)$result['reconciled'];
-        if (array_key_exists('tag_id', $result)) { // assume the other fields are present as well.
+        if (array_key_exists('tag_id', $result) && null !== $result['tag_id']) { // assume the other fields are present as well.
             $tagId   = (int)$augumentedJournal['tag_id'];
             $tagDate = null;
             try {

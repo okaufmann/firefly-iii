@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use Exception;
 use FireflyIII\Console\Commands\VerifiesAccessToken;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -162,9 +163,8 @@ class ExportData extends Command
      */
     private function parseOptions(): array
     {
-        $start = $this->getDateParameter('start');
-        $end   = $this->getDateParameter('end');
-        exit;
+        $start    = $this->getDateParameter('start');
+        $end      = $this->getDateParameter('end');
         $accounts = $this->getAccountsParameter();
         $export   = $this->getExportDirectory();
 
@@ -242,7 +242,7 @@ class ExportData extends Command
             $accounts = $this->accountRepository->getAccountsByType($types);
         }
         // filter accounts,
-        /** @var AccountType $account */
+        /** @var Account $account */
         foreach ($accounts as $account) {
             if (in_array($account->accountType->type, $types, true)) {
                 $final->push($account);

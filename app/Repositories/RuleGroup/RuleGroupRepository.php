@@ -150,7 +150,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      */
     public function getActiveGroups(): Collection
     {
-        return $this->user->ruleGroups()->with(['rules'])->where('rule_groups.active', 1)->orderBy('order', 'ASC')->get(['rule_groups.*']);
+        return $this->user->ruleGroups()->with(['rules'])->where('rule_groups.active', true)->orderBy('order', 'ASC')->get(['rule_groups.*']);
     }
 
     /**
@@ -161,7 +161,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     public function getActiveRules(RuleGroup $group): Collection
     {
         return $group->rules()
-                     ->where('rules.active', 1)
+                     ->where('rules.active', true)
                      ->get(['rules.*']);
     }
 
@@ -176,7 +176,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
                      ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
                      ->where('rule_triggers.trigger_type', 'user_action')
                      ->where('rule_triggers.trigger_value', 'store-journal')
-                     ->where('rules.active', 1)
+                     ->where('rules.active', true)
                      ->get(['rules.*']);
     }
 
@@ -191,7 +191,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
                      ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
                      ->where('rule_triggers.trigger_type', 'user_action')
                      ->where('rule_triggers.trigger_value', 'update-journal')
-                     ->where('rules.active', 1)
+                     ->where('rules.active', true)
                      ->get(['rules.*']);
     }
 
@@ -259,6 +259,58 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
+     * @param string|null $filter
+     *
+     * @return Collection
+     */
+    public function getAllRuleGroupsWithRules(?string $filter): Collection
+    {
+        $groups = $this->user->ruleGroups()
+                             ->orderBy('order', 'ASC')
+                             ->with(
+                                 [
+                                     'rules'              => static function (HasMany $query) {
+                                         $query->orderBy('order', 'ASC');
+                                     },
+                                     'rules.ruleTriggers' => static function (HasMany $query) {
+                                         $query->orderBy('order', 'ASC');
+                                     },
+                                     'rules.ruleActions'  => static function (HasMany $query) {
+                                         $query->orderBy('order', 'ASC');
+                                     },
+                                 ]
+                             )->get();
+        if (null === $filter) {
+            return $groups;
+        }
+        Log::debug(sprintf('Will filter getRuleGroupsWithRules on "%s".', $filter));
+
+        return $groups->map(
+            function (RuleGroup $group) use ($filter) {
+                Log::debug(sprintf('Now filtering group #%d', $group->id));
+                // filter the rules in the rule group:
+                $group->rules = $group->rules->filter(
+                    function (Rule $rule) use ($filter) {
+                        Log::debug(sprintf('Now filtering rule #%d', $rule->id));
+                        foreach ($rule->ruleTriggers as $trigger) {
+                            if ('user_action' === $trigger->trigger_type && $filter === $trigger->trigger_value) {
+                                Log::debug(sprintf('Rule #%d triggers on %s, include it.', $rule->id, $filter));
+
+                                return true;
+                            }
+                        }
+                        Log::debug(sprintf('Rule #%d does not trigger on %s, do not include it.', $rule->id, $filter));
+
+                        return false;
+                    }
+                );
+
+                return $group;
+            }
+        );
+    }
+
+    /**
      * @param RuleGroup $group
      *
      * @return Collection
@@ -274,7 +326,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      */
     public function maxOrder(): int
     {
-        return (int)$this->user->ruleGroups()->where('active', 1)->max('order');
+        return (int)$this->user->ruleGroups()->where('active', true)->max('order');
     }
 
     /**
@@ -285,7 +337,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         $this->user->ruleGroups()->where('active', false)->update(['order' => 0]);
         $set   = $this->user
             ->ruleGroups()
-            ->where('active', 1)
+            ->where('active', true)
             ->whereNull('deleted_at')
             ->orderBy('order', 'ASC')
             ->orderBy('title', 'DESC')

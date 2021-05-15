@@ -95,6 +95,7 @@ class UpgradeDatabase extends Command
             'firefly-iii:fix-recurring-transactions',
             'firefly-iii:unify-group-accounts',
             'firefly-iii:fix-transaction-types',
+            'firefly-iii:fix-frontpage-accounts',
 
             // two report commands
             'firefly-iii:report-empty-objects',
@@ -126,6 +127,11 @@ class UpgradeDatabase extends Command
     {
         $this->line('Now seeding the database...');
         Artisan::call('migrate', ['--seed' => true, '--force' => true]);
+        $result = Artisan::output();
+        echo $result;
+
+        $this->line('Fix PostgreSQL sequences.');
+        Artisan::call('firefly-iii:fix-pgsql-sequences');
         $result = Artisan::output();
         echo $result;
 

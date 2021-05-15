@@ -20,7 +20,7 @@
 
 <template>
   <div class="row">
-    <div class="col"> <!-- col-md-3 col-sm-6 col-12 -->
+    <div class="col" v-if="0 !== prefCurrencyBalances.length || 0 !== notPrefCurrencyBalances.length">
       <div class="info-box">
         <span class="info-box-icon"><i class="far fa-bookmark text-info"></i></span>
 
@@ -30,7 +30,7 @@
           <span v-if="error" class="info-box-text"><i class="fas fa-exclamation-triangle text-danger"></i></span>
           <!-- balance in preferred currency -->
           <span v-for="balance in prefCurrencyBalances" :title="balance.sub_title" class="info-box-number">{{ balance.value_parsed }}</span>
-
+          <span v-if="0 === prefCurrencyBalances.length" class="info-box-number">&nbsp;</span>
           <div class="progress bg-info">
             <div class="progress-bar" style="width: 0"></div>
           </div>
@@ -45,7 +45,7 @@
       </div>
     </div>
 
-    <div class="col">
+    <div class="col" v-if="0!==prefBillsUnpaid.length || 0 !== notPrefBillsUnpaid.length">
       <div class="info-box">
         <span class="info-box-icon"><i class="far fa-calendar-alt text-teal"></i></span>
 
@@ -70,7 +70,7 @@
       </div>
     </div>
     <!-- left to spend -->
-    <div class="col">
+    <div class="col" v-if="0 !== prefLeftToSpend.length || 0 !== notPrefLeftToSpend.length">
       <div class="info-box">
         <span class="info-box-icon"><i class="fas fa-money-bill text-success"></i></span>
 
@@ -80,6 +80,7 @@
           <span v-if="error" class="info-box-text"><i class="fas fa-exclamation-triangle text-danger"></i></span>
           <!-- left to spend in preferred currency -->
           <span v-for="left in prefLeftToSpend" :title="left.sub_title" class="info-box-number">{{ left.value_parsed }}</span>
+          <span v-if="0 === prefLeftToSpend.length" class="info-box-number">&nbsp;</span>
 
           <div class="progress bg-success">
             <div class="progress-bar" style="width: 0"></div>
@@ -96,7 +97,7 @@
     </div>
 
     <!-- net worth -->
-    <div class="col">
+    <div class="col" v-if="0 !== notPrefNetWorth.length || 0 !== prefNetWorth.length">
       <div class="info-box">
         <span class="info-box-icon"><i class="fas fa-money-bill text-success"></i></span>
 
@@ -105,7 +106,7 @@
           <span v-if="loading && !error" class="info-box-text"><i class="fas fa-spinner fa-spin"></i></span>
           <span v-if="error" class="info-box-text"><i class="fas fa-exclamation-triangle text-danger"></i></span>
           <span v-for="nw in prefNetWorth" :title="nw.sub_title" class="info-box-number">{{ nw.value_parsed }}</span>
-
+          <span v-if="0===prefNetWorth.length">&nbsp;</span>
           <div class="progress bg-success">
             <div class="progress-bar" style="width: 0"></div>
           </div>
@@ -124,6 +125,7 @@
 
 <script>
 import {createNamespacedHelpers} from "vuex";
+import format from 'date-fns/format';
 
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('dashboard/index')
 export default {
@@ -249,8 +251,12 @@ export default {
       this.billsUnpaid = [];
       this.leftToSpend = [];
       this.netWorth = [];
-      let startStr = this.start.toISOString().split('T')[0];
-      let endStr = this.end.toISOString().split('T')[0];
+      let startStr = format(this.start, 'y-MM-dd');
+      let endStr = format(this.end, 'y-MM-dd');
+      //let startStr = this.start.toISOString().split('T')[0];
+      //let endStr = this.end.toISOString().split('T')[0];
+      //console.log(startStr);
+      //console.log(endStr);
       axios.get('./api/v1/summary/basic?start=' + startStr + '&end=' + endStr)
           .then(response => {
             this.summary = response.data;

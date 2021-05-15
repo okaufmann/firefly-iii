@@ -19,7 +19,7 @@
   -->
 
 <template>
-  <div :id="'split_' + index" :class="'tab-pane' + (0===index ? ' active' : '')">
+  <div :id="'split_' + index" :class="'tab-pane' + (0 === index ? ' active' : '')">
     <div class="row">
       <div class="col">
         <div class="card">
@@ -32,6 +32,7 @@
               <button type="button" class="btn btn-danger btn-xs" @click="removeTransaction"><i class="fas fa-trash-alt"></i></button>
             </div>
           </div>
+
           <div class="card-body">
             <!-- start of body -->
             <div class="row">
@@ -267,8 +268,9 @@
                     v-on="$listeners"
                     :custom-fields.sync="customFields"
                     :index="index"
-                    :submitted_transaction="submittedTransaction"
                     :transaction_journal_id="transaction.transaction_journal_id"
+                    :upload-trigger="transaction.uploadTrigger"
+                    :clear-trigger="transaction.clearTrigger"
                 />
                 <TransactionLocation
                     v-model="transaction.location"
@@ -329,7 +331,7 @@ export default {
     },
     count: {
       type: Number,
-      required: false
+      required: true
     },
     customFields: {
       type: Object,
@@ -347,28 +349,30 @@ export default {
       type: String,
       required: true
     },
-    submittedTransaction: {
-      type: Boolean,
-      required: false,
-      default: false
-    }, // need to know if transaction is submitted.
     sourceAllowedTypes: {
       type: Array,
       required: false,
-      default: []
+      default: function () {
+        return [];
+      }
     }, // allowed source account types.
     destinationAllowedTypes: {
       type: Array,
       required: false,
-      default: []
+      default: function () {
+        return [];
+      }
     },
     // allow switch?
     allowSwitch: {
       type: Boolean,
       required: false,
-      default: true
+      default: false
     }
 
+  },
+  created() {
+    // console.log('SplitForm(' + this.index + ')');
   },
   methods: {
     removeTransaction: function () {
@@ -381,21 +385,24 @@ export default {
       return this.date;
     },
     sourceAccount: function () {
-      // console.log('computed::sourceAccount');
+      //console.log('computed::sourceAccount(' + this.index + ')');
       let value = {
         id: this.transaction.source_account_id,
         name: this.transaction.source_account_name,
         type: this.transaction.source_account_type,
       };
-      // console.log(JSON.stringify(value));
+      //console.log(JSON.stringify(value));
       return value;
     },
     destinationAccount: function () {
-      return {
+      //console.log('computed::destinationAccount(' + this.index + ')');
+      let value = {
         id: this.transaction.destination_account_id,
         name: this.transaction.destination_account_name,
         type: this.transaction.destination_account_type,
       };
+      //console.log(JSON.stringify(value));
+      return value;
     },
     hasMetaFields: function () {
       let requiredFields = [

@@ -431,7 +431,6 @@ return [
     'apply_rule_group_selection'                          => '选取交易并应用规则组“:title”',
     'apply_rule_group_selection_intro'                    => '规则组如“:title”一般仅应用于新增的或更新后的交易，但您可要求 Firefly III 针对已有的单笔或多笔交易执行规则组内的规则。在您更新一个规则组后，且必须应用此组至其他交易时，即可使用此功能。',
     'applied_rule_group_selection'                        => '规则组“:title”已应用至所选交易',
-    'timezone_difference'                                 => 'Your browser reports time zone "{local}". Firefly III is configured for time zone "{system}". This chart may drift.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => '用户动作为“:trigger_value”',
@@ -1141,9 +1140,9 @@ return [
     'interest_calc_daily'                       => '每日',
     'interest_calc_monthly'                     => '每月',
     'interest_calc_yearly'                      => '每年',
-    'interest_calc_weekly'                      => 'Per week',
-    'interest_calc_half-year'                   => 'Per half year',
-    'interest_calc_quarterly'                   => 'Per quarter',
+    'interest_calc_weekly'                      => '每周',
+    'interest_calc_half-year'                   => '每半年',
+    'interest_calc_quarterly'                   => '每季度',
     'initial_balance_account'                   => '初始余额账户“:account”',
     'list_options'                              => 'List options',
 
@@ -1325,8 +1324,8 @@ return [
     'account_type_Loan'                         => '贷款',
     'account_type_Mortgage'                     => '抵押',
     'account_type_Credit card'                  => '信用卡',
-    'liability_direction_credit'                => 'I am owed this debt',
-    'liability_direction_debit'                 => 'I owe this debt to somebody else',
+    'liability_direction_credit'                => '我欠了这笔债务',
+    'liability_direction_debit'                 => '我欠别人这笔钱',
     'budgets'                                   => '预算',
     'tags'                                      => '标签',
     'reports'                                   => '报表',

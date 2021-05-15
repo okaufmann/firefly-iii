@@ -64,6 +64,7 @@ class InstallController extends Controller
         $this->upgradeCommands = [
             // there are 3 initial commands
             'migrate'                                  => ['--seed' => true, '--force' => true],
+            'firefly-iii:fix-pgsql-sequences'          => [],
             'firefly-iii:decrypt-all'                  => [],
             'firefly-iii:restore-oauth-keys'           => [],
             'generate-keys'                            => [], // an exception :(
@@ -105,6 +106,7 @@ class InstallController extends Controller
             'firefly-iii:fix-recurring-transactions'   => [],
             'firefly-iii:unify-group-accounts'         => [],
             'firefly-iii:fix-transaction-types'        => [],
+            'firefly-iii:fix-frontpage-accounts'       => [],
 
             // final command to set latest version in DB
             'firefly-iii:set-latest-version'           => ['--james-is-cool' => true],

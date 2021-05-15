@@ -98,10 +98,10 @@ class BudgetRepository implements BudgetRepositoryInterface
         $budgets = $this->getBudgets();
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
-            DB::table('budget_transaction')->where('budget_id', $budget->id)->delete();
-            DB::table('budget_transaction_journal')->where('budget_id', $budget->id)->delete();
-            RecurrenceTransactionMeta::where('name', 'budget_id')->where('value', $budget->id)->delete();
-            RuleAction::where('action_type', 'set_budget')->where('action_value', $budget->id)->delete();
+            DB::table('budget_transaction')->where('budget_id', (int)$budget->id)->delete();
+            DB::table('budget_transaction_journal')->where('budget_id', (int)$budget->id)->delete();
+            RecurrenceTransactionMeta::where('name', 'budget_id')->where('value', (string)$budget->id)->delete();
+            RuleAction::where('action_type', 'set_budget')->where('action_value', (string)$budget->id)->delete();
             $budget->delete();
         }
     }
@@ -197,7 +197,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function getActiveBudgets(): Collection
     {
-        return $this->user->budgets()->where('active', 1)
+        return $this->user->budgets()->where('active', true)
                           ->orderBy('order', 'ASC')
                           ->orderBy('name', 'ASC')
                           ->get();
@@ -282,7 +282,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             $search->where('name', 'LIKE', sprintf('%%%s%%', $query));
         }
         $search->orderBy('order', 'ASC')
-               ->orderBy('name', 'ASC')->where('active', 1);
+               ->orderBy('name', 'ASC')->where('active', true);
 
         return $search->take($limit)->get();
     }
@@ -328,7 +328,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             Log::error($e->getTraceAsString());
             throw new FireflyException('400002: Could not store budget.', 0, $e);
         }
-        if (!array_key_exists('auto_budget_type', $data)) {
+        if (!array_key_exists('auto_budget_type', $data) || !array_key_exists('auto_budget_amount', $data) || !array_key_exists('auto_budget_period', $data)) {
             return $newBudget;
         }
         $type = $data['auto_budget_type'];

@@ -31,6 +31,7 @@ const mix = require('laravel-mix');
  |
  */
 
+mix.setResourceRoot('./');
 
 // production
 // require('laravel-mix-bundle-analyzer');
@@ -55,6 +56,9 @@ mix.js('src/pages/accounts/delete.js', 'public/js/accounts').vue({version: 2});
 mix.js('src/pages/accounts/show.js', 'public/js/accounts').vue({version: 2});
 mix.js('src/pages/accounts/create.js', 'public/js/accounts').vue({version: 2});
 
+// budgets
+mix.js('src/pages/budgets/index.js', 'public/js/budgets').vue({version: 2});
+
 // transactions.
 mix.js('src/pages/transactions/create.js', 'public/js/transactions').vue({version: 2});
 mix.js('src/pages/transactions/edit.js', 'public/js/transactions').vue({version: 2});
@@ -75,7 +79,7 @@ mix.sass('src/app.scss', 'public/css', {
 
 // move to right dir
 mix.copy('public/js', '../public/v2/js')
-    .copy('fonts', '../public/fonts')
+    .copy('fonts', '../public/v2/css/fonts')
     .copy('images', '../public/images')
     .copy('public/css', '../public/v2/css');
 

@@ -298,8 +298,8 @@ return [
     'search_modifier_has_any_category'                    => 'Η συναλλαγή πρέπει να έχει μία (οποιαδήποτε) κατηγορία',
     'search_modifier_has_no_budget'                       => 'Η συναλλαγή δεν πρέπει να έχει προϋπολογισμό',
     'search_modifier_has_any_budget'                      => 'Η συναλλαγή πρέπει να έχει έναν (οποιοδήποτε) προϋπολογισμό',
-    'search_modifier_has_no_bill'                         => 'The transaction must have no bill',
-    'search_modifier_has_any_bill'                        => 'The transaction must have a (any) bill',
+    'search_modifier_has_no_bill'                         => 'Η συναλλαγή δεν πρέπει να έχει λογαριασμό',
+    'search_modifier_has_any_bill'                        => 'Η συναλλαγή πρέπει να έχει έναν (οποιοδήποτε) λογαριασμό',
     'search_modifier_has_no_tag'                          => 'Η συναλλαγή δεν πρέπει να έχει καμία ετικέτα',
     'search_modifier_has_any_tag'                         => 'Η συναλλαγή πρέπει να έχει μία (οποιαδήποτε) ετικέτα',
     'search_modifier_notes_contain'                       => 'Οι σημειώσεις της συναλλαγής περιέχουν ":value"',
@@ -431,7 +431,6 @@ return [
     'apply_rule_group_selection'                          => 'Εφαρμογή ομάδας κανόνων ":title" σε μία επιλογή των συναλλαγών σας',
     'apply_rule_group_selection_intro'                    => 'Ομάδες κανόνων όπως ":title" συνήθως εφαρμόζονται σε νέες ή ενημερωμένες συναλλαγές, αλλά μπορείτε να πείτε στο Firefly III να εκτελέσει όλους τους κανόνες σε αυτή την ομάδα σε μία επιλογή των υπαρχόντων συναλλαγών σας. Αυτό μπορεί να είναι χρήσιμο εάν ενημερώσατε μια ομάδα κανόνων και θέλετε οι αλλαγές να εφαρμοστούν σε όλες τις άλλες συναλλαγές σας.',
     'applied_rule_group_selection'                        => 'Η ομάδα κανόνων ":title" έχει εφαρμοστεί στην επιλογή σας.',
-    'timezone_difference'                                 => 'Your browser reports time zone "{local}". Firefly III is configured for time zone "{system}". This chart may drift.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => 'Η ενέργεια χρήστη είναι ":trigger_value"',
@@ -1862,8 +1861,8 @@ return [
     'edit_object_group'                  => 'Επεξεργασία ομάδας ":title"',
     'delete_object_group'                => 'Διαγραφή ομάδας ":title"',
     'update_object_group'                => 'Ενημέρωση ομάδας',
-    'updated_object_group'               => 'Successfully updated group ":title"',
-    'deleted_object_group'               => 'Successfully deleted group ":title"',
+    'updated_object_group'               => 'Επιτυχής ενημέρωση της ομάδας ":title"',
+    'deleted_object_group'               => 'Επιτυχής διαγραφή της ομάδας ":title"',
     'object_group'                       => 'Ομάδα',
 
 

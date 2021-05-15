@@ -123,24 +123,14 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function findByIbanNull(string $iban, array $types): ?Account
     {
-        $query = $this->user->accounts()->where('iban', '!=', '')->whereNotNull('iban');
+        $query = $this->user->accounts()->where('accounts.iban', $iban);
 
-        if (0!==count($types)) {
+        if (0 !== count($types)) {
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $query->whereIn('account_types.type', $types);
         }
 
-        // TODO a loop like this is no longer necessary
-
-        $accounts = $query->get(['accounts.*']);
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            if ($account->iban === $iban) {
-                return $account;
-            }
-        }
-
-        return null;
+        return $query->first(['accounts.*']);
     }
 
     /**
@@ -269,7 +259,7 @@ class AccountRepository implements AccountRepositoryInterface
         if (0 !== count($types)) {
             $query->accountTypeIn($types);
         }
-        $query->where('active', 1);
+        $query->where('active', true);
         $query->orderBy('accounts.account_type_id', 'ASC');
         $query->orderBy('accounts.order', 'ASC');
         $query->orderBy('accounts.name', 'ASC');
@@ -650,7 +640,7 @@ class AccountRepository implements AccountRepositoryInterface
     public function searchAccount(string $query, array $types, int $limit): Collection
     {
         $dbQuery = $this->user->accounts()
-                              ->where('active', 1)
+                              ->where('active', true)
                               ->orderBy('accounts.order', 'ASC')
                               ->orderBy('accounts.account_type_id', 'ASC')
                               ->orderBy('accounts.name', 'ASC')
@@ -678,8 +668,8 @@ class AccountRepository implements AccountRepositoryInterface
     public function searchAccountNr(string $query, array $types, int $limit): Collection
     {
         $dbQuery = $this->user->accounts()->distinct()
-                              ->leftJoin('account_meta', 'accounts.id', 'account_meta.account_id')
-                              ->where('accounts.active', 1)
+                              ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
+                              ->where('accounts.active', true)
                               ->orderBy('accounts.order', 'ASC')
                               ->orderBy('accounts.account_type_id', 'ASC')
                               ->orderBy('accounts.name', 'ASC')
@@ -746,5 +736,30 @@ class AccountRepository implements AccountRepositoryInterface
         $service = app(AccountUpdateService::class);
 
         return $service->update($account, $data);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function findByAccountNumber(string $number, array $types): ?Account
+    {
+        $dbQuery = $this->user
+            ->accounts()
+            ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
+            ->where('accounts.active', true)
+            ->where(
+                function (EloquentBuilder $q1) use ($number) {
+                    $json = json_encode($number);
+                    $q1->where('account_meta.name', '=', 'account_number');
+                    $q1->where('account_meta.data', '=', $json);
+                }
+            );
+
+        if (0 !== count($types)) {
+            $dbQuery->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
+            $dbQuery->whereIn('account_types.type', $types);
+        }
+
+        return $dbQuery->first(['accounts.*']);
     }
 }
